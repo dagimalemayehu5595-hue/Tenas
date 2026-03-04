@@ -4,7 +4,13 @@ Modern gym website and lightweight admin system for handling memberships, tour b
 
 ## Live Project
 - GitHub Repo: https://github.com/dagimalemayehu5595-hue/Tenas
-- Demo: Add your deployed link here
+- Demo: https://dagimalemayehu5595-hue.github.io/Tenas/
+
+## Screenshots
+![Home](public/images/screenshots/home.jpeg)
+![Machines](public/images/screenshots/machines.png)
+![Coaches](public/images/screenshots/coaches.png)
+![Membership](public/images/screenshots/membership.png)
 
 ## Overview
 Tenas Fitness is a full-stack web project built for a gym business. It includes a public-facing website, membership registration flow with file uploads, tour booking, and an admin dashboard for reviewing submissions and updating site content.

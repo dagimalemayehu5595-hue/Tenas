@@ -34,7 +34,7 @@ const uploadImage = multer({
   }),
   limits: { fileSize: 6 * 1024 * 1024 }
 });
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || crypto.randomBytes(16).toString("hex");
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "";
 const OTP_SECRET = process.env.OTP_SECRET || crypto.randomBytes(32).toString("hex");
 const OTP_TTL_MS = 10 * 60 * 1000;
@@ -46,8 +46,8 @@ const ADMIN_CONFIG_FILE = path.join(DATA_DIR, "admin.json");
 const adminTokens = new Set();
 const otpStore = new Map();
 
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8476567885:AAFTbGjXc4g7CqNlHa-9fgzFyVK87ll-tNc";
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "7211124460";
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "32mb" }));
@@ -358,6 +358,8 @@ const sendOtpEmail = async (email, code) => {
   const text = `Your password reset code is: ${code}\nThis code expires in 10 minutes.`;
   await transporter.sendMail({ from, to: email, subject, text });
 };
+
+const hasTelegramConfig = () => Boolean(TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID);
 const saveSubmission = async (entry) => {
   submissions.unshift(entry);
   await fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2));
@@ -400,6 +402,9 @@ app.post("/api/tour", async (req, res) => {
     const { fullName, phone } = req.body || {};
     if (!fullName || !phone) {
       return res.status(400).json({ ok: false, error: "Missing full name or phone" });
+    }
+    if (!hasTelegramConfig()) {
+      return res.status(500).json({ ok: false, error: "Telegram is not configured" });
     }
     const message = "New tour request\nName: " + fullName + "\nPhone: " + phone + "\nTime: " + new Date().toISOString();
     const url = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage";
@@ -585,6 +590,9 @@ app.post(
       if (!payload[field]) {
         return res.status(400).json({ ok: false, error: "Missing required field: " + field });
       }
+    }
+    if (!hasTelegramConfig()) {
+      return res.status(500).json({ ok: false, error: "Telegram is not configured" });
     }
 
     const profilePhoto = req.files?.profilePhoto?.[0];
