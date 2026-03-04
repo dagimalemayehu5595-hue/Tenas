@@ -61,8 +61,8 @@ function MembershipForm() {
     fetch("./content.json?v=20260304184135")
       .then((res) => res.json())
       .then((data) => {
-        if (mounted && data && data.ok) {
-          setContent(data.content);
+        if (mounted && data) {
+          setContent(data.content || data);
         }
       })
       .catch(() => {});
@@ -454,8 +454,8 @@ function App() {
     fetch("./content.json?v=20260304184135")
       .then((res) => res.json())
       .then((data) => {
-        if (mounted && data && data.ok) {
-          setContent(data.content);
+        if (mounted && data) {
+          setContent(data.content || data);
         }
       })
       .catch(() => {});
@@ -610,6 +610,8 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+
 
 
 
