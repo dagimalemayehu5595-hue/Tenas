@@ -52,18 +52,18 @@ function App() {
     <div>
       <header className="hero">
         <nav className="nav">
-          <a className="logo" href="/index.html">
-            <img src="/images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
+          <a className="logo" href="./index.html">
+            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
             <span>Tenas Fitness</span>
           </a>
           <div className="nav-links">
-            <a href="/">Home</a>
-            <a href="/machines.html">Machines</a>
-            <a href="/programs.html">Programs</a>
-            <a href="/coaches.html">Coaches</a>
-            <a href="/membership.html">Membership</a>
+            <a href="./">Home</a>
+            <a href="./machines.html">Machines</a>
+            <a href="./programs.html">Programs</a>
+            <a href="./coaches.html">Coaches</a>
+            <a href="./membership.html">Membership</a>
           </div>
-          <a className="cta" href="/membership.html">Join Now</a>
+          <a className="cta" href="./membership.html">Join Now</a>
         </nav>
 
         <div className="hero-grid">
@@ -72,8 +72,8 @@ function App() {
             <h1>Programs Built For Real Life.</h1>
             <p className="lead">Choose guided strength, conditioning, or recovery — with a plan you can stick to.</p>
             <div className="hero-actions">
-              <a className="cta" href="/membership.html">Start Free Trial</a>
-              <a className="secondary" href="/coaches.html">Meet Coaches</a>
+              <a className="cta" href="./membership.html">Start Free Trial</a>
+              <a className="secondary" href="./coaches.html">Meet Coaches</a>
             </div>
           </div>
           <div className="hero-card">
@@ -132,6 +132,7 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
 
 
 

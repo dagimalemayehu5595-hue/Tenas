@@ -39,7 +39,7 @@ function Footer() {
       <div className="footer-block footer-partner">
         <h4>Partners</h4>
         <div className="partner">
-          <img src="/images/samrawit.png" alt="Samrawit Foundation logo" className="partner-logo" />
+          <img src="./images/samrawit.png" alt="Samrawit Foundation logo" className="partner-logo" />
           <p>Samrawit Foundation</p>
         </div>
       </div>
@@ -50,4 +50,5 @@ function Footer() {
     </footer>
   );
 }
+
 

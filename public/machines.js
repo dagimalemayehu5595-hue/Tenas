@@ -4,7 +4,7 @@ const machines = [
   {
     name: "Apex Power Rack",
     desc: "Heavy-duty rack for squats, bench, and pull-ups.",
-    img: "/images/apex.png",
+    img: "./images/apex.png",
     targets: "Quads, glutes, back",
     bestFor: "Compound strength",
     tip: "Brace your core before every rep."
@@ -12,7 +12,7 @@ const machines = [
   {
     name: "Vector Cable Station",
     desc: "Dual-stack cables for full-range strength work.",
-    img: "/images/victor-cable.png",
+    img: "./images/victor-cable.png",
     targets: "Chest, shoulders, arms",
     bestFor: "Cables, flyes, rows",
     tip: "Keep constant tension."
@@ -20,7 +20,7 @@ const machines = [
   {
     name: "Storm Air Bike",
     desc: "Assault-style bike with infinite resistance.",
-    img: "/images/bike.png",
+    img: "./images/bike.png",
     targets: "Full body engine",
     bestFor: "Intervals, warm-ups",
     tip: "Push and pull together for max output."
@@ -28,7 +28,7 @@ const machines = [
   {
     name: "Precision Leg Press",
     desc: "45-degree sled with smooth rails and oversized footplate.",
-    img: "/images/leg press.png",
+    img: "./images/leg press.png",
     targets: "Quads, glutes, calves",
     bestFor: "Strength & volume",
     tip: "Drive through mid-foot for control."
@@ -36,7 +36,7 @@ const machines = [
   {
     name: "Crossover Fly Station",
     desc: "Adjustable fly station for chest and shoulder isolation.",
-    img: "/images/cross.png",
+    img: "./images/cross.png",
     targets: "Chest, shoulders",
     bestFor: "Flyes, isolation",
     tip: "Keep elbows soft through the arc."
@@ -44,7 +44,7 @@ const machines = [
   {
     name: "Functional Trainer Pro",
     desc: "Versatile cable unit for full-body training.",
-    img: "/images/functional.png",
+    img: "./images/functional.png",
     targets: "Full body",
     bestFor: "Functional strength",
     tip: "Control the negative on every rep."
@@ -52,7 +52,7 @@ const machines = [
   {
     name: "Power Rack Elite",
     desc: "Heavy rack for max strength and safe spotting.",
-    img: "/images/power.png",
+    img: "./images/power.png",
     targets: "Quads, glutes, back",
     bestFor: "Squats, presses",
     tip: "Set safety pins before lifting heavy."
@@ -68,7 +68,7 @@ const machines = [
   {
     name: "Glide Leg Press",
     desc: "45-degree sled with wide foot plate.",
-    img: "/images/leg press.png",
+    img: "./images/leg press.png",
     targets: "Quads, glutes, calves",
     bestFor: "Hypertrophy blocks",
     tip: "Control the descent for growth."
@@ -109,18 +109,18 @@ function App() {
     <div>
       <header className="hero">
         <nav className="nav">
-          <a className="logo" href="/index.html">
-            <img src="/images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
+          <a className="logo" href="./index.html">
+            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
             <span>Tenas Fitness</span>
           </a>
           <div className="nav-links">
-            <a href="/">Home</a>
-            <a href="/machines.html">Machines</a>
-            <a href="/programs.html">Programs</a>
-            <a href="/coaches.html">Coaches</a>
-            <a href="/membership.html">Membership</a>
+            <a href="./">Home</a>
+            <a href="./machines.html">Machines</a>
+            <a href="./programs.html">Programs</a>
+            <a href="./coaches.html">Coaches</a>
+            <a href="./membership.html">Membership</a>
           </div>
-          <a className="cta" href="/membership.html">Join Now</a>
+          <a className="cta" href="./membership.html">Join Now</a>
         </nav>
 
         <div className="hero-grid">
@@ -129,8 +129,8 @@ function App() {
             <h1>Precision Equipment That Performs.</h1>
             <p className="lead">Select a machine to see specs, coaching tips, and training focus.</p>
             <div className="hero-actions">
-              <a className="cta" href="/tour.html">Book a Tour</a>
-              <a className="secondary" href="/programs.html">See Programs</a>
+              <a className="cta" href="./tour.html">Book a Tour</a>
+              <a className="secondary" href="./programs.html">See Programs</a>
             </div>
           </div>
           <div className="hero-card">
@@ -198,6 +198,7 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
 
 
 

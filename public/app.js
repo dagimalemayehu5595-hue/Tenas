@@ -52,23 +52,23 @@ function App() {
     <div>
       <header className="hero">
         <nav className="nav">
-          <a className="logo" href="/index.html">
+          <a className="logo" href="./index.html">
             <img
-              src="/images/tenas.jpeg"
+              src="./images/tenas.jpeg"
               alt="Tenas Fitness logo"
               className="logo-image"
             />
             <span>Tenas Fitness</span>
           </a>
           <div className="nav-links">
-            <a href="/machines.html">Machines</a>
-            <a href="/programs.html">Programs</a>
-            <a href="/coaches.html">Coaches</a>
-            <a href="/membership.html">Membership</a>
+            <a href="./machines.html">Machines</a>
+            <a href="./programs.html">Programs</a>
+            <a href="./coaches.html">Coaches</a>
+            <a href="./membership.html">Membership</a>
           </div>
           <div className="nav-actions">
-            <a className="cta secondary admin-link" href="/admin.html">Admin</a>
-            <a className="cta" href="/membership.html">Join Now</a>
+            <a className="cta secondary admin-link" href="./admin.html">Admin</a>
+            <a className="cta" href="./membership.html">Join Now</a>
           </div>
         </nav>
 
@@ -78,8 +78,8 @@ function App() {
             <h1>Train strong. Move fast. Recover smarter.</h1>
             <p className="lead">Black & blue performance gym with premium machines, coaching, and recovery built around your goals.</p>
             <div className="hero-actions">
-              <a className="cta" href="/membership.html">Start Free Trial</a>
-              <a className="secondary" href="/programs.html">View Schedule</a>
+              <a className="cta" href="./membership.html">Start Free Trial</a>
+              <a className="secondary" href="./programs.html">View Schedule</a>
             </div>
           </div>
           <div className="hero-card">
@@ -134,4 +134,5 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
 

@@ -8,7 +8,7 @@ function TourForm() {
       <div className="tour-confirm">
         <h2>Thank you. We received your request.</h2>
         <p>We will call you to confirm your tour time and notify you when your tour is scheduled.</p>
-        <a className="cta" href="/">Back to Home</a>
+        <a className="cta" href="./">Back to Home</a>
       </div>
     );
   }
@@ -72,18 +72,18 @@ function App() {
     <div>
       <header className="hero">
         <nav className="nav">
-          <a className="logo" href="/index.html">
-            <img src="/images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
+          <a className="logo" href="./index.html">
+            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
             <span>Tenas Fitness</span>
           </a>
           <div className="nav-links">
-            <a href="/">Home</a>
-            <a href="/machines.html">Machines</a>
-            <a href="/programs.html">Programs</a>
-            <a href="/coaches.html">Coaches</a>
-            <a href="/membership.html">Membership</a>
+            <a href="./">Home</a>
+            <a href="./machines.html">Machines</a>
+            <a href="./programs.html">Programs</a>
+            <a href="./coaches.html">Coaches</a>
+            <a href="./membership.html">Membership</a>
           </div>
-          <a className="cta" href="/membership.html">Join Now</a>
+          <a className="cta" href="./membership.html">Join Now</a>
         </nav>
 
         <div className="hero-grid">
@@ -117,6 +117,7 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
 
 
 

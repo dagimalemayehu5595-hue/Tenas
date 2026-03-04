@@ -278,14 +278,14 @@ function AdminApp() {
     <div>
       <header className="hero admin-hero">
         <nav className="nav">
-          <a className="logo" href="/index.html">
-            <img src="/images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
+          <a className="logo" href="./index.html">
+            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
             <span>Tenas Fitness</span>
           </a>
           <div className="nav-links">
-            <a href="/">Home</a>
-            <a href="/membership.html">Membership</a>
-            <a href="/tour.html">Tour</a>
+            <a href="./">Home</a>
+            <a href="./membership.html">Membership</a>
+            <a href="./tour.html">Tour</a>
           </div>
           {token ? (
             <button className="cta" type="button" onClick={handleLogout}>Logout</button>
@@ -1306,6 +1306,7 @@ function AdminApp() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<AdminApp />);
+
 
 
 

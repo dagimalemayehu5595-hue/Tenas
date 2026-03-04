@@ -2,7 +2,7 @@ const coaches = [
   {
     name: "Kidus Mulgeta",
     role: "Head Strength Coach",
-    img: "/images/kidus%20mulgeta.png",
+    img: "./images/kidus%20mulgeta.png",
     bio: "10+ years coaching strength athletes and general population clients.",
     skills: ["CSCS", "Powerlifting", "Mobility"],
     exp: "Focus: Maximum strength, clean technique, injury-proof mechanics."
@@ -10,7 +10,7 @@ const coaches = [
   {
     name: "Eskinder Worku",
     role: "Performance & Conditioning",
-    img: "/images/my%20co2.jpg",
+    img: "./images/my%20co2.jpg",
     bio: "Hybrid endurance specialist with a focus on sustainable intensity.",
     skills: ["USAW", "HIIT", "Hyrox"],
     exp: "Focus: Engine building, athletic conditioning, interval systems."
@@ -18,7 +18,7 @@ const coaches = [
   {
     name: "Niah Hassen",
     role: "Mobility & Recovery",
-    img: "/images/noh%20co.png",
+    img: "./images/noh%20co.png",
     bio: "Movement coach helping members improve range and reduce pain.",
     skills: ["FRC", "Stretch Therapy", "Recovery"],
     exp: "Focus: Mobility systems, tissue care, pre-hab and post-hab."
@@ -49,18 +49,18 @@ function App() {
     <div>
       <header className="hero">
         <nav className="nav">
-          <a className="logo" href="/index.html">
-            <img src="/images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
+          <a className="logo" href="./index.html">
+            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
             <span>Tenas Fitness</span>
           </a>
           <div className="nav-links">
-            <a href="/">Home</a>
-            <a href="/machines.html">Machines</a>
-            <a href="/programs.html">Programs</a>
-            <a href="/coaches.html">Coaches</a>
-            <a href="/membership.html">Membership</a>
+            <a href="./">Home</a>
+            <a href="./machines.html">Machines</a>
+            <a href="./programs.html">Programs</a>
+            <a href="./coaches.html">Coaches</a>
+            <a href="./membership.html">Membership</a>
           </div>
-          <a className="cta" href="/membership.html">Join Now</a>
+          <a className="cta" href="./membership.html">Join Now</a>
         </nav>
 
         <div className="hero-grid">
@@ -69,7 +69,7 @@ function App() {
             <h1>Coaches Who Build Performance, Not Just Physique.</h1>
             <p className="lead">Certified experts in strength, conditioning, mobility, and recovery with individualized programs for every goal.</p>
             <div className="hero-actions">
-              <a className="secondary" href="/programs.html">View Programs</a>
+              <a className="secondary" href="./programs.html">View Programs</a>
             </div>
           </div>
           <div className="hero-card">
@@ -157,6 +157,7 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
 
 
 

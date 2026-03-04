@@ -105,7 +105,7 @@ function MembershipForm() {
       <div className="tour-confirm">
         <h2>Thank you. Your membership request is received.</h2>
         <p>Our team will review your details and confirm your membership shortly.</p>
-        <a className="cta" href="/">Back to Home</a>
+        <a className="cta" href="./">Back to Home</a>
       </div>
     );
   }
@@ -469,18 +469,18 @@ function App() {
     <div>
       <header className="hero">
         <nav className="nav">
-          <a className="logo" href="/index.html">
-            <img src="/images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
+          <a className="logo" href="./index.html">
+            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
             <span>Tenas Fitness</span>
           </a>
           <div className="nav-links">
-            <a href="/">Home</a>
-            <a href="/machines.html">Machines</a>
-            <a href="/programs.html">Programs</a>
-            <a href="/coaches.html">Coaches</a>
-            <a href="/membership.html">Membership</a>
+            <a href="./">Home</a>
+            <a href="./machines.html">Machines</a>
+            <a href="./programs.html">Programs</a>
+            <a href="./coaches.html">Coaches</a>
+            <a href="./membership.html">Membership</a>
           </div>
-          <a className="cta" href="/membership.html">Join Now</a>
+          <a className="cta" href="./membership.html">Join Now</a>
         </nav>
 
         <div className="hero-grid">
@@ -490,7 +490,7 @@ function App() {
             <p className="lead">Premium equipment, expert coaching, and recovery support — without the chaos.</p>
             <div className="hero-actions">
               <a className="cta" href="#tiers">Claim Free Trial</a>
-              <a className="secondary" href="/coaches.html">Meet Coaches</a>
+              <a className="secondary" href="./coaches.html">Meet Coaches</a>
             </div>
           </div>
           <div className="hero-card">
@@ -578,7 +578,7 @@ function App() {
           <h2>Start Your Trial This Week</h2>
           <p>Tour the facility, meet a coach, and get your plan built fast.</p>
         </div>
-        <a className="cta" href="/tour.html">Book a Tour</a>
+        <a className="cta" href="./tour.html">Book a Tour</a>
       </section>
 
       <section className="section membership-start">
@@ -610,6 +610,7 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
 
 
 
