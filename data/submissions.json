@@ -1,0 +1,43 @@
+[
+  {
+    "id": "bfd36674-be12-4f4a-a332-899ea3d50243",
+    "type": "membership",
+    "fullName": "Dagim Alemayehu",
+    "phone": "099",
+    "email": "dagimalemayehu5595@gmail.com",
+    "plan": "Full Package (Gym, Spa, Aerobics)",
+    "membershipType": "2 Month",
+    "startDate": "2026-03-03",
+    "preferredTime": "Morning",
+    "training": "No Trainer",
+    "goals": [
+      "Weight Loss"
+    ],
+    "paymentMethod": "manual",
+    "createdAt": "2026-03-02T19:14:40.545Z"
+  },
+  {
+    "id": "2f0a3d0b-fcb6-4628-8087-d164e73e6cf2",
+    "type": "tour",
+    "fullName": "Dagim Alemayehu",
+    "phone": "099",
+    "createdAt": "2026-03-02T19:12:25.680Z"
+  },
+  {
+    "id": "dc9db8af-b4ee-4502-92f2-e82f420e2d7f",
+    "type": "membership",
+    "fullName": "Dagim Alemayehu",
+    "phone": "099",
+    "email": "dagimalemayehu5595@gmail.com",
+    "plan": "Gym Only",
+    "membershipType": "1 Month",
+    "startDate": "2026-03-04",
+    "preferredTime": "Morning",
+    "training": "No Trainer",
+    "goals": [
+      "Weight Loss"
+    ],
+    "paymentMethod": "manual",
+    "createdAt": "2026-03-02T18:47:15.390Z"
+  }
+]

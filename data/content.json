@@ -1,0 +1,276 @@
+{
+  "hours": {
+    "monSat": "5:00 AM - 9:00 PM",
+    "sunday": "Half day"
+  },
+  "contact": {
+    "phone": "+251 912196096",
+    "email": "tenasgymandspa@gmail.com"
+  },
+  "payment": {
+    "link": ""
+  },
+  "membershipTiers": [],
+  "membershipPerks": [
+    "Movement screen + onboarding",
+    "Coach feedback and program updates",
+    "Recovery suite access",
+    "Community events + challenges"
+  ],
+  "priceList": {
+    "periods": [
+      "1 Month",
+      "2 Month",
+      "3 Month",
+      "6 Month",
+      "1 Year"
+    ],
+    "columns": [
+      "Full Package (Gym, Spa, Aerobics)",
+      "Gym and Spa",
+      "Gym and Aerobics",
+      "Gym Only",
+      "Aerobics Only",
+      "Off Peak Hour"
+    ],
+    "prices": [
+      [
+        "9,999",
+        "7,499",
+        "7,499",
+        "5,499",
+        "2,999",
+        "4,499"
+      ],
+      [
+        "18,799",
+        "13,999",
+        "13,999",
+        "10,199",
+        "5,499",
+        "8,499"
+      ],
+      [
+        "23,999",
+        "18,499",
+        "18,499",
+        "13,199",
+        "7,499",
+        "10,999"
+      ],
+      [
+        "39,999",
+        "30,999",
+        "30,999",
+        "23,999",
+        "13,499",
+        "19,999"
+      ],
+      [
+        "69,999",
+        "53,999",
+        "53,999",
+        "39,999",
+        "24,999",
+        "35,999"
+      ]
+    ]
+  },
+  "dailyPass": [
+    {
+      "label": "Daily pass F.P",
+      "price": "1,099"
+    },
+    {
+      "label": "Daily pass Gym",
+      "price": "499"
+    },
+    {
+      "label": "Daily pass Aerobics",
+      "price": "499"
+    }
+  ],
+  "discounts": [
+    {
+      "label": "3 person",
+      "value": "5% each"
+    },
+    {
+      "label": ">= 4 person",
+      "value": "7% each"
+    }
+  ],
+  "priceNote": "The 500.00 Birr pass card membership fee will be donated to the Samrawit Foundation Charitable Endowment.",
+  "programs": [
+    {
+      "name": "Strength Track",
+      "desc": "Barbell progressions with weekly performance tracking and coaching feedback.",
+      "focus": [
+        "Squat/Bench/Deadlift",
+        "Progressive overload",
+        "Technique coaching"
+      ]
+    },
+    {
+      "name": "Hybrid Conditioning",
+      "desc": "Engine-building sessions that mix cardio, sled work, and functional strength.",
+      "focus": [
+        "Intervals",
+        "Sled work",
+        "Athletic conditioning"
+      ]
+    },
+    {
+      "name": "Recovery Flow",
+      "desc": "Mobility classes, breathwork, and guided stretching for longevity.",
+      "focus": [
+        "Mobility",
+        "Breathing",
+        "Post-session recovery"
+      ]
+    },
+    {
+      "name": "Athlete Performance",
+      "desc": "Power, speed, and agility for sport-specific results.",
+      "focus": [
+        "Sprint mechanics",
+        "Explosive power",
+        "Change of direction"
+      ]
+    }
+  ],
+  "schedule": [
+    {
+      "time": "06:00",
+      "name": "Strength Foundations"
+    },
+    {
+      "time": "12:15",
+      "name": "Hyrox Conditioning"
+    },
+    {
+      "time": "18:30",
+      "name": "Power + Mobility"
+    }
+  ],
+  "coaches": [
+    {
+      "name": "Kidus Mulgeta",
+      "role": "Head Strength Coach",
+      "img": "/images/kidus%20mulgeta.png",
+      "bio": "10+ years coaching strength athletes and general population clients.",
+      "skills": [
+        "CSCS",
+        "Powerlifting",
+        "Mobility"
+      ],
+      "exp": "Focus: Maximum strength, clean technique, injury-proof mechanics."
+    },
+    {
+      "name": "Eskinder Worku",
+      "role": "Performance & Conditioning",
+      "img": "/images/my%20co2.jpg",
+      "bio": "Hybrid endurance specialist with a focus on sustainable intensity.",
+      "skills": [
+        "USAW",
+        "HIIT",
+        "Hyrox"
+      ],
+      "exp": "Focus: Engine building, athletic conditioning, interval systems."
+    },
+    {
+      "name": "Niah Hassen",
+      "role": "Mobility & Recovery",
+      "img": "/uploads/6e1e12da-9dc4-4b15-9d0e-3119b4313e1e.png",
+      "bio": "Movement coach helping members improve range and reduce pain.",
+      "skills": [
+        "FRC",
+        "Stretch Therapy",
+        "Recovery"
+      ],
+      "exp": "Focus: Mobility systems, tissue care, pre-hab and post-hab."
+    }
+  ],
+  "machines": [
+    {
+      "name": "Apex Power Rack",
+      "desc": "Heavy-duty rack for squats, bench, and pull-ups.",
+      "img": "/images/apex.png",
+      "targets": "Quads, glutes, back",
+      "bestFor": "Compound strength",
+      "tip": "Brace your core before every rep."
+    },
+    {
+      "name": "Vector Cable Station",
+      "desc": "Dual-stack cables for full-range strength work.",
+      "img": "/images/victor-cable.png",
+      "targets": "Chest, shoulders, arms",
+      "bestFor": "Cables, flyes, rows",
+      "tip": "Keep constant tension."
+    },
+    {
+      "name": "Storm Air Bike",
+      "desc": "Assault-style bike with infinite resistance.",
+      "img": "/images/bike.png",
+      "targets": "Full body engine",
+      "bestFor": "Intervals, warm-ups",
+      "tip": "Push and pull together for max output."
+    },
+    {
+      "name": "Precision Leg Press",
+      "desc": "45-degree sled with smooth rails and oversized footplate.",
+      "img": "/images/leg press.png",
+      "targets": "Quads, glutes, calves",
+      "bestFor": "Strength & volume",
+      "tip": "Drive through mid-foot for control."
+    },
+    {
+      "name": "Crossover Fly Station",
+      "desc": "Adjustable fly station for chest and shoulder isolation.",
+      "img": "/images/cross.png",
+      "targets": "Chest, shoulders",
+      "bestFor": "Flyes, isolation",
+      "tip": "Keep elbows soft through the arc."
+    },
+    {
+      "name": "Functional Trainer Pro",
+      "desc": "Versatile cable unit for full-body training.",
+      "img": "/images/functional.png",
+      "targets": "Full body",
+      "bestFor": "Functional strength",
+      "tip": "Control the negative on every rep."
+    },
+    {
+      "name": "Power Rack Elite",
+      "desc": "Heavy rack for max strength and safe spotting.",
+      "img": "/images/power.png",
+      "targets": "Quads, glutes, back",
+      "bestFor": "Squats, presses",
+      "tip": "Set safety pins before lifting heavy."
+    },
+    {
+      "name": "Hydro Row Elite",
+      "desc": "Water-resistance rower with smooth glide.",
+      "img": "images/hydro.png",
+      "targets": "Back, legs, core",
+      "bestFor": "Cardio endurance",
+      "tip": "Drive with legs, finish with arms."
+    },
+    {
+      "name": "Glide Leg Press",
+      "desc": "45-degree sled with wide foot plate.",
+      "img": "/images/leg press.png",
+      "targets": "Quads, glutes, calves",
+      "bestFor": "Hypertrophy blocks",
+      "tip": "Control the descent for growth."
+    },
+    {
+      "name": "Pulse Sled Track",
+      "desc": "Turf lane for sled pushes and pulls.",
+      "img": "images/pulse-sled.png",
+      "targets": "Legs, lungs",
+      "bestFor": "Conditioning",
+      "tip": "Stay low and drive through the floor."
+    }
+  ]
+}
