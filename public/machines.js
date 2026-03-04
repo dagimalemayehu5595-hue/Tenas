@@ -89,7 +89,7 @@ function App() {
 
   React.useEffect(() => {
     let mounted = true;
-    fetch("./content.json")
+    fetch("./content.json?v=20260304184135")
       .then((res) => res.json())
       .then((data) => {
         if (mounted && data && data.ok) {
@@ -198,6 +198,7 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
 
 
 
