@@ -58,7 +58,7 @@ function MembershipForm() {
 
   React.useEffect(() => {
     let mounted = true;
-    fetch("./content.json?v=20260304184135")
+    fetch("./content.json?v=20260325203227")
       .then((res) => res.json())
       .then((data) => {
         if (mounted && data) {
@@ -451,7 +451,7 @@ function App() {
   const [content, setContent] = React.useState(null);
   React.useEffect(() => {
     let mounted = true;
-    fetch("./content.json?v=20260304184135")
+    fetch("./content.json?v=20260325203227")
       .then((res) => res.json())
       .then((data) => {
         if (mounted && data) {
