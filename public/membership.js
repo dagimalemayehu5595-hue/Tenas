@@ -47,6 +47,7 @@ const conditionOptions = [
 
 function MembershipForm() {
   const [submitted, setSubmitted] = React.useState(false);
+  const [submittedCard, setSubmittedCard] = React.useState(null);
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [paymentMethod, setPaymentMethod] = React.useState("online");
@@ -101,11 +102,89 @@ function MembershipForm() {
   };
 
   if (submitted) {
+    const memberName = submittedCard?.fullName || "New Member";
+    const memberPlan = submittedCard?.plan || selectedPlan || "Membership";
+    const memberPeriod = submittedCard?.membershipType || selectedPeriod || "Pending";
+    const memberPrice = submittedCard?.price || "";
+
     return (
-      <div className="tour-confirm">
-        <h2>Thank you. Your membership request is received.</h2>
-        <p>Our team will review your details and confirm your membership shortly.</p>
-        <a className="cta" href="./">Back to Home</a>
+      <div className="tour-confirm membership-success">
+        <div className="membership-success-copy">
+          <span className="eyebrow">Card Preview Ready</span>
+          <h2>Your membership request has been received.</h2>
+          <p>
+            Your NFC access card has been prepared under your name. Once your payment is approved,
+            you&apos;ll be notified to collect your card.
+          </p>
+          <div className="membership-success-meta">
+            <div className="membership-success-pill">
+              <strong>Plan</strong>
+              <span>{memberPlan}</span>
+            </div>
+            <div className="membership-success-pill">
+              <strong>Period</strong>
+              <span>{memberPeriod}</span>
+            </div>
+            <div className="membership-success-pill">
+              <strong>Status</strong>
+              <span>Pending Approval</span>
+            </div>
+            {memberPrice ? (
+              <div className="membership-success-pill">
+                <strong>Amount</strong>
+                <span>ETB {memberPrice}</span>
+              </div>
+            ) : null}
+          </div>
+          <div className="membership-success-actions">
+            <a className="cta" href="./">Back to Home</a>
+            <a className="secondary" href="./tour.html">Book a Tour</a>
+          </div>
+        </div>
+
+        <div className="nfc-preview-shell" aria-hidden="true">
+          <div className="nfc-orbit-glow"></div>
+          <div className="nfc-card-rotator">
+            <div className="nfc-card-face nfc-card-front">
+              <div className="nfc-card-cross nfc-cross-top-left"></div>
+              <div className="nfc-card-cross nfc-cross-top-right"></div>
+              <div className="nfc-card-cross nfc-cross-bottom-left"></div>
+              <div className="nfc-card-cross nfc-cross-bottom-right"></div>
+              <div className="nfc-front-mark">
+                <div className="nfc-front-emblem">
+                  <span className="nfc-front-emblem-mark"></span>
+                </div>
+                <span className="nfc-front-divider"></span>
+                <div className="nfc-front-copy">
+                  <strong className="nfc-front-title">TENAS GYM</strong>
+                  <span className="nfc-front-mini">Fitness and wellness</span>
+                  <span className="nfc-front-sub">Smart Management System</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="nfc-card-face nfc-card-back">
+              <div className="nfc-card-cross nfc-cross-top-left"></div>
+              <div className="nfc-card-cross nfc-cross-top-right"></div>
+              <div className="nfc-card-cross nfc-cross-bottom-left"></div>
+              <div className="nfc-card-cross nfc-cross-bottom-right"></div>
+              <div className="nfc-back-copy">
+                <div className="nfc-back-header">
+                  <span className="nfc-back-brand">TENAS GYM</span>
+                  <span className="nfc-back-type">Member Pass Card</span>
+                  <span className="nfc-back-type-local">የአባል ካርድ</span>
+                </div>
+                <div className="nfc-name-strip">
+                  <strong className="nfc-name-strip-text">{memberName}</strong>
+                </div>
+                <div className="nfc-back-footer">
+                  <span className="nfc-back-phone">+251-912 196096</span>
+                  <span className="nfc-card-state">Pending Approval</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -145,7 +224,11 @@ function MembershipForm() {
       return;
     }
     const payload = new FormData();
-    payload.append("fullName", form.fullName.value.trim());
+    const fullName = form.fullName.value.trim();
+    const plan = form.plan.value;
+    const membershipType = form.membershipType.value;
+    const selectedPrice = getSelectedPrice();
+    payload.append("fullName", fullName);
     payload.append("phone", form.phone.value.trim());
     payload.append("email", form.email.value.trim());
     payload.append("dob", form.dob.value);
@@ -153,8 +236,8 @@ function MembershipForm() {
     payload.append("emergencyContact", form.emergencyContact.value.trim());
     payload.append("emergencyPhone", form.emergencyPhone.value.trim());
     payload.append("emergencyRelationship", form.emergencyRelationship.value.trim());
-    payload.append("plan", form.plan.value);
-    payload.append("membershipType", form.membershipType.value);
+    payload.append("plan", plan);
+    payload.append("membershipType", membershipType);
     payload.append("startDate", form.startDate.value);
     payload.append("preferredTime", form.preferredTime.value);
     payload.append("training", form.training.value);
@@ -188,6 +271,12 @@ function MembershipForm() {
         }
         throw new Error(msg);
       }
+      setSubmittedCard({
+        fullName,
+        plan,
+        membershipType,
+        price: selectedPrice
+      });
       setSubmitted(true);
     } catch (err) {
       setError(String(err.message || err || "Network error. Make sure you opened the site at http://localhost:3001"));
@@ -466,7 +555,7 @@ function App() {
 
   const [showForm, setShowForm] = React.useState(false);
   return (
-    <div>
+    <div className="page-shell">
       <header className="hero">
         <nav className="nav">
           <a className="logo" href="./index.html">
@@ -503,107 +592,109 @@ function App() {
         </div>
       </header>
 
-      <section id="tiers" className="section pricing">
-        <div className="section-header">
-          <h2>Membership Options</h2>
-          <p>Updated price list and membership choices.</p>
-        </div>
-        {content?.priceList ? (
-          <div className="price-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Period</th>
-                  {content.priceList.columns.map((col) => (
-                    <th key={col}>{col}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {content.priceList.periods.map((period, rowIndex) => (
-                  <tr key={period}>
-                    <td><strong>{period}</strong></td>
-                    {content.priceList.prices[rowIndex].map((price, colIndex) => (
-                      <td key={`${period}-${colIndex}`}>{price}</td>
+      <main className="page-main">
+        <section id="tiers" className="section pricing">
+          <div className="section-header">
+            <h2>Membership Options</h2>
+            <p>Updated price list and membership choices.</p>
+          </div>
+          {content?.priceList ? (
+            <div className="price-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Period</th>
+                    {content.priceList.columns.map((col) => (
+                      <th key={col}>{col}</th>
                     ))}
                   </tr>
+                </thead>
+                <tbody>
+                  {content.priceList.periods.map((period, rowIndex) => (
+                    <tr key={period}>
+                      <td><strong>{period}</strong></td>
+                      {content.priceList.prices[rowIndex].map((price, colIndex) => (
+                        <td key={`${period}-${colIndex}`}>{price}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="pricing-grid">
+              {(content?.membershipTiers || tiers).map((tier) => (
+                <div className="price-card" key={tier.name}>
+                  <h3>{tier.name}</h3>
+                  <p className="price">{tier.price}</p>
+                  <p>{tier.desc}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {content?.dailyPass?.length ? (
+            <div className="price-extra">
+              <h3>Daily Pass</h3>
+              <div className="extra-grid">
+                {content.dailyPass.map((item) => (
+                  <div className="extra-card" key={item.label}>
+                    <p>{item.label}</p>
+                    <p className="price">{item.price}</p>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="pricing-grid">
-            {(content?.membershipTiers || tiers).map((tier) => (
-              <div className="price-card" key={tier.name}>
-                <h3>{tier.name}</h3>
-                <p className="price">{tier.price}</p>
-                <p>{tier.desc}</p>
               </div>
-            ))}
-          </div>
-        )}
-
-        {content?.dailyPass?.length ? (
-          <div className="price-extra">
-            <h3>Daily Pass</h3>
-            <div className="extra-grid">
-              {content.dailyPass.map((item) => (
-                <div className="extra-card" key={item.label}>
-                  <p>{item.label}</p>
-                  <p className="price">{item.price}</p>
-                </div>
-              ))}
             </div>
-          </div>
-        ) : null}
+          ) : null}
 
-        {content?.discounts?.length ? (
-          <div className="price-extra">
-            <h3>Discounts</h3>
-            <div className="extra-grid">
-              {content.discounts.map((item) => (
-                <div className="extra-card" key={item.label}>
-                  <p>{item.label}</p>
-                  <p className="price">{item.value}</p>
-                </div>
-              ))}
+          {content?.discounts?.length ? (
+            <div className="price-extra">
+              <h3>Discounts</h3>
+              <div className="extra-grid">
+                {content.discounts.map((item) => (
+                  <div className="extra-card" key={item.label}>
+                    <p>{item.label}</p>
+                    <p className="price">{item.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
 
-        {content?.priceNote ? <p className="form-note">{content.priceNote}</p> : null}
-      </section>
+          {content?.priceNote ? <p className="form-note">{content.priceNote}</p> : null}
+        </section>
 
-      <section className="section cta-band">
-        <div>
-          <h2>Start Your Trial This Week</h2>
-          <p>Tour the facility, meet a coach, and get your plan built fast.</p>
-        </div>
-        <a className="cta" href="./tour.html">Book a Tour</a>
-      </section>
+        <section className="section cta-band">
+          <div>
+            <h2>Start Your Trial This Week</h2>
+            <p>Tour the facility, meet a coach, and get your plan built fast.</p>
+          </div>
+          <a className="cta" href="./tour.html">Book a Tour</a>
+        </section>
 
-      <section className="section membership-start">
-        <div className="section-header">
-          <h2>Membership Form</h2>
-          <p>Fill out the form below and complete your payment to join.</p>
-        </div>
-        {showForm ? (
-          <div className="membership-card">
-            <MembershipForm />
+        <section className="section membership-start">
+          <div className="section-header">
+            <h2>Membership Form</h2>
+            <p>Fill out the form below and complete your payment to join.</p>
           </div>
-        ) : (
-          <div className="membership-card membership-intro">
-            <p className="form-note">Press the button to start your membership application.</p>
-            <button
-              type="button"
-              className="cta"
-              onClick={() => setShowForm(true)}
-            >
-              Start Membership Form
-            </button>
-          </div>
-        )}
-      </section>
+          {showForm ? (
+            <div className="membership-card">
+              <MembershipForm />
+            </div>
+          ) : (
+            <div className="membership-card membership-intro">
+              <p className="form-note">Press the button to start your membership application.</p>
+              <button
+                type="button"
+                className="cta"
+                onClick={() => setShowForm(true)}
+              >
+                Start Membership Form
+              </button>
+            </div>
+          )}
+        </section>
+      </main>
 
       <Footer />
     </div>

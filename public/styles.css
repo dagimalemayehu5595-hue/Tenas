@@ -17,13 +17,36 @@
   padding: 0;
 }
 
+html,
 body {
   font-family: "Manrope", sans-serif;
-  background: #02050f;
+  background:
+    url("./images/IMG_3759.JPG") center center / cover no-repeat fixed,
+    #02050f;
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
+}
+
+#root,
+.page-shell {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+}
+
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.page-main {
+  flex: 1 0 auto;
 }
 
 body::before {
@@ -31,13 +54,12 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(2, 6, 18, 0.5) 0%, rgba(3, 6, 22, 0.58) 55%, rgba(2, 4, 12, 0.68) 100%),
+    linear-gradient(180deg, rgba(2, 6, 18, 0.4) 0%, rgba(3, 6, 22, 0.48) 55%, rgba(2, 4, 12, 0.62) 100%),
     radial-gradient(circle at 15% 15%, rgba(15, 127, 201, 0.12), transparent 42%),
     radial-gradient(circle at 85% 10%, rgba(12, 36, 70, 0.22), transparent 40%),
-    radial-gradient(circle at 55% 80%, rgba(241, 200, 76, 0.08), transparent 46%),
-    url("./images/IMG_3759.JPG") center center / cover no-repeat;
-  filter: brightness(0.45) saturate(0.85);
-  z-index: -2;
+    radial-gradient(circle at 55% 80%, rgba(241, 200, 76, 0.08), transparent 46%);
+  filter: brightness(0.72) saturate(0.88);
+  z-index: -1;
   pointer-events: none;
 }
 
@@ -45,8 +67,8 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background: linear-gradient(180deg, rgba(1, 3, 10, 0.2), rgba(1, 3, 10, 0.4));
-  z-index: -1;
+  background: linear-gradient(180deg, rgba(1, 3, 10, 0.08), rgba(1, 3, 10, 0.24));
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -165,6 +187,10 @@ a {
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   gap: 40px;
   margin-top: 60px;
+}
+
+.hero-grid > * {
+  min-width: 0;
 }
 
 .hero p {
@@ -978,6 +1004,8 @@ a {
   grid-template-columns: 1.4fr 1fr 1fr 1fr 1.3fr;
   gap: 16px;
   align-items: start;
+  position: relative;
+  z-index: 2;
 }
 
 .footer-brand h3 {
@@ -1169,6 +1197,61 @@ a {
   .location-map {
     min-height: 320px;
   }
+  .membership-success {
+    grid-template-columns: 1fr;
+    padding: 28px 22px;
+  }
+  .membership-success-copy {
+    text-align: center;
+    justify-items: center;
+  }
+  .membership-success-meta {
+    grid-template-columns: 1fr;
+  }
+  .membership-success-actions {
+    justify-content: center;
+  }
+  .nfc-preview-shell {
+    min-height: 380px;
+  }
+  .nfc-card-rotator {
+    width: min(100%, 320px);
+    height: 206px;
+  }
+  .nfc-front-title {
+    font-size: 1.75rem;
+  }
+  .nfc-front-mark {
+    gap: 12px;
+    padding-right: 10px;
+  }
+  .nfc-front-emblem {
+    width: 62px;
+    height: 62px;
+  }
+  .nfc-front-divider {
+    height: 88px;
+  }
+  .nfc-front-mini {
+    font-size: 0.62rem;
+  }
+  .nfc-front-sub {
+    font-size: 0.52rem;
+    letter-spacing: 2px;
+  }
+  .nfc-back-type {
+    font-size: 0.8rem;
+  }
+  .nfc-back-type-local {
+    font-size: 0.66rem;
+  }
+  .nfc-name-strip {
+    min-height: 48px;
+    padding: 8px 18px;
+  }
+  .nfc-name-strip-text {
+    font-size: 0.76rem;
+  }
 }
 
 .tour-card {
@@ -1221,6 +1304,458 @@ a {
   gap: 12px;
 }
 
+.membership-success {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 38px;
+  border-radius: 28px;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  gap: 34px;
+  align-items: center;
+  text-align: left;
+  background:
+    linear-gradient(145deg, rgba(8, 14, 32, 0.92), rgba(5, 10, 24, 0.94)),
+    radial-gradient(circle at top right, rgba(15, 127, 201, 0.18), transparent 42%);
+  border: 1px solid rgba(15, 127, 201, 0.22);
+  box-shadow: 0 30px 64px rgba(0, 0, 0, 0.44), inset 0 0 30px rgba(15, 127, 201, 0.06);
+  overflow: hidden;
+  position: relative;
+}
+
+.membership-success::before {
+  content: "";
+  position: absolute;
+  inset: -30% auto auto -8%;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(15, 127, 201, 0.22), transparent 68%);
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+.membership-success::after {
+  content: "";
+  position: absolute;
+  inset: auto -8% -24% auto;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(241, 200, 76, 0.14), transparent 68%);
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+.membership-success-copy,
+.nfc-preview-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.membership-success-copy {
+  display: grid;
+  gap: 18px;
+}
+
+.membership-success-copy h2 {
+  max-width: 14ch;
+}
+
+.membership-success-copy p {
+  max-width: 54ch;
+  color: rgba(242, 243, 246, 0.82);
+}
+
+.membership-success-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.membership-success-pill {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(8, 14, 30, 0.74);
+  border: 1px solid rgba(15, 127, 201, 0.14);
+}
+
+.membership-success-pill strong {
+  color: var(--accent-2);
+  font-size: 0.74rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.membership-success-pill span {
+  color: var(--text);
+  font-size: 0.98rem;
+}
+
+.membership-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.membership-success-actions .cta,
+.membership-success-actions .secondary {
+  width: auto;
+  min-width: 180px;
+}
+
+.nfc-preview-shell {
+  min-height: 430px;
+  display: grid;
+  place-items: center;
+  perspective: 1400px;
+}
+
+.nfc-orbit-glow {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(15, 127, 201, 0.22), transparent 56%),
+    radial-gradient(circle at 65% 35%, rgba(241, 200, 76, 0.18), transparent 34%);
+  filter: blur(12px);
+  animation: pulseGlow 5.6s ease-in-out infinite;
+}
+
+.nfc-card-rotator {
+  width: 360px;
+  height: 228px;
+  transform-style: preserve-3d;
+  animation: cardRotate 12s ease-in-out infinite;
+  position: relative;
+}
+
+.nfc-card-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 22px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(5, 8, 18, 0.99), rgba(9, 12, 24, 0.99));
+  border: 1px solid rgba(116, 137, 207, 0.18);
+  box-shadow:
+    0 26px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 24px rgba(15, 127, 201, 0.06);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  position: absolute;
+  inset: 0;
+}
+
+.nfc-card-face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(125deg, rgba(255, 255, 255, 0.035), transparent 24%),
+    radial-gradient(circle at 30% 20%, rgba(16, 55, 137, 0.12), transparent 26%),
+    radial-gradient(circle at 70% 74%, rgba(241, 200, 76, 0.08), transparent 22%);
+  pointer-events: none;
+}
+
+.nfc-card-face::after {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+.nfc-card-front {
+  display: grid;
+  place-items: center;
+}
+
+.nfc-card-back {
+  transform: rotateY(180deg);
+}
+
+.nfc-front-mark,
+.nfc-back-copy,
+.nfc-card-cross {
+  position: relative;
+  z-index: 1;
+}
+
+.nfc-card-cross {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  opacity: 0.92;
+}
+
+.nfc-card-cross::before,
+.nfc-card-cross::after {
+  content: "";
+  position: absolute;
+  background: linear-gradient(180deg, rgba(241, 200, 76, 0.8), rgba(90, 63, 10, 0.32));
+  box-shadow: 0 0 10px rgba(241, 200, 76, 0.12);
+}
+
+.nfc-card-cross::before {
+  width: 1px;
+  height: 84px;
+  left: 48px;
+  top: 6px;
+}
+
+.nfc-card-cross::after {
+  width: 84px;
+  height: 1px;
+  left: 6px;
+  top: 48px;
+}
+
+.nfc-cross-top-left {
+  top: 10px;
+  left: 10px;
+}
+
+.nfc-cross-top-right {
+  top: 8px;
+  right: 10px;
+}
+
+.nfc-cross-bottom-left {
+  bottom: 10px;
+  left: 10px;
+}
+
+.nfc-cross-bottom-right {
+  bottom: 8px;
+  right: 10px;
+}
+
+.nfc-cross-top-right::before,
+.nfc-cross-bottom-left::before,
+.nfc-card-back .nfc-cross-top-left::before,
+.nfc-card-back .nfc-cross-bottom-right::before {
+  background: linear-gradient(180deg, rgba(88, 141, 255, 0.8), rgba(24, 54, 118, 0.28));
+  box-shadow: 0 0 10px rgba(88, 141, 255, 0.14);
+}
+
+.nfc-cross-top-right::after,
+.nfc-cross-bottom-left::after,
+.nfc-card-back .nfc-cross-top-left::after,
+.nfc-card-back .nfc-cross-bottom-right::after {
+  background: linear-gradient(90deg, rgba(88, 141, 255, 0.8), rgba(24, 54, 118, 0.28));
+  box-shadow: 0 0 10px rgba(88, 141, 255, 0.14);
+}
+
+.nfc-front-mark {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 18px;
+  align-items: center;
+  justify-items: start;
+  text-align: left;
+  width: 100%;
+  padding: 0 22px 0 12px;
+}
+
+.nfc-front-mini,
+.nfc-front-sub,
+.nfc-back-brand,
+.nfc-back-type,
+.nfc-back-type-local,
+.nfc-back-phone {
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+}
+
+.nfc-front-mini {
+  color: rgba(82, 102, 179, 0.82);
+  font-size: 0.72rem;
+  text-transform: none;
+  letter-spacing: 0.8px;
+}
+
+.nfc-front-title {
+  font-family: "Orbitron", "Anton", sans-serif;
+  font-size: 2.15rem;
+  line-height: 1;
+  color: rgba(227, 183, 64, 0.96);
+  text-shadow: 0 0 18px rgba(241, 200, 76, 0.08);
+}
+
+.nfc-front-sub {
+  color: rgba(227, 183, 64, 0.84);
+  font-size: 0.6rem;
+  letter-spacing: 3px;
+}
+
+.nfc-front-emblem {
+  width: 82px;
+  height: 82px;
+  display: grid;
+  place-items: center;
+}
+
+.nfc-front-emblem-mark {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.nfc-front-emblem-mark::before,
+.nfc-front-emblem-mark::after {
+  content: "";
+  position: absolute;
+}
+
+.nfc-front-emblem-mark::before {
+  inset: 10px 16px 0 16px;
+  border-radius: 999px 999px 8px 8px;
+  background: linear-gradient(180deg, rgba(72, 112, 238, 0.9), rgba(23, 46, 118, 0.5));
+  box-shadow: 0 0 18px rgba(72, 112, 238, 0.18);
+}
+
+.nfc-front-emblem-mark::after {
+  left: 8px;
+  right: 8px;
+  bottom: 4px;
+  height: 22px;
+  border-radius: 30px 30px 8px 8px;
+  background: linear-gradient(180deg, rgba(72, 112, 238, 0.86), rgba(23, 46, 118, 0.32));
+  clip-path: polygon(0 100%, 16% 50%, 38% 30%, 52% 0, 62% 22%, 100% 100%);
+}
+
+.nfc-front-divider {
+  width: 3px;
+  height: 112px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(227, 183, 64, 0.96), rgba(126, 82, 9, 0.42));
+  box-shadow: 0 0 16px rgba(227, 183, 64, 0.12);
+}
+
+.nfc-front-copy {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+
+.nfc-back-copy {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 18px;
+  padding: 12px 22px 16px;
+}
+
+.nfc-back-header {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  justify-items: center;
+  text-align: center;
+}
+
+.nfc-back-brand {
+  font-family: "Orbitron", "Anton", sans-serif;
+  font-size: 1.1rem;
+  color: rgba(227, 183, 64, 0.96);
+}
+
+.nfc-back-type {
+  font-size: 0.92rem;
+  color: rgba(227, 183, 64, 0.84);
+}
+
+.nfc-back-type-local {
+  font-size: 0.74rem;
+  color: rgba(227, 183, 64, 0.72);
+}
+
+.nfc-name-strip {
+  align-self: center;
+  width: 100%;
+  max-width: 100%;
+  justify-self: center;
+  min-height: 56px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(247, 248, 252, 0.98), rgba(226, 231, 237, 0.96));
+  display: grid;
+  place-items: center;
+  padding: 10px 26px;
+  box-shadow: inset 0 0 0 1px rgba(22, 24, 28, 0.08), 0 10px 22px rgba(0, 0, 0, 0.2);
+}
+
+.nfc-name-strip-text {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.1;
+  letter-spacing: 0.8px;
+  color: #11141b;
+  text-transform: uppercase;
+  text-align: center;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nfc-back-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.nfc-back-phone {
+  color: rgba(227, 183, 64, 0.76);
+  font-size: 0.62rem;
+}
+
+.nfc-card-state {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(241, 200, 76, 0.12);
+  border: 1px solid rgba(241, 200, 76, 0.22);
+  color: var(--accent-2);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@keyframes cardRotate {
+  0% {
+    transform: rotateY(-22deg) rotateX(8deg);
+  }
+  22% {
+    transform: rotateY(0deg) rotateX(6deg);
+  }
+  48% {
+    transform: rotateY(180deg) rotateX(4deg);
+  }
+  74% {
+    transform: rotateY(180deg) rotateX(4deg);
+  }
+  100% {
+    transform: rotateY(338deg) rotateX(8deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    transform: scale(0.94);
+    opacity: 0.68;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
 
 .form-error {
   color: #ffb3b3;
@@ -1240,6 +1775,7 @@ a {
 .membership-card {
   max-width: 980px;
   margin: 0 auto;
+  margin-bottom: 44px;
   background: linear-gradient(160deg, rgba(10, 18, 40, 0.85), rgba(6, 12, 28, 0.95));
   border: 1px solid rgba(15, 127, 201, 0.35);
   border-radius: 24px;
@@ -1251,7 +1787,7 @@ a {
 
 .membership-start {
   position: relative;
-  padding: 90px 7vw 110px;
+  padding: 90px 7vw 150px;
 }
 
 .membership-start::before {
@@ -1628,11 +2164,15 @@ a {
 }
 
 .price-table {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
   border: 1px solid rgba(15, 127, 201, 0.2);
   border-radius: 18px;
   background: rgba(8, 14, 30, 0.7);
   box-shadow: inset 0 0 20px rgba(15, 127, 201, 0.12);
+  -webkit-overflow-scrolling: touch;
 }
 
 .price-table table {
