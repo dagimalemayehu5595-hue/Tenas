@@ -41,10 +41,20 @@ function Footer() {
         <div className="partner">
           <img src="./images/samrawit.png" alt="Samrawit Foundation logo" className="partner-logo" />
           <p>Samrawit Foundation</p>
+          <a
+            href="https://samrawitfoundation.org.et"
+            target="_blank"
+            rel="noreferrer"
+            className="partner-link"
+          >
+            samrawitfoundation.org.et
+          </a>
         </div>
       </div>
       <div className="footer-bottom">
-        <p>Tenas Fitness (c) 2026</p>
+        <p>
+          Tenas Fitness (c) <a href="./admin.html" className="footer-year-link">2026</a>
+        </p>
         <p>Designed and developed by Dagim Alemayehu | Contact: 0930105595 / 0917923211</p>
       </div>
     </footer>

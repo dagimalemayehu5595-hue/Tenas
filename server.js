@@ -403,19 +403,18 @@ app.post("/api/tour", async (req, res) => {
     if (!fullName || !phone) {
       return res.status(400).json({ ok: false, error: "Missing full name or phone" });
     }
-    if (!hasTelegramConfig()) {
-      return res.status(500).json({ ok: false, error: "Telegram is not configured" });
-    }
-    const message = "New tour request\nName: " + fullName + "\nPhone: " + phone + "\nTime: " + new Date().toISOString();
-    const url = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage";
-    const tgRes = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
-    });
-    if (!tgRes.ok) {
-      const errText = await tgRes.text();
-      return res.status(502).json({ ok: false, error: errText });
+    if (hasTelegramConfig()) {
+      const message = "New tour request\nName: " + fullName + "\nPhone: " + phone + "\nTime: " + new Date().toISOString();
+      const url = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage";
+      const tgRes = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
+      });
+      if (!tgRes.ok) {
+        const errText = await tgRes.text();
+        return res.status(502).json({ ok: false, error: errText });
+      }
     }
     await saveSubmission({
       id: crypto.randomUUID(),
@@ -591,10 +590,6 @@ app.post(
         return res.status(400).json({ ok: false, error: "Missing required field: " + field });
       }
     }
-    if (!hasTelegramConfig()) {
-      return res.status(500).json({ ok: false, error: "Telegram is not configured" });
-    }
-
     const profilePhoto = req.files?.profilePhoto?.[0];
     const paymentProof = req.files?.paymentProof?.[0];
     if (!profilePhoto) {
@@ -632,38 +627,40 @@ app.post(
       "Submitted: " + new Date().toISOString()
     ];
 
-    const message = messageLines.join("\n");
-    const messageUrl = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage";
-    const tgRes = await fetch(messageUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
-    });
-    if (!tgRes.ok) {
-      const errText = await tgRes.text();
-      return res.status(502).json({ ok: false, error: errText });
-    }
-
-    const sendPhotoToTelegram = async (photo) => {
-      const form = new FormData();
-      form.append("chat_id", TELEGRAM_CHAT_ID);
-      if (typeof Blob !== "undefined") {
-        form.append("photo", new Blob([photo.buffer], { type: photo.mimetype }), photo.originalname || "upload");
-      } else {
-        form.append("photo", photo.buffer, photo.originalname || "upload");
+    if (hasTelegramConfig()) {
+      const message = messageLines.join("\n");
+      const messageUrl = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage";
+      const tgRes = await fetch(messageUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
+      });
+      if (!tgRes.ok) {
+        const errText = await tgRes.text();
+        return res.status(502).json({ ok: false, error: errText });
       }
-      const photoUrl = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendPhoto";
-      const photoRes = await fetch(photoUrl, { method: "POST", body: form });
-      if (!photoRes.ok) {
-        const errText = await photoRes.text();
-        throw new Error(errText);
+
+      const sendPhotoToTelegram = async (photo) => {
+        const form = new FormData();
+        form.append("chat_id", TELEGRAM_CHAT_ID);
+        if (typeof Blob !== "undefined") {
+          form.append("photo", new Blob([photo.buffer], { type: photo.mimetype }), photo.originalname || "upload");
+        } else {
+          form.append("photo", photo.buffer, photo.originalname || "upload");
+        }
+        const photoUrl = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendPhoto";
+        const photoRes = await fetch(photoUrl, { method: "POST", body: form });
+        if (!photoRes.ok) {
+          const errText = await photoRes.text();
+          throw new Error(errText);
+        }
+      };
+
+      await sendPhotoToTelegram(profilePhoto);
+
+      if (paymentProof) {
+        await sendPhotoToTelegram(paymentProof);
       }
-    };
-
-    await sendPhotoToTelegram(profilePhoto);
-
-    if (paymentProof) {
-      await sendPhotoToTelegram(paymentProof);
     }
 
     await saveSubmission({

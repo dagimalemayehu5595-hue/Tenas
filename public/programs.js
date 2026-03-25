@@ -58,6 +58,7 @@ function App() {
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
+            <a href="./gallery.html">Gallery</a>
             <a href="./machines.html">Machines</a>
             <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
@@ -70,7 +71,7 @@ function App() {
           <div>
             <p className="eyebrow">Smart Programming</p>
             <h1>Programs Built For Real Life.</h1>
-            <p className="lead">Choose guided strength, conditioning, or recovery — with a plan you can stick to.</p>
+            <p className="lead">Choose guided strength, conditioning, or recovery - with a plan you can stick to.</p>
             <div className="hero-actions">
               <a className="cta" href="./membership.html">Start Free Trial</a>
               <a className="secondary" href="./coaches.html">Meet Coaches</a>

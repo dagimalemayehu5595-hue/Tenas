@@ -32,6 +32,9 @@ const tech = [
 
 function App() {
   const [content, setContent] = useState(null);
+  const mapQuery = encodeURIComponent("Tenas Fitness Bole Bulbula Kidus gebreal Building Addis Ababa Ethiopia");
+  const phone = content?.contact?.phone || "+251 912196096";
+  const email = content?.contact?.email || "tenasgymandspa@gmail.com";
 
   useEffect(() => {
     let mounted = true;
@@ -61,13 +64,13 @@ function App() {
             <span>Tenas Fitness</span>
           </a>
           <div className="nav-links">
+            <a href="./gallery.html">Gallery</a>
             <a href="./machines.html">Machines</a>
             <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>
           <div className="nav-actions">
-            <a className="cta secondary admin-link" href="./admin.html">Admin</a>
             <a className="cta" href="./membership.html">Join Now</a>
           </div>
         </nav>
@@ -118,6 +121,58 @@ function App() {
               <p>{item.desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="section location-section">
+        <div className="section-header">
+          <p className="eyebrow">Find Us</p>
+          <h2>Train at the right spot</h2>
+          <p className="lead">Easy to locate, simple to visit, and designed to feel like part of the Tenas experience before you even walk in.</p>
+        </div>
+        <div className="location-grid">
+          <div className="location-card">
+            <div className="location-copy">
+              <span className="location-label">Visit</span>
+              <h3>Bole Bulbula, Kidus gebreal Building</h3>
+              <p>Addis Ababa, Ethiopia</p>
+            </div>
+            <div className="location-meta">
+              <div className="location-pill">
+                <strong>Hours</strong>
+                <span>Mon-Sat: {content?.hours?.monSat || "5:00 AM - 9:00 PM"}</span>
+              </div>
+              <div className="location-pill">
+                <strong>Contact</strong>
+                <span>{phone}</span>
+              </div>
+              <div className="location-pill">
+                <strong>Email</strong>
+                <span>{email}</span>
+              </div>
+            </div>
+            <div className="hero-actions">
+              <a
+                className="cta"
+                href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Get Directions
+              </a>
+              <a className="secondary" href="./gallery.html">Open Full Gallery</a>
+              <a className="secondary" href="./tour.html">Book a Tour</a>
+            </div>
+          </div>
+          <div className="map-shell">
+            <iframe
+              className="location-map"
+              title="Tenas Fitness location map"
+              src={`https://www.google.com/maps?q=${mapQuery}&z=15&output=embed`}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
         </div>
       </section>
 

@@ -2,84 +2,140 @@ const { useState } = React;
 
 const machines = [
   {
-    name: "Apex Power Rack",
-    desc: "Heavy-duty rack for squats, bench, and pull-ups.",
-    img: "./images/apex.png",
-    targets: "Quads, glutes, back",
-    bestFor: "Compound strength",
-    tip: "Brace your core before every rep."
-  },
-  {
-    name: "Vector Cable Station",
-    desc: "Dual-stack cables for full-range strength work.",
-    img: "./images/victor-cable.png",
-    targets: "Chest, shoulders, arms",
-    bestFor: "Cables, flyes, rows",
-    tip: "Keep constant tension."
-  },
-  {
-    name: "Storm Air Bike",
-    desc: "Assault-style bike with infinite resistance.",
-    img: "./images/bike.png",
-    targets: "Full body engine",
-    bestFor: "Intervals, warm-ups",
-    tip: "Push and pull together for max output."
-  },
-  {
-    name: "Precision Leg Press",
-    desc: "45-degree sled with smooth rails and oversized footplate.",
-    img: "./images/leg press.png",
-    targets: "Quads, glutes, calves",
-    bestFor: "Strength & volume",
-    tip: "Drive through mid-foot for control."
-  },
-  {
-    name: "Crossover Fly Station",
-    desc: "Adjustable fly station for chest and shoulder isolation.",
-    img: "./images/cross.png",
-    targets: "Chest, shoulders",
-    bestFor: "Flyes, isolation",
-    tip: "Keep elbows soft through the arc."
-  },
-  {
-    name: "Functional Trainer Pro",
-    desc: "Versatile cable unit for full-body training.",
+    name: "Multi-Station Cable Machine",
+    desc: "Functional trainer with adjustable pulleys for upper body, core, and full-body cable work.",
     img: "./images/functional.png",
-    targets: "Full body",
-    bestFor: "Functional strength",
-    tip: "Control the negative on every rep."
+    targets: "Chest, back, arms, shoulders, core",
+    bestFor: "Cable flyes, pulldowns, pushdowns, rows",
+    tip: "Set both pulleys evenly and stay controlled through the full range."
   },
   {
-    name: "Power Rack Elite",
-    desc: "Heavy rack for max strength and safe spotting.",
-    img: "./images/power.png",
-    targets: "Quads, glutes, back",
-    bestFor: "Squats, presses",
-    tip: "Set safety pins before lifting heavy."
+    name: "Seated Chest Press Machine",
+    desc: "Guided chest press machine that lets members load the chest, triceps, and front delts safely.",
+    img: "./images/Seated Chest Press Machine.png",
+    targets: "Chest, triceps, shoulders",
+    bestFor: "Pressing strength with guided mechanics",
+    tip: "Keep your shoulders down and drive straight through the handles."
   },
   {
-    name: "Hydro Row Elite",
-    desc: "Water-resistance rower with smooth glide.",
-    img: "images/hydro.png",
-    targets: "Back, legs, core",
-    bestFor: "Cardio endurance",
-    tip: "Drive with legs, finish with arms."
+    name: "Pec Deck / Chest Fly Machine",
+    desc: "Chest isolation station built for controlled inward pressing and fly movement.",
+    img: "./images/cross.png",
+    targets: "Chest",
+    bestFor: "Chest flyes and inner-chest focus",
+    tip: "Keep a soft bend in the elbows and squeeze at the center."
   },
   {
-    name: "Glide Leg Press",
-    desc: "45-degree sled with wide foot plate.",
+    name: "Seated Calf Raise",
+    desc: "Lower-leg machine designed to load the calves in a seated position for controlled plantar flexion work.",
+    img: "./images/Seated Calf Raise.png",
+    targets: "Calves, soleus, lower legs",
+    bestFor: "Calf strength, ankle support, lower-leg development",
+    tip: "Pause at the top, lower slowly, and move through the full ankle range."
+  },
+  {
+    name: "Inclined Leg Press Machine",
+    desc: "Angled sled machine for heavy lower-body pressing with stable foot placement.",
     img: "./images/leg press.png",
     targets: "Quads, glutes, calves",
-    bestFor: "Hypertrophy blocks",
-    tip: "Control the descent for growth."
+    bestFor: "Leg strength and high-volume lower-body work",
+    tip: "Drive through the mid-foot and avoid locking the knees hard."
   },
   {
-    name: "Pulse Sled Track",
-    desc: "Turf lane for sled pushes and pulls.",
-    img: "images/pulse-sled.png",
-    targets: "Legs, lungs",
-    bestFor: "Conditioning",
-    tip: "Stay low and drive through the floor."
+    name: "Smith Machine",
+    desc: "Barbell-on-rails setup for safer pressing and squat patterns with guided movement.",
+    img: "./images/Smith Machine.png",
+    targets: "Quads, glutes, chest, shoulders",
+    bestFor: "Squats, bench press, shoulder press",
+    tip: "Set the safeties before loading the bar and keep your path stacked."
+  },
+  {
+    name: "Adjustable Benches",
+    desc: "Flat and incline benches used throughout the free-weight area for pressing and dumbbell work.",
+    img: "./images/Adjustable Benches.png",
+    targets: "Chest, shoulders, arms, full body",
+    bestFor: "Dumbbell presses, rows, incline work",
+    tip: "Lock the bench angle first so the setup stays solid through the set."
+  },
+  {
+    name: "Abductors Machine",
+    desc: "Seated lower-body machine designed to strengthen the outer hips through controlled abduction.",
+    img: "./images/Abductors Machine.png",
+    targets: "Glute medius, outer hips, hip stabilizers",
+    bestFor: "Hip strength, lower-body balance, glute activation",
+    tip: "Stay tall in the seat and press outward with control instead of jerking the weight."
+  },
+  {
+    name: "Dumbbell Rack",
+    desc: "Full rack of dumbbells for progressive free-weight training across all major movement patterns.",
+    img: "./images/Dumbbell Rack.png",
+    targets: "Full body",
+    bestFor: "Presses, rows, lunges, carries",
+    tip: "Choose the pair you can control cleanly for every rep."
+  },
+  {
+    name: "Leg Extension Machine",
+    desc: "Seated lower-body machine designed to isolate the quadriceps through controlled knee extension.",
+    img: "./images/Leg Extension Machine.png",
+    targets: "Quadriceps, knees, lower legs",
+    bestFor: "Quad isolation, knee strength, lower-body development",
+    tip: "Extend smoothly, pause at the top, and lower the weight under control."
+  },
+  {
+    name: "Treadmills",
+    desc: "Multiple treadmills positioned near the windows for walking, runs, and conditioning blocks.",
+    img: "./images/Treadmills.png",
+    targets: "Cardio, legs",
+    bestFor: "Walking, running, intervals",
+    tip: "Start with a steady pace before adding speed or incline."
+  },
+  {
+    name: "Elliptical Machines",
+    desc: "Low-impact cross-trainers for steady cardio and recovery-oriented conditioning.",
+    img: "./images/Elliptical Machines.png",
+    targets: "Cardio, legs, glutes",
+    bestFor: "Low-impact endurance work",
+    tip: "Keep the motion smooth and drive evenly through both pedals."
+  },
+  {
+    name: "Stair Climber",
+    desc: "Stepper-style cardio machine for intense leg-focused conditioning.",
+    img: "./images/Stair Climber.png",
+    targets: "Cardio, quads, glutes, calves",
+    bestFor: "High-intensity cardio and leg burn",
+    tip: "Stay upright and let the legs do the work instead of leaning on the rails."
+  },
+  {
+    name: "Punching Bag",
+    desc: "Heavy bag station for boxing drills, conditioning rounds, and athletic movement work.",
+    img: "./images/Punching Bag.png",
+    targets: "Shoulders, core, cardio",
+    bestFor: "Boxing, conditioning, coordination",
+    tip: "Brace your core and rotate through the hips, not just the arms."
+  },
+  {
+    name: "Spin Bikes",
+    desc: "Indoor cycling bikes used for cardio blocks, endurance rides, and class-style sessions.",
+    img: "./images/Spin Bikes.png",
+    targets: "Cardio, legs",
+    bestFor: "Cycling sessions and interval work",
+    tip: "Set the saddle height first so the knees stay comfortable through the ride."
+  },
+  {
+    name: "Preacher Curl Machine",
+    desc: "Arm-focused machine built to isolate the biceps with a supported upper-arm position and strict curl path.",
+    img: "./images/Preacher Curl Machine.png",
+    targets: "Biceps, brachialis, forearms",
+    bestFor: "Biceps isolation, strict curls, arm development",
+    tip: "Keep your upper arms planted on the pad and control the lowering phase."
+  },
+  {
+    name: "Mats / Functional Space",
+    desc: "Open floor area for stretching, mobility drills, bodyweight work, and general movement prep.",
+    img: "./images/Mats  Functional Space.png",
+    targets: "Mobility, core, bodyweight training",
+    bestFor: "Stretching, warm-ups, functional exercise",
+    tip: "Use the space for prep work before loading the main lifts."
   }
 ];
 
@@ -115,6 +171,7 @@ function App() {
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
+            <a href="./gallery.html">Gallery</a>
             <a href="./machines.html">Machines</a>
             <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
@@ -160,7 +217,6 @@ function App() {
                 <img src={machine.img} alt={machine.name} />
                 <div className="info">
                   <h3>{machine.name}</h3>
-                  <p>{machine.desc}</p>
                 </div>
               </article>
             ))}
@@ -198,10 +254,6 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-
-
-
-
 
 
 

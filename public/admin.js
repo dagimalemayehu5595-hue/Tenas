@@ -284,6 +284,7 @@ function AdminApp() {
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
+            <a href="./gallery.html">Gallery</a>
             <a href="./membership.html">Membership</a>
             <a href="./tour.html">Tour</a>
           </div>

@@ -78,6 +78,7 @@ function App() {
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
+            <a href="./gallery.html">Gallery</a>
             <a href="./machines.html">Machines</a>
             <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
