@@ -42,6 +42,7 @@ const OTP_COOLDOWN_MS = 60 * 1000;
 const DATA_DIR = path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "submissions.json");
 const CONTENT_FILE = path.join(DATA_DIR, "content.json");
+const PUBLIC_CONTENT_FILE = path.join(__dirname, "public", "content.json");
 const ADMIN_CONFIG_FILE = path.join(DATA_DIR, "admin.json");
 const adminTokens = new Set();
 const otpStore = new Map();
@@ -116,6 +117,8 @@ const defaultContent = {
     { label: "3 person", value: "5% each" },
     { label: ">= 4 person", value: "7% each" }
   ],
+  referralCodes: [],
+  announcements: [],
   priceNote: "The above price does not include donation for 500.00 to Samrawit Foundation.",
   programs: [
     {
@@ -557,6 +560,7 @@ app.put("/api/admin/content", requireAdmin, async (req, res) => {
     const payload = req.body || {};
     content = payload;
     await fs.writeFile(CONTENT_FILE, JSON.stringify(content, null, 2));
+    await fs.writeFile(PUBLIC_CONTENT_FILE, JSON.stringify(content, null, 2));
     return res.json({ ok: true });
   } catch (err) {
     return res.status(500).json({ ok: false, error: String(err) });
@@ -624,6 +628,9 @@ app.post(
       "Doctor Advised Against Exercise: " + (payload.doctorAdvised || "N/A"),
       "Payment Method: " + payload.paymentMethod,
       "Payment Reference: " + (payload.paymentReference || "N/A"),
+      "Referral Code: " + (payload.referralCode || "N/A"),
+      "Referral Discount: " + (payload.referralDiscountPercent ? payload.referralDiscountPercent + "%" : "N/A"),
+      "Calculated Price: " + (payload.calculatedPrice || "N/A"),
       "Submitted: " + new Date().toISOString()
     ];
 
@@ -676,6 +683,10 @@ app.post(
       training: payload.training || "",
       goals: goalsArr,
       paymentMethod: payload.paymentMethod,
+      paymentReference: payload.paymentReference || "",
+      referralCode: payload.referralCode || "",
+      referralDiscountPercent: payload.referralDiscountPercent || "",
+      calculatedPrice: payload.calculatedPrice || "",
       createdAt: new Date().toISOString()
     });
     return res.json({ ok: true });

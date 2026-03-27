@@ -1,3 +1,50 @@
+const TENAS_THEME_KEY = "tenas_theme_mode";
+
+function getPreferredTheme() {
+  const saved = localStorage.getItem(TENAS_THEME_KEY);
+  if (saved === "light" || saved === "dark") return saved;
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+}
+
+applyTheme(getPreferredTheme());
+
+function useThemeMode() {
+  const [theme, setTheme] = React.useState(() => getPreferredTheme());
+
+  React.useEffect(() => {
+    applyTheme(theme);
+    localStorage.setItem(TENAS_THEME_KEY, theme);
+  }, [theme]);
+
+  const toggleTheme = React.useCallback(() => {
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
+  }, []);
+
+  return { theme, toggleTheme };
+}
+
+function ThemeToggle() {
+  const { theme, toggleTheme } = useThemeMode();
+  const nextTheme = theme === "dark" ? "light" : "dark";
+
+  return (
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={toggleTheme}
+      aria-label={`Switch to ${nextTheme} mode`}
+      title={`Switch to ${nextTheme} mode`}
+    >
+      <span className="theme-toggle-icon" aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
+      <span className="theme-toggle-text">{theme === "dark" ? "Light" : "Dark"}</span>
+    </button>
+  );
+}
+
 function Footer() {
   return (
     <footer className="footer">

@@ -56,11 +56,13 @@ function MembershipForm() {
   const [content, setContent] = React.useState(null);
   const [selectedPlan, setSelectedPlan] = React.useState("");
   const [selectedPeriod, setSelectedPeriod] = React.useState("");
+  const [referralCode, setReferralCode] = React.useState("");
 
   React.useEffect(() => {
     let mounted = true;
-    fetch("./content.json?v=20260325203227")
-      .then((res) => res.json())
+    fetch("/api/content")
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("api"))))
+      .catch(() => fetch("./content.json?v=20260325203227").then((res) => res.json()))
       .then((data) => {
         if (mounted && data) {
           setContent(data.content || data);
@@ -101,11 +103,38 @@ function MembershipForm() {
     return prices?.[rowIndex]?.[colIndex] || "";
   };
 
+  const toPriceNumber = (value) => {
+    const cleaned = String(value || "").replace(/[^0-9.]/g, "");
+    if (!cleaned) return 0;
+    return Number.parseFloat(cleaned) || 0;
+  };
+
+  const formatPriceNumber = (value) =>
+    Number(value || 0).toLocaleString("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    });
+
+  const normalizedReferralCode = referralCode.trim().toLowerCase();
+  const matchedReferral = (content?.referralCodes || []).find((item) => {
+    const code = String(item?.code || "").trim().toLowerCase();
+    return code && code === normalizedReferralCode;
+  }) || null;
+  const referralPercent = matchedReferral ? Math.max(0, Math.min(100, Number(matchedReferral.percent) || 0)) : 0;
+  const selectedPriceValue = getSelectedPrice();
+  const selectedPriceNumber = toPriceNumber(selectedPriceValue);
+  const discountedPriceNumber = referralPercent > 0
+    ? selectedPriceNumber * (1 - referralPercent / 100)
+    : selectedPriceNumber;
+  const discountedPriceLabel = selectedPriceNumber > 0 ? formatPriceNumber(discountedPriceNumber) : "";
+
   if (submitted) {
     const memberName = submittedCard?.fullName || "New Member";
     const memberPlan = submittedCard?.plan || selectedPlan || "Membership";
     const memberPeriod = submittedCard?.membershipType || selectedPeriod || "Pending";
     const memberPrice = submittedCard?.price || "";
+    const memberReferralCode = submittedCard?.referralCode || "";
+    const memberReferralPercent = submittedCard?.referralPercent || 0;
 
     return (
       <div className="tour-confirm membership-success">
@@ -129,6 +158,12 @@ function MembershipForm() {
               <strong>Status</strong>
               <span>Pending Approval</span>
             </div>
+            {memberReferralCode ? (
+              <div className="membership-success-pill">
+                <strong>Referral</strong>
+                <span>{memberReferralCode} ({memberReferralPercent}% off)</span>
+              </div>
+            ) : null}
             {memberPrice ? (
               <div className="membership-success-pill">
                 <strong>Amount</strong>
@@ -227,7 +262,8 @@ function MembershipForm() {
     const fullName = form.fullName.value.trim();
     const plan = form.plan.value;
     const membershipType = form.membershipType.value;
-    const selectedPrice = getSelectedPrice();
+    const selectedPrice = discountedPriceLabel || selectedPriceValue;
+    const appliedReferralCode = matchedReferral ? referralCode.trim() : "";
     payload.append("fullName", fullName);
     payload.append("phone", form.phone.value.trim());
     payload.append("email", form.email.value.trim());
@@ -250,6 +286,9 @@ function MembershipForm() {
     payload.append("doctorAdvised", form.doctorAdvised.value);
     payload.append("paymentMethod", paymentMethod);
     payload.append("paymentReference", form.paymentReference.value.trim());
+    payload.append("referralCode", appliedReferralCode);
+    payload.append("referralDiscountPercent", referralPercent ? String(referralPercent) : "");
+    payload.append("calculatedPrice", selectedPrice);
     payload.append("profilePhoto", photoFile);
     if (paymentMethod === "manual" && file) {
       payload.append("paymentProof", file);
@@ -275,7 +314,9 @@ function MembershipForm() {
         fullName,
         plan,
         membershipType,
-        price: selectedPrice
+        price: selectedPrice,
+        referralCode: appliedReferralCode,
+        referralPercent
       });
       setSubmitted(true);
     } catch (err) {
@@ -383,11 +424,32 @@ function MembershipForm() {
           <div className="price-preview">
             <div>
               <span>Selected price / የተመረጠ ዋጋ</span>
-              <strong>{getSelectedPrice() ? `ETB ${getSelectedPrice()}` : "-"}</strong>
+              <strong>{selectedPriceValue ? `ETB ${discountedPriceLabel || selectedPriceValue}` : "-"}</strong>
             </div>
+            {matchedReferral && selectedPriceNumber > 0 ? (
+              <p className="price-preview-discount">
+                Code <strong>{matchedReferral.code}</strong> applied for {referralPercent}% off.
+                Original price: ETB {selectedPriceValue}
+              </p>
+            ) : null}
+            {!matchedReferral && normalizedReferralCode ? (
+              <p className="price-preview-discount">Referral code not found. Standard pricing will be used.</p>
+            ) : null}
             <p className="form-note">Price is based on the plan and period you choose. / ዋጋው በመረጡት አቅጣጫ እና ጊዜ ይመሰረታል።</p>
           </div>
         ) : null}
+        <div className="form-field">
+          <label htmlFor="referralCode">Referral code / የቅናሽ ኮድ</label>
+          <input
+            id="referralCode"
+            name="referralCodeInput"
+            type="text"
+            value={referralCode}
+            onChange={(e) => setReferralCode(e.target.value)}
+            placeholder="Enter code if you have one"
+            autoComplete="off"
+          />
+        </div>
         <div className="form-inline">
           <label className="form-label">Preferred workout time / የተመረጠ ጊዜ</label>
           <div className="radio-group">
@@ -540,8 +602,9 @@ function App() {
   const [content, setContent] = React.useState(null);
   React.useEffect(() => {
     let mounted = true;
-    fetch("./content.json?v=20260325203227")
-      .then((res) => res.json())
+    fetch("/api/content")
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("api"))))
+      .catch(() => fetch("./content.json?v=20260325203227").then((res) => res.json()))
       .then((data) => {
         if (mounted && data) {
           setContent(data.content || data);
@@ -570,7 +633,10 @@ function App() {
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>
-          <a className="cta" href="./membership.html">Join Now</a>
+          <div className="nav-actions">
+            <ThemeToggle />
+            <a className="cta" href="./membership.html">Join Now</a>
+          </div>
         </nav>
 
         <div className="hero-grid">

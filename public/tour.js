@@ -84,7 +84,10 @@ function App() {
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>
-          <a className="cta" href="./membership.html">Join Now</a>
+          <div className="nav-actions">
+            <ThemeToggle />
+            <a className="cta" href="./membership.html">Join Now</a>
+          </div>
         </nav>
 
         <div className="hero-grid">

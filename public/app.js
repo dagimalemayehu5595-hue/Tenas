@@ -35,11 +35,13 @@ function App() {
   const mapQuery = encodeURIComponent("Tenas Fitness Bole Bulbula Kidus gebreal Building Addis Ababa Ethiopia");
   const phone = content?.contact?.phone || "+251 912196096";
   const email = content?.contact?.email || "tenasgymandspa@gmail.com";
+  const announcements = Array.isArray(content?.announcements) ? content.announcements.filter((item) => item?.title || item?.text) : [];
 
   useEffect(() => {
     let mounted = true;
-    fetch("./content.json?v=20260325203227")
-      .then((res) => res.json())
+    fetch("/api/content")
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("api"))))
+      .catch(() => fetch("./content.json?v=20260325203227").then((res) => res.json()))
       .then((data) => {
         if (mounted && data) {
           setContent(data.content || data);
@@ -71,6 +73,7 @@ function App() {
             <a href="./membership.html">Membership</a>
           </div>
           <div className="nav-actions">
+            <ThemeToggle />
             <a className="cta" href="./membership.html">Join Now</a>
           </div>
         </nav>
@@ -81,7 +84,7 @@ function App() {
             <h1>Train strong. Move fast. Recover smarter.</h1>
             <p className="lead">Black & blue performance gym with premium machines, coaching, and recovery built around your goals.</p>
             <div className="hero-actions">
-              <a className="cta" href="./membership.html">Start Free Trial</a>
+              <a className="cta" href="./membership.html">Join Now</a>
               <a className="secondary" href="./programs.html">View Schedule</a>
             </div>
           </div>
@@ -123,6 +126,46 @@ function App() {
           ))}
         </div>
       </section>
+
+      {announcements.length ? (
+        <section className="section updates-section">
+          <div className="section-header">
+            <p className="eyebrow">New Updates</p>
+            <h2>What&apos;s happening at Tenas</h2>
+            <p className="lead">Announce discounts, events, special sessions, and important gym news in one polished place.</p>
+          </div>
+          <div className="updates-grid">
+            {announcements.slice(0, 3).map((item, index) => (
+              <article
+                className={`update-card ${index === 0 ? "update-card-featured" : ""}`}
+                key={`${item.title || "update"}-${index}`}
+              >
+                <div className="update-media">
+                  {item.img ? <img className="update-image" src={item.img} alt={item.title || "Tenas update"} /> : <div className="update-image update-image-fallback" />}
+                  <div className="update-media-overlay" />
+                  <div className="update-badges">
+                    {item.tag ? <span className="update-tag">{item.tag}</span> : null}
+                    {item.date ? <span className="update-date">{item.date}</span> : null}
+                  </div>
+                </div>
+                <div className="update-copy">
+                  <h3>{item.title || "New announcement"}</h3>
+                  {item.text ? <p>{item.text}</p> : null}
+                  <div className="update-actions">
+                    {item.link ? (
+                      <a className="secondary" href={item.link} target="_blank" rel="noreferrer">
+                        Learn More
+                      </a>
+                    ) : (
+                      <span className="update-status">Live at Tenas</span>
+                    )}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="section location-section">
         <div className="section-header">

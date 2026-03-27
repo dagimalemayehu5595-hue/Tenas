@@ -27,6 +27,8 @@ function AdminApp() {
     priceList: { periods: [], columns: [], prices: [] },
     dailyPass: [],
     discounts: [],
+    referralCodes: [],
+    announcements: [],
     priceNote: "",
     programs: [],
     schedule: [],
@@ -56,6 +58,8 @@ function AdminApp() {
     priceList: src?.priceList || { periods: [], columns: [], prices: [] },
     dailyPass: Array.isArray(src?.dailyPass) ? src.dailyPass : [],
     discounts: Array.isArray(src?.discounts) ? src.discounts : [],
+    referralCodes: Array.isArray(src?.referralCodes) ? src.referralCodes : [],
+    announcements: Array.isArray(src?.announcements) ? src.announcements : [],
     priceNote: src?.priceNote || "",
     programs: Array.isArray(src?.programs) ? src.programs : [],
     schedule: Array.isArray(src?.schedule) ? src.schedule : [],
@@ -288,11 +292,14 @@ function AdminApp() {
             <a href="./membership.html">Membership</a>
             <a href="./tour.html">Tour</a>
           </div>
-          {token ? (
-            <button className="cta" type="button" onClick={handleLogout}>Logout</button>
-          ) : (
-            <span className="cta admin-badge">Admin</span>
-          )}
+          <div className="nav-actions">
+            <ThemeToggle />
+            {token ? (
+              <button className="cta" type="button" onClick={handleLogout}>Logout</button>
+            ) : (
+              <span className="cta admin-badge">Admin</span>
+            )}
+          </div>
         </nav>
 
         <div className="hero-grid">
@@ -470,6 +477,10 @@ function AdminApp() {
                       {item.email ? <p>{item.email}</p> : null}
                       {item.plan ? <p>Plan: {item.plan}</p> : null}
                       {item.membershipType ? <p>Type: {item.membershipType}</p> : null}
+                      {item.calculatedPrice ? <p>Price: ETB {item.calculatedPrice}</p> : null}
+                      {item.referralCode ? (
+                        <p>Referral: {item.referralCode} ({item.referralDiscountPercent || 0}% off)</p>
+                      ) : null}
                       <p className="submission-time">{new Date(item.createdAt).toLocaleString()}</p>
                       <div className="submission-actions">
                         <label>
@@ -802,6 +813,192 @@ function AdminApp() {
                     />
                   </label>
                 </div>
+              </div>
+
+              <div className="editor-list">
+                <div className="editor-row">
+                  <h3>Referral Codes</h3>
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() =>
+                      setContentDraft({
+                        ...contentDraft,
+                        referralCodes: [...contentDraft.referralCodes, { code: "", percent: "" }]
+                      })
+                    }
+                  >
+                    Add Referral Code
+                  </button>
+                </div>
+                {contentDraft.referralCodes.map((item, index) => (
+                  <div className="editor-item" key={`referral-${index}`}>
+                    <label>
+                      Referral Code
+                      <input
+                        type="text"
+                        value={item.code || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.referralCodes];
+                          next[index] = { ...next[index], code: e.target.value };
+                          setContentDraft({ ...contentDraft, referralCodes: next });
+                        }}
+                        placeholder="dagi"
+                      />
+                    </label>
+                    <label>
+                      Discount Percent
+                      <input
+                        type="number"
+                        min="1"
+                        max="100"
+                        value={item.percent || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.referralCodes];
+                          next[index] = { ...next[index], percent: e.target.value };
+                          setContentDraft({ ...contentDraft, referralCodes: next });
+                        }}
+                        placeholder="25"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => {
+                        const next = contentDraft.referralCodes.filter((_, i) => i !== index);
+                        setContentDraft({ ...contentDraft, referralCodes: next });
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="editor-list">
+                <div className="editor-row">
+                  <h3>Announcements / Updates</h3>
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() =>
+                      setContentDraft({
+                        ...contentDraft,
+                        announcements: [
+                          ...contentDraft.announcements,
+                          { tag: "", title: "", text: "", date: "", link: "", img: "" }
+                        ]
+                      })
+                    }
+                  >
+                    Add Announcement
+                  </button>
+                </div>
+                {contentDraft.announcements.map((item, index) => (
+                  <div className="editor-item" key={`announcement-${index}`}>
+                    <label>
+                      Tag
+                      <input
+                        type="text"
+                        value={item.tag || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.announcements];
+                          next[index] = { ...next[index], tag: e.target.value };
+                          setContentDraft({ ...contentDraft, announcements: next });
+                        }}
+                        placeholder="Discount"
+                      />
+                    </label>
+                    <label>
+                      Title
+                      <input
+                        type="text"
+                        value={item.title || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.announcements];
+                          next[index] = { ...next[index], title: e.target.value };
+                          setContentDraft({ ...contentDraft, announcements: next });
+                        }}
+                        placeholder="Ramadan offer this week"
+                      />
+                    </label>
+                    <label>
+                      Text
+                      <textarea
+                        rows="3"
+                        value={item.text || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.announcements];
+                          next[index] = { ...next[index], text: e.target.value };
+                          setContentDraft({ ...contentDraft, announcements: next });
+                        }}
+                        placeholder="Share the event, offer, or important update."
+                      />
+                    </label>
+                    <label>
+                      Date Label
+                      <input
+                        type="text"
+                        value={item.date || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.announcements];
+                          next[index] = { ...next[index], date: e.target.value };
+                          setContentDraft({ ...contentDraft, announcements: next });
+                        }}
+                        placeholder="This weekend"
+                      />
+                    </label>
+                    <label>
+                      Link
+                      <input
+                        type="text"
+                        value={item.link || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.announcements];
+                          next[index] = { ...next[index], link: e.target.value };
+                          setContentDraft({ ...contentDraft, announcements: next });
+                        }}
+                        placeholder="https://..."
+                      />
+                    </label>
+                    <label>
+                      Image Path
+                      <input
+                        type="text"
+                        value={item.img || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.announcements];
+                          next[index] = { ...next[index], img: e.target.value };
+                          setContentDraft({ ...contentDraft, announcements: next });
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Upload Image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleImageUpload(e.target.files?.[0], (path) => {
+                            const next = [...contentDraft.announcements];
+                            next[index] = { ...next[index], img: path };
+                            setContentDraft({ ...contentDraft, announcements: next });
+                          })
+                        }
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => {
+                        const next = contentDraft.announcements.filter((_, i) => i !== index);
+                        setContentDraft({ ...contentDraft, announcements: next });
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
               </div>
 
               <div className="editor-list">
