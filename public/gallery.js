@@ -1,15 +1,15 @@
 const mediaShots = [
   {
-    title: "Arrival",
-    desc: "A first look at the training floor and machine layout.",
-    img: "./images/IMG_3758.JPG",
-    tone: "Space"
+    title: "Signature Wall",
+    desc: "A strong first impression that captures the mood and identity of the gym.",
+    img: "./images/IMG_3759.JPG",
+    tone: "Mood"
   },
   {
-    title: "Shadow Wall",
-    desc: "A darker, more focused view of the strength side of the gym.",
-    img: "./images/IMG_3759.JPG",
-    tone: "Strength"
+    title: "Training Floor",
+    desc: "A wider view that helps visitors understand the room layout before they visit.",
+    img: "./images/IMG_3762.JPG",
+    tone: "Space"
   },
   {
     title: "Machine Rhythm",
@@ -18,64 +18,10 @@ const mediaShots = [
     tone: "Equipment"
   },
   {
-    title: "Deep Floor",
-    desc: "Another angle showing the machines, depth, and visual identity.",
-    img: "./images/IMG_3761.JPG",
-    tone: "Vibe"
-  },
-  {
-    title: "Open Space",
-    desc: "A wider floor shot that helps visitors understand the space.",
-    img: "./images/IMG_3762.JPG",
-    tone: "Space"
-  },
-  {
-    title: "Precision Line",
-    desc: "Clean machine lines and a premium studio atmosphere.",
-    img: "./images/IMG_3763.JPG",
-    tone: "Equipment"
-  },
-  {
-    title: "Low Light",
-    desc: "A moodier angle showing the darker side of the training floor.",
-    img: "./images/IMG_3764.JPG",
-    tone: "Mood"
-  },
-  {
-    title: "Perspective",
-    desc: "A strong perspective shot that highlights the room design.",
-    img: "./images/IMG_3765.JPG",
-    tone: "Design"
-  },
-  {
-    title: "Power Zone",
-    desc: "A wide look at multiple stations working together in one space.",
-    img: "./images/IMG_3766.JPG",
-    tone: "Space"
-  },
-  {
-    title: "Walkthrough",
-    desc: "Another broad view of the floor for visitors previewing the gym.",
-    img: "./images/IMG_3767.JPG",
-    tone: "Tour"
-  },
-  {
-    title: "Window Side",
-    desc: "A bright angle softened to keep the gallery cohesive.",
-    img: "./images/IMG_3769.JPG",
-    tone: "Light"
-  },
-  {
-    title: "Machine Detail",
-    desc: "A detailed machine shot for people who look closely at equipment.",
+    title: "Detail Focus",
+    desc: "A closer machine detail for visitors who care about equipment quality.",
     img: "./images/IMG_3770.JPG",
     tone: "Detail"
-  },
-  {
-    title: "Corner View",
-    desc: "A wider corner shot showing more of the room and circulation.",
-    img: "./images/IMG_3771.JPG",
-    tone: "Space"
   },
   {
     title: "Free Weight Side",
@@ -84,32 +30,8 @@ const mediaShots = [
     tone: "Weights"
   },
   {
-    title: "Closer Look",
-    desc: "A closer equipment angle for visitors who want detail.",
-    img: "./images/IMG_3773.JPG",
-    tone: "Equipment"
-  },
-  {
-    title: "Depth Frame",
-    desc: "A floor view that shows depth, finish, and overall atmosphere.",
-    img: "./images/IMG_3774.JPG",
-    tone: "Vibe"
-  },
-  {
-    title: "Premium Floor",
-    desc: "A clean wide shot that helps the gym feel open and premium.",
-    img: "./images/IMG_3775.JPG",
-    tone: "Premium"
-  },
-  {
-    title: "Entry Light",
-    desc: "A brighter entry-side angle now softened for visual consistency.",
-    img: "./images/IMG_3776.JPG",
-    tone: "Light"
-  },
-  {
-    title: "Final Angle",
-    desc: "A final bright floor shot balanced to match the darker gallery mood.",
+    title: "Open Finish",
+    desc: "A brighter final frame that shows the gym feeling open, clean, and ready.",
     img: "./images/IMG_3777.JPG",
     tone: "Finish"
   }
@@ -123,7 +45,7 @@ const vibePoints = [
 ];
 
 const galleryStats = [
-  { value: "19", label: "real gym shots" },
+  { value: "5", label: "curated gym shots" },
   { value: "100%", label: "actual Tenas space" },
   { value: "1", label: "clear visual story" }
 ];
@@ -147,6 +69,7 @@ function App() {
           <div className="nav-links">
             <a href="./index.html">Home</a>
             <a href="./gallery.html">Gallery</a>
+            <a href="./shop.html">Shop</a>
             <a href="./machines.html">Machines</a>
             <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>

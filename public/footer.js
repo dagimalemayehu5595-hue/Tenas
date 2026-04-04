@@ -85,17 +85,24 @@ function Footer() {
       </div>
       <div className="footer-block footer-partner">
         <h4>Partners</h4>
-        <div className="partner">
-          <img src="./images/samrawit.png" alt="Samrawit Foundation logo" className="partner-logo" />
-          <p>Samrawit Foundation</p>
-          <a
-            href="https://samrawitfoundation.org.et"
-            target="_blank"
-            rel="noreferrer"
-            className="partner-link"
-          >
-            samrawitfoundation.org.et
-          </a>
+        <div className="footer-partner-grid">
+          <div className="partner">
+            <img src="./images/samrawit.png" alt="Samrawit Foundation logo" className="partner-logo" />
+            <p>Samrawit Foundation</p>
+            <a
+              href="https://samrawitfoundation.org.et"
+              target="_blank"
+              rel="noreferrer"
+              className="partner-link"
+            >
+              Visit Website
+            </a>
+          </div>
+          <div className="partner">
+            <img src="./images/spa.PNG" alt="Tenas Day Spa Therapy and Wellness logo" className="partner-logo" />
+            <p>Tenas Day Spa</p>
+            <span className="partner-link">Therapy and Wellness</span>
+          </div>
         </div>
       </div>
       <div className="footer-bottom">

@@ -106,7 +106,74 @@
       "percent": "25"
     }
   ],
-  "announcements": [],
+  "announcements": [
+    {
+      "tag": "Discount ",
+      "title": "Fasika ",
+      "text": "Don't miss it ",
+      "date": "This weekend ",
+      "link": "",
+      "img": ""
+    }
+  ],
+  "shopProducts": [
+    {
+      "category": "Protein",
+      "name": "Whey Protein",
+      "price": "ETB 8,900",
+      "desc": "Everyday whey support for recovery, lean muscle maintenance, and easy protein intake after training.",
+      "tag": "Best Seller",
+      "img": "./images/whey protein.avif"
+    },
+    {
+      "category": "Protein",
+      "name": "Plant-Based Protein",
+      "price": "ETB 9,400",
+      "desc": "A dairy-free protein option for members who want lighter digestion with daily protein support.",
+      "tag": "Plant Option",
+      "img": "./images/Plant-Based Protein.webp"
+    },
+    {
+      "category": "Mass",
+      "name": "Mass Gainer",
+      "price": "ETB 7,800",
+      "desc": "High-calorie shake support for members focused on size, weight gain, and fuller recovery nutrition.",
+      "tag": "Size Support",
+      "img": "./images/Mass Gainer.jpg"
+    },
+    {
+      "category": "Energy",
+      "name": "Pre Workout Engine",
+      "price": "ETB 4,600",
+      "desc": "A fast pre-training lift for energy, focus, and stronger gym sessions when you need extra drive.",
+      "tag": "Before Training",
+      "img": "./images/Pre Workout.jpg"
+    },
+    {
+      "category": "Hydration",
+      "name": "Electrolyte Powder",
+      "price": "ETB 2,400",
+      "desc": "Hydration support for long sessions, hot training days, and faster recovery after sweating hard.",
+      "tag": "Hydration",
+      "img": "./images/Electrolyte Powder.avif"
+    },
+    {
+      "category": "Wellness",
+      "name": "Omega-3 Fish Oil",
+      "price": "ETB 2,800",
+      "desc": "A simple daily wellness add-on for joint support, balance, and long-term recovery habits.",
+      "tag": "Daily Essential",
+      "img": "./images/Omega-3 (Fish Oil).avif"
+    },
+    {
+      "category": "Vitamins",
+      "name": "Multivitamins & Minerals",
+      "price": "ETB 3,200",
+      "desc": "One-daily vitamin support to help cover nutrition gaps and support energy, bones, and daily health.",
+      "tag": "Daily Formula",
+      "img": "./images/Multivitamins.jpg"
+    }
+  ],
   "priceNote": "The 500.00 Birr pass card membership fee will be donated to the Samrawit Foundation Charitable Endowment.",
   "programs": [
     {

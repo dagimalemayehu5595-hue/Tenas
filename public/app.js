@@ -67,6 +67,7 @@ function App() {
           </a>
           <div className="nav-links">
             <a href="./gallery.html">Gallery</a>
+            <a href="./shop.html">Shop</a>
             <a href="./machines.html">Machines</a>
             <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
@@ -203,6 +204,7 @@ function App() {
               >
                 Get Directions
               </a>
+              <a className="secondary" href="./shop.html">Open Shop</a>
               <a className="secondary" href="./gallery.html">Open Full Gallery</a>
               <a className="secondary" href="./tour.html">Book a Tour</a>
             </div>

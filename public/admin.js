@@ -29,6 +29,7 @@ function AdminApp() {
     discounts: [],
     referralCodes: [],
     announcements: [],
+    shopProducts: [],
     priceNote: "",
     programs: [],
     schedule: [],
@@ -60,6 +61,7 @@ function AdminApp() {
     discounts: Array.isArray(src?.discounts) ? src.discounts : [],
     referralCodes: Array.isArray(src?.referralCodes) ? src.referralCodes : [],
     announcements: Array.isArray(src?.announcements) ? src.announcements : [],
+    shopProducts: Array.isArray(src?.shopProducts) ? src.shopProducts : [],
     priceNote: src?.priceNote || "",
     programs: Array.isArray(src?.programs) ? src.programs : [],
     schedule: Array.isArray(src?.schedule) ? src.schedule : [],
@@ -289,6 +291,7 @@ function AdminApp() {
           <div className="nav-links">
             <a href="./">Home</a>
             <a href="./gallery.html">Gallery</a>
+            <a href="./shop.html">Shop</a>
             <a href="./membership.html">Membership</a>
             <a href="./tour.html">Tour</a>
           </div>
@@ -477,10 +480,12 @@ function AdminApp() {
                       {item.email ? <p>{item.email}</p> : null}
                       {item.plan ? <p>Plan: {item.plan}</p> : null}
                       {item.membershipType ? <p>Type: {item.membershipType}</p> : null}
+                      {item.items?.length ? <p>Items: {item.items.map((entry) => `${entry.name} x${entry.quantity || 1}`).join(", ")}</p> : null}
                       {item.calculatedPrice ? <p>Price: ETB {item.calculatedPrice}</p> : null}
                       {item.referralCode ? (
                         <p>Referral: {item.referralCode} ({item.referralDiscountPercent || 0}% off)</p>
                       ) : null}
+                      {item.notes ? <p>Notes: {item.notes}</p> : null}
                       <p className="submission-time">{new Date(item.createdAt).toLocaleString()}</p>
                       <div className="submission-actions">
                         <label>
@@ -993,6 +998,132 @@ function AdminApp() {
                       onClick={() => {
                         const next = contentDraft.announcements.filter((_, i) => i !== index);
                         setContentDraft({ ...contentDraft, announcements: next });
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="editor-list">
+                <div className="editor-row">
+                  <h3>Shop Products</h3>
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() =>
+                      setContentDraft({
+                        ...contentDraft,
+                        shopProducts: [
+                          ...contentDraft.shopProducts,
+                          { category: "", name: "", price: "", desc: "", tag: "", img: "" }
+                        ]
+                      })
+                    }
+                  >
+                    Add Product
+                  </button>
+                </div>
+                {contentDraft.shopProducts.map((item, index) => (
+                  <div className="editor-item" key={`shop-${index}`}>
+                    <label>
+                      Category
+                      <input
+                        type="text"
+                        value={item.category || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.shopProducts];
+                          next[index] = { ...next[index], category: e.target.value };
+                          setContentDraft({ ...contentDraft, shopProducts: next });
+                        }}
+                        placeholder="Protein"
+                      />
+                    </label>
+                    <label>
+                      Name
+                      <input
+                        type="text"
+                        value={item.name || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.shopProducts];
+                          next[index] = { ...next[index], name: e.target.value };
+                          setContentDraft({ ...contentDraft, shopProducts: next });
+                        }}
+                        placeholder="Whey Isolate"
+                      />
+                    </label>
+                    <label>
+                      Price
+                      <input
+                        type="text"
+                        value={item.price || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.shopProducts];
+                          next[index] = { ...next[index], price: e.target.value };
+                          setContentDraft({ ...contentDraft, shopProducts: next });
+                        }}
+                        placeholder="ETB 8,500"
+                      />
+                    </label>
+                    <label>
+                      Description
+                      <textarea
+                        rows="3"
+                        value={item.desc || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.shopProducts];
+                          next[index] = { ...next[index], desc: e.target.value };
+                          setContentDraft({ ...contentDraft, shopProducts: next });
+                        }}
+                        placeholder="Clean recovery support for strength and lean muscle."
+                      />
+                    </label>
+                    <label>
+                      Tag
+                      <input
+                        type="text"
+                        value={item.tag || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.shopProducts];
+                          next[index] = { ...next[index], tag: e.target.value };
+                          setContentDraft({ ...contentDraft, shopProducts: next });
+                        }}
+                        placeholder="Best Seller"
+                      />
+                    </label>
+                    <label>
+                      Image Path
+                      <input
+                        type="text"
+                        value={item.img || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.shopProducts];
+                          next[index] = { ...next[index], img: e.target.value };
+                          setContentDraft({ ...contentDraft, shopProducts: next });
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Upload Image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleImageUpload(e.target.files?.[0], (path) => {
+                            const next = [...contentDraft.shopProducts];
+                            next[index] = { ...next[index], img: path };
+                            setContentDraft({ ...contentDraft, shopProducts: next });
+                          })
+                        }
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => {
+                        const next = contentDraft.shopProducts.filter((_, i) => i !== index);
+                        setContentDraft({ ...contentDraft, shopProducts: next });
                       }}
                     >
                       Remove

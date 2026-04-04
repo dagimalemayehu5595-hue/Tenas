@@ -119,6 +119,40 @@ const defaultContent = {
   ],
   referralCodes: [],
   announcements: [],
+  shopProducts: [
+    {
+      category: "Protein",
+      name: "Whey Isolate",
+      price: "ETB 8,500",
+      desc: "Fast-digesting post-workout protein to support lean muscle recovery and daily intake.",
+      tag: "Best Seller",
+      img: ""
+    },
+    {
+      category: "Creatine",
+      name: "Creatine Monohydrate",
+      price: "ETB 3,200",
+      desc: "A simple strength staple for power output, performance, and steady progress.",
+      tag: "Strength Essential",
+      img: ""
+    },
+    {
+      category: "Recovery",
+      name: "BCAA + Electrolytes",
+      price: "ETB 2,900",
+      desc: "Hydration and recovery support for long sessions, hot days, and high-volume training.",
+      tag: "Recovery Stack",
+      img: ""
+    },
+    {
+      category: "Energy",
+      name: "Pre-Workout Blend",
+      price: "ETB 4,400",
+      desc: "A focus and energy boost before demanding sessions without needing to leave the gym.",
+      tag: "Before Training",
+      img: ""
+    }
+  ],
   priceNote: "The above price does not include donation for 500.00 to Samrawit Foundation.",
   programs: [
     {
@@ -381,6 +415,10 @@ app.get(["/coaches", "/coaches.html"], (req, res) => {
   res.sendFile(path.join(__dirname, "public", "coaches.html"));
 });
 
+app.get(["/shop", "/shop.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "shop.html"));
+});
+
 app.get(["/machines", "/machines.html"], (req, res) => {
   res.sendFile(path.join(__dirname, "public", "machines.html"));
 });
@@ -424,6 +462,64 @@ app.post("/api/tour", async (req, res) => {
       type: "tour",
       fullName,
       phone,
+      createdAt: new Date().toISOString()
+    });
+    return res.json({ ok: true });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: String(err) });
+  }
+});
+
+app.post("/api/shop-order", async (req, res) => {
+  try {
+    const payload = req.body || {};
+    const fullName = String(payload.fullName || "").trim();
+    const phone = String(payload.phone || "").trim();
+    const notes = String(payload.notes || "").trim();
+    const items = Array.isArray(payload.items) ? payload.items.filter((item) => item?.name) : [];
+
+    if (!fullName || !phone) {
+      return res.status(400).json({ ok: false, error: "Missing full name or phone" });
+    }
+    if (!items.length) {
+      return res.status(400).json({ ok: false, error: "Please select at least one item" });
+    }
+
+    const itemLines = items.map((item) => {
+      const qty = Math.max(1, Number(item.quantity) || 1);
+      return `${item.name} x${qty}${item.price ? ` (${item.price})` : ""}`;
+    });
+
+    if (hasTelegramConfig()) {
+      const message = [
+        "New shop order",
+        "Name: " + fullName,
+        "Phone: " + phone,
+        "Items:",
+        ...itemLines.map((line) => "- " + line),
+        "Notes: " + (notes || "N/A"),
+        "Submitted: " + new Date().toISOString()
+      ].join("\n");
+
+      const url = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage";
+      const tgRes = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
+      });
+      if (!tgRes.ok) {
+        const errText = await tgRes.text();
+        return res.status(502).json({ ok: false, error: errText });
+      }
+    }
+
+    await saveSubmission({
+      id: crypto.randomUUID(),
+      type: "shop",
+      fullName,
+      phone,
+      items,
+      notes,
       createdAt: new Date().toISOString()
     });
     return res.json({ ok: true });
