@@ -44,7 +44,9 @@ const DATA_FILE = path.join(DATA_DIR, "submissions.json");
 const CONTENT_FILE = path.join(DATA_DIR, "content.json");
 const PUBLIC_CONTENT_FILE = path.join(__dirname, "public", "content.json");
 const ADMIN_CONFIG_FILE = path.join(DATA_DIR, "admin.json");
+const MEMBERS_FILE = path.join(DATA_DIR, "members.json");
 const adminTokens = new Set();
+const memberTokens = new Map();
 const otpStore = new Map();
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
@@ -56,6 +58,7 @@ app.use(express.json({ limit: "32mb" }));
 let submissions = [];
 let content = null;
 let adminAuth = null;
+let members = [];
 const ensureDataFile = async () => {
   try {
     await fs.mkdir(DATA_DIR, { recursive: true });
@@ -67,9 +70,21 @@ const ensureDataFile = async () => {
   }
 };
 
+const ensureMembersFile = async () => {
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    const raw = await fs.readFile(MEMBERS_FILE, "utf8");
+    members = JSON.parse(raw || "[]");
+    if (!Array.isArray(members)) members = [];
+  } catch (err) {
+    members = [];
+    await fs.writeFile(MEMBERS_FILE, JSON.stringify(members, null, 2));
+  }
+};
+
 const defaultContent = {
   hours: {
-    monSat: "11:00 AM - 4:00 AM",
+    monSat: "05:00 PM - 09:00 AM",
     sunday: "Half day"
   },
   contact: {
@@ -117,7 +132,7 @@ const defaultContent = {
     { label: "3 person", value: "5% each" },
     { label: ">= 4 person", value: "7% each" }
   ],
-  referralCodes: [],
+  referralCodes: [], 
   announcements: [],
   shopProducts: [
     {
@@ -402,6 +417,58 @@ const saveSubmission = async (entry) => {
   await fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2));
 };
 
+const saveMembers = async () => {
+  await fs.writeFile(MEMBERS_FILE, JSON.stringify(members, null, 2));
+};
+
+const getMemberPublic = (member) => {
+  if (!member) return null;
+  return {
+    id: member.id,
+    email: member.email,
+    fullName: member.fullName || "",
+    phone: member.phone || "",
+    membership: member.membership || null,
+    createdAt: member.createdAt || null
+  };
+};
+
+const syncMemberMembershipFromSubmission = (member, submission) => {
+  if (!member || !submission || submission.type !== "membership") return;
+  member.fullName = submission.fullName || member.fullName || "";
+  member.phone = submission.phone || member.phone || "";
+  member.membership = {
+    submissionId: submission.id,
+    fullName: submission.fullName || member.fullName || "",
+    email: submission.email || member.email,
+    phone: submission.phone || member.phone || "",
+    plan: submission.plan || "",
+    membershipType: submission.membershipType || "",
+    startDate: submission.startDate || "",
+    paymentMethod: submission.paymentMethod || "",
+    paymentReference: submission.paymentReference || "",
+    referralCode: submission.referralCode || "",
+    referralPercent: Number(submission.referralDiscountPercent || 0) || 0,
+    calculatedPrice: submission.calculatedPrice || "",
+    status: submission.status || "pending",
+    notes: submission.notes || "",
+    createdAt: submission.createdAt || new Date().toISOString()
+  };
+};
+
+const requireMember = (req, res, next) => {
+  const auth = req.headers.authorization || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  const memberId = token ? memberTokens.get(token) : "";
+  const member = memberId ? members.find((item) => item.id === memberId) : null;
+  if (!token || !member) {
+    return res.status(401).json({ ok: false, error: "Unauthorized" });
+  }
+  req.member = member;
+  req.memberToken = token;
+  return next();
+};
+
 const requireAdmin = (req, res, next) => {
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
@@ -424,7 +491,7 @@ app.get(["/machines", "/machines.html"], (req, res) => {
 });
 
 app.get(["/programs", "/programs.html"], (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "programs.html"));
+  res.redirect(302, "/");
 });
 
 app.get(["/membership", "/membership.html"], (req, res) => {
@@ -526,6 +593,90 @@ app.post("/api/shop-order", async (req, res) => {
   } catch (err) {
     return res.status(500).json({ ok: false, error: String(err) });
   }
+});
+
+app.post("/api/member/signup", async (req, res) => {
+  try {
+    const email = normalizeEmail(req.body?.email);
+    const password = String(req.body?.password || "");
+    const fullName = String(req.body?.fullName || "").trim();
+    const phone = String(req.body?.phone || "").trim();
+    if (!email || !password || !fullName) {
+      return res.status(400).json({ ok: false, error: "Full name, email, and password are required" });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ ok: false, error: "Password must be at least 6 characters" });
+    }
+    if (members.some((item) => item.email === email)) {
+      return res.status(409).json({ ok: false, error: "An account already exists for this email" });
+    }
+    const passwordAuth = hashPassword(password);
+    const member = {
+      id: crypto.randomUUID(),
+      email,
+      fullName,
+      phone,
+      passwordSalt: passwordAuth.salt,
+      passwordHash: passwordAuth.hash,
+      membership: null,
+      createdAt: new Date().toISOString()
+    };
+    const previousMembership = submissions.find((item) => item.type === "membership" && normalizeEmail(item.email) === email);
+    if (previousMembership) {
+      previousMembership.memberId = member.id;
+      syncMemberMembershipFromSubmission(member, previousMembership);
+      await fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2));
+    }
+    members.unshift(member);
+    await saveMembers();
+    const token = crypto.randomBytes(24).toString("hex");
+    memberTokens.set(token, member.id);
+    return res.json({ ok: true, token, member: getMemberPublic(member) });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: String(err) });
+  }
+});
+
+app.post("/api/member/login", async (req, res) => {
+  try {
+    const email = normalizeEmail(req.body?.email);
+    const password = String(req.body?.password || "");
+    const member = members.find((item) => item.email === email);
+    const auth = member ? { salt: member.passwordSalt, hash: member.passwordHash } : null;
+    if (!member || !verifyPassword(password, auth)) {
+      return res.status(401).json({ ok: false, error: "Invalid email or password" });
+    }
+    if (!member.membership) {
+      const previousMembership = submissions.find((item) => item.type === "membership" && normalizeEmail(item.email) === email);
+      if (previousMembership) {
+        previousMembership.memberId = member.id;
+        syncMemberMembershipFromSubmission(member, previousMembership);
+        await fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2));
+        await saveMembers();
+      }
+    }
+    const token = crypto.randomBytes(24).toString("hex");
+    memberTokens.set(token, member.id);
+    return res.json({ ok: true, token, member: getMemberPublic(member) });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: String(err) });
+  }
+});
+
+app.post("/api/member/logout", requireMember, (req, res) => {
+  memberTokens.delete(req.memberToken);
+  return res.json({ ok: true });
+});
+
+app.get("/api/member/me", requireMember, async (req, res) => {
+  const latestMembership = submissions.find((item) => item.type === "membership" && (item.memberId === req.member.id || normalizeEmail(item.email) === req.member.email));
+  if (latestMembership) {
+    latestMembership.memberId = req.member.id;
+    syncMemberMembershipFromSubmission(req.member, latestMembership);
+    await saveMembers();
+    await fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2));
+  }
+  return res.json({ ok: true, member: getMemberPublic(req.member) });
 });
 
 app.post("/api/admin/login", (req, res) => {
@@ -632,6 +783,13 @@ app.patch("/api/admin/submissions/:id", requireAdmin, async (req, res) => {
     status: updates.status ?? submissions[idx].status ?? "new",
     notes: updates.notes ?? submissions[idx].notes ?? ""
   };
+  if (submissions[idx].type === "membership" && submissions[idx].memberId) {
+    const member = members.find((item) => item.id === submissions[idx].memberId);
+    if (member) {
+      syncMemberMembershipFromSubmission(member, submissions[idx]);
+      await saveMembers();
+    }
+  }
   await fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2));
   return res.json({ ok: true, submission: submissions[idx] });
 });
@@ -684,6 +842,18 @@ app.post(
   async (req, res) => {
   try {
     const payload = req.body || {};
+    const auth = req.headers.authorization || "";
+    const memberToken = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+    const memberId = memberToken ? memberTokens.get(memberToken) : "";
+    const member = memberId ? members.find((item) => item.id === memberId) : null;
+    const normalizedEmail = normalizeEmail(payload.email);
+    if (member) {
+      if (member.email !== normalizedEmail) {
+        return res.status(400).json({ ok: false, error: "Please use the same email as your member account" });
+      }
+      member.fullName = payload.fullName || member.fullName || "";
+      member.phone = payload.phone || member.phone || "";
+    }
     const required = ["fullName", "phone", "email", "plan", "membershipType", "startDate", "paymentMethod"];
     for (const field of required) {
       if (!payload[field]) {
@@ -766,9 +936,10 @@ app.post(
       }
     }
 
-    await saveSubmission({
+    const submission = {
       id: crypto.randomUUID(),
       type: "membership",
+      memberId: member?.id || "",
       fullName: payload.fullName,
       phone: payload.phone,
       email: payload.email,
@@ -783,9 +954,16 @@ app.post(
       referralCode: payload.referralCode || "",
       referralDiscountPercent: payload.referralDiscountPercent || "",
       calculatedPrice: payload.calculatedPrice || "",
+      status: "pending",
+      notes: "",
       createdAt: new Date().toISOString()
-    });
-    return res.json({ ok: true });
+    };
+    await saveSubmission(submission);
+    if (member) {
+      syncMemberMembershipFromSubmission(member, submission);
+      await saveMembers();
+    }
+    return res.json({ ok: true, membership: member ? member.membership : null });
   } catch (err) {
     return res.status(500).json({ ok: false, error: String(err) });
   }
@@ -796,6 +974,7 @@ app.get("*", (req, res) => {
 
 const start = async () => {
   await ensureDataFile();
+  await ensureMembersFile();
   await ensureContentFile();
   await ensureAdminFile();
   app.listen(PORT, () => {
@@ -804,6 +983,3 @@ const start = async () => {
 };
 
 start();
-
-
-

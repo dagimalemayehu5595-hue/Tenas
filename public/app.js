@@ -30,12 +30,22 @@ const tech = [
   }
 ];
 
+function isActiveUntil(value) {
+  if (!value) return true;
+  const normalized = String(value).trim();
+  const parsed = new Date(normalized.length <= 10 ? `${normalized}T23:59:59` : normalized);
+  if (Number.isNaN(parsed.getTime())) return true;
+  return parsed.getTime() >= Date.now();
+}
+
 function App() {
   const [content, setContent] = useState(null);
   const mapQuery = encodeURIComponent("Tenas Fitness Bole Bulbula Kidus gebreal Building Addis Ababa Ethiopia");
-  const phone = content?.contact?.phone || "+251 912196096";
+  const phone = content?.contact?.phone || "+25191 219 6096";
   const email = content?.contact?.email || "tenasgymandspa@gmail.com";
-  const announcements = Array.isArray(content?.announcements) ? content.announcements.filter((item) => item?.title || item?.text) : [];
+  const announcements = Array.isArray(content?.announcements)
+    ? content.announcements.filter((item) => (item?.title || item?.text) && isActiveUntil(item?.expiresAt))
+    : [];
 
   useEffect(() => {
     let mounted = true;
@@ -63,13 +73,12 @@ function App() {
               alt="Tenas Fitness logo"
               className="logo-image"
             />
-            <span>Tenas Fitness</span>
+            <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./gallery.html">Gallery</a>
             <a href="./shop.html">Shop</a>
             <a href="./machines.html">Machines</a>
-            <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>
@@ -86,14 +95,14 @@ function App() {
             <p className="lead">Black & blue performance gym with premium machines, coaching, and recovery built around your goals.</p>
             <div className="hero-actions">
               <a className="cta" href="./membership.html">Join Now</a>
-              <a className="secondary" href="./programs.html">View Schedule</a>
+              <a className="secondary" href="./tour.html">Book a Tour</a>
             </div>
           </div>
           <div className="hero-card">
-            <h3>Today at Tenas</h3>
-            <p>Strength foundations, performance conditioning, and mobility flows on tap.</p>
-            <p><strong>Mon-Sat:</strong> {content?.hours?.monSat || "11:00 AM - 4:00 AM"}</p>
-            <p><strong>Sunday:</strong> {content?.hours?.sunday || "Half day"}</p>
+            <h3>At Tenas</h3>
+            <p>Strength foundations</p>
+            <p>Performance conditioning</p>
+            <p>Mobility flows on tap</p>
           </div>
         </div>
       </header>

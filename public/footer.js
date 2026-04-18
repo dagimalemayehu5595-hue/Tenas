@@ -55,12 +55,12 @@ function Footer() {
       </div>
       <div className="footer-block">
         <h4>Contact</h4>
-        <p>contact@tenasgym.com</p>
-        <p>(251) 911820607</p>
+        <p>tenasgymandspa@gmail.com</p>
+        <p>+25191 219 6096</p>
       </div>
       <div className="footer-block">
         <h4>Hours</h4>
-        <p>Mon-Sat: 11:00 AM - 4:00 AM</p>
+        <p>Mon-Sat: 05:00 PM - 09:00 AM</p>
         <p>Sunday: Half day</p>
       </div>
       <div className="footer-block footer-social">
@@ -76,7 +76,7 @@ function Footer() {
               <path d="M16.7 3c.4 2.6 2.2 4.3 4.3 4.5v2.6c-1.6.1-3.1-.4-4.3-1.3v6.3c0 3.3-2.7 5.9-6 5.9a6 6 0 0 1-6-5.9 6 6 0 0 1 7.7-5.7v2.8a3.3 3.3 0 1 0 1.9 3V3h2.4z"/>
             </svg>
           </a>
-          <a href="mailto:contact@tenasgym.com" aria-label="Email">
+          <a href="mailto:tenasgymandspa@gmail.com" aria-label="Email">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v.2l8 5.1 8-5.1V7H4zm16 10V9.5l-7.5 4.8a1 1 0 0 1-1 0L4 9.5V17h16z"/>
             </svg>

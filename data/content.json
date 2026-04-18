@@ -4,7 +4,7 @@
     "sunday": "Half day"
   },
   "contact": {
-    "phone": "+251 912196096",
+    "phone": "+25191 219 6096",
     "email": "tenasgymandspa@gmail.com"
   },
   "payment": {
@@ -103,7 +103,8 @@
   "referralCodes": [
     {
       "code": "dagi12",
-      "percent": "25"
+      "percent": "25",
+      "expiresAt": ""
     }
   ],
   "announcements": [
@@ -113,7 +114,8 @@
       "text": "Don't miss it ",
       "date": "This weekend ",
       "link": "",
-      "img": ""
+      "img": "",
+      "expiresAt": ""
     }
   ],
   "shopProducts": [
@@ -253,7 +255,7 @@
       "exp": "Focus: Engine building, athletic conditioning, interval systems."
     },
     {
-      "name": "Niah Hassen",
+      "name": "Noah Hassen",
       "role": "Mobility & Recovery",
       "img": "/uploads/6e1e12da-9dc4-4b15-9d0e-3119b4313e1e.png",
       "bio": "Movement coach helping members improve range and reduce pain.",

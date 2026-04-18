@@ -59,8 +59,12 @@ function AdminApp() {
     priceList: src?.priceList || { periods: [], columns: [], prices: [] },
     dailyPass: Array.isArray(src?.dailyPass) ? src.dailyPass : [],
     discounts: Array.isArray(src?.discounts) ? src.discounts : [],
-    referralCodes: Array.isArray(src?.referralCodes) ? src.referralCodes : [],
-    announcements: Array.isArray(src?.announcements) ? src.announcements : [],
+    referralCodes: Array.isArray(src?.referralCodes)
+      ? src.referralCodes.map((item) => ({ code: "", percent: "", expiresAt: "", ...item }))
+      : [],
+    announcements: Array.isArray(src?.announcements)
+      ? src.announcements.map((item) => ({ tag: "", title: "", text: "", date: "", link: "", img: "", expiresAt: "", ...item }))
+      : [],
     shopProducts: Array.isArray(src?.shopProducts) ? src.shopProducts : [],
     priceNote: src?.priceNote || "",
     programs: Array.isArray(src?.programs) ? src.programs : [],
@@ -286,7 +290,7 @@ function AdminApp() {
         <nav className="nav">
           <a className="logo" href="./index.html">
             <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Fitness</span>
+            <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
@@ -829,7 +833,7 @@ function AdminApp() {
                     onClick={() =>
                       setContentDraft({
                         ...contentDraft,
-                        referralCodes: [...contentDraft.referralCodes, { code: "", percent: "" }]
+                        referralCodes: [...contentDraft.referralCodes, { code: "", percent: "", expiresAt: "" }]
                       })
                     }
                   >
@@ -866,6 +870,18 @@ function AdminApp() {
                         placeholder="25"
                       />
                     </label>
+                    <label>
+                      Ends On
+                      <input
+                        type="date"
+                        value={item.expiresAt || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.referralCodes];
+                          next[index] = { ...next[index], expiresAt: e.target.value };
+                          setContentDraft({ ...contentDraft, referralCodes: next });
+                        }}
+                      />
+                    </label>
                     <button
                       type="button"
                       className="secondary"
@@ -891,7 +907,7 @@ function AdminApp() {
                         ...contentDraft,
                         announcements: [
                           ...contentDraft.announcements,
-                          { tag: "", title: "", text: "", date: "", link: "", img: "" }
+                          { tag: "", title: "", text: "", date: "", link: "", img: "", expiresAt: "" }
                         ]
                       })
                     }
@@ -964,6 +980,18 @@ function AdminApp() {
                           setContentDraft({ ...contentDraft, announcements: next });
                         }}
                         placeholder="https://..."
+                      />
+                    </label>
+                    <label>
+                      Ends On
+                      <input
+                        type="date"
+                        value={item.expiresAt || ""}
+                        onChange={(e) => {
+                          const next = [...contentDraft.announcements];
+                          next[index] = { ...next[index], expiresAt: e.target.value };
+                          setContentDraft({ ...contentDraft, announcements: next });
+                        }}
                       />
                     </label>
                     <label>

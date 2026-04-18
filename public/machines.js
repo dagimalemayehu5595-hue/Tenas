@@ -167,14 +167,13 @@ function App() {
         <nav className="nav">
           <a className="logo" href="./index.html">
             <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Fitness</span>
+            <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
             <a href="./gallery.html">Gallery</a>
             <a href="./shop.html">Shop</a>
             <a href="./machines.html">Machines</a>
-            <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>
@@ -191,7 +190,7 @@ function App() {
             <p className="lead">Select a machine to see specs, coaching tips, and training focus.</p>
             <div className="hero-actions">
               <a className="cta" href="./tour.html">Book a Tour</a>
-              <a className="secondary" href="./programs.html">See Programs</a>
+              <a className="secondary" href="./coaches.html">Meet Coaches</a>
             </div>
           </div>
           <div className="hero-card">
@@ -258,6 +257,4 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-
-
 

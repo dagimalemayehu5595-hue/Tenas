@@ -266,14 +266,13 @@ function App() {
         <nav className="nav">
           <a className="logo" href="./index.html">
             <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Fitness</span>
+            <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./index.html">Home</a>
             <a href="./gallery.html">Gallery</a>
             <a href="./shop.html">Shop</a>
             <a href="./machines.html">Machines</a>
-            <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>
@@ -286,7 +285,7 @@ function App() {
         <div className="hero-grid">
           <div>
             <p className="eyebrow">Supplements + Fuel</p>
-            <h1>Protein, wellness, and performance support in one clean shop.</h1>
+            <h1>Supplements organized for strength, recovery, and daily wellness.</h1>
             <p className="lead">Built around the products you actually sell in the gym: whey, plant protein, mass gainer, pre-workout, hydration, fish oil, and vitamins.</p>
             <div className="hero-actions">
               <a className="cta" href="#shop-floor">Browse Products</a>

@@ -74,14 +74,13 @@ function App() {
         <nav className="nav">
           <a className="logo" href="./index.html">
             <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Fitness</span>
+            <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
             <a href="./gallery.html">Gallery</a>
             <a href="./shop.html">Shop</a>
             <a href="./machines.html">Machines</a>
-            <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>

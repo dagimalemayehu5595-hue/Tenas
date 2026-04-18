@@ -16,7 +16,7 @@ const coaches = [
     exp: "Focus: Engine building, athletic conditioning, interval systems."
   },
   {
-    name: "Niah Hassen",
+    name: "Noah Hassen",
     role: "Mobility & Recovery",
     img: "./images/noh%20co.png",
     bio: "Movement coach helping members improve range and reduce pain.",
@@ -51,14 +51,13 @@ function App() {
         <nav className="nav">
           <a className="logo" href="./index.html">
             <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Fitness</span>
+            <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
             <a href="./gallery.html">Gallery</a>
             <a href="./shop.html">Shop</a>
             <a href="./machines.html">Machines</a>
-            <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>
@@ -74,7 +73,7 @@ function App() {
             <h1>Coaches Who Build Performance, Not Just Physique.</h1>
             <p className="lead">Certified experts in strength, conditioning, mobility, and recovery with individualized programs for every goal.</p>
             <div className="hero-actions">
-              <a className="secondary" href="./programs.html">View Programs</a>
+              <a className="secondary" href="./tour.html">Book a Tour</a>
             </div>
           </div>
           <div className="hero-card">

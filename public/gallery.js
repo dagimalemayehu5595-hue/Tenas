@@ -44,12 +44,6 @@ const vibePoints = [
   "Jump into live short-form clips from social"
 ];
 
-const galleryStats = [
-  { value: "5", label: "curated gym shots" },
-  { value: "100%", label: "actual Tenas space" },
-  { value: "1", label: "clear visual story" }
-];
-
 const galleryAtmosphere = [
   "moody lighting",
   "clean machine lines",
@@ -64,14 +58,13 @@ function App() {
         <nav className="nav">
           <a className="logo" href="./index.html">
             <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Fitness</span>
+            <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./index.html">Home</a>
             <a href="./gallery.html">Gallery</a>
             <a href="./shop.html">Shop</a>
             <a href="./machines.html">Machines</a>
-            <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>
@@ -88,7 +81,7 @@ function App() {
             <p className="lead">A dedicated gallery page for people who want to feel the energy of Tenas before they walk through the door.</p>
             <div className="hero-actions">
               <a className="cta" href="#gallery-grid">Explore Gallery</a>
-              <a className="secondary" href="https://www.instagram.com/tenasgymandspa/" target="_blank" rel="noreferrer">Watch Reels</a>
+              <a className="secondary" href="https://www.tiktok.com/@tenas.gym.and.spa" target="_blank" rel="noreferrer">Watch TikTok</a>
             </div>
             <div className="gallery-atmosphere">
               {galleryAtmosphere.map((item) => (
@@ -110,21 +103,6 @@ function App() {
           <p className="eyebrow">Gallery</p>
           <h2>Inside the Tenas experience</h2>
           <p className="lead">A focused look at the training environment, equipment choices, and the atmosphere members feel on the floor.</p>
-        </div>
-        <div className="gallery-curation">
-          <div className="gallery-curation-copy">
-            <span className="gallery-curation-label">Curated View</span>
-            <h3>Dark, premium, and performance-first.</h3>
-            <p>Instead of showing random photos, this gallery now reads more like a visual tour. The mix of wider hero frames and tighter equipment details gives the whole page a cleaner rhythm.</p>
-          </div>
-          <div className="gallery-stats">
-            {galleryStats.map((item) => (
-              <div className="gallery-stat" key={item.label}>
-                <strong>{item.value}</strong>
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
         </div>
         <div className="gallery-page-grid">
           {mediaShots.map((item, index) => (

@@ -45,9 +45,11 @@ const conditionOptions = [
   "None"
 ];
 
-function MembershipForm() {
-  const [submitted, setSubmitted] = React.useState(false);
-  const [submittedCard, setSubmittedCard] = React.useState(null);
+const MEMBER_TOKEN_KEY = "tenas_member_token";
+
+function MembershipForm({ member, savedMembership, onMembershipSaved }) {
+  const [submitted, setSubmitted] = React.useState(Boolean(savedMembership));
+  const [submittedCard, setSubmittedCard] = React.useState(savedMembership || null);
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [paymentMethod, setPaymentMethod] = React.useState("online");
@@ -115,10 +117,18 @@ function MembershipForm() {
       maximumFractionDigits: 2
     });
 
+  const isActiveUntil = (value) => {
+    if (!value) return true;
+    const normalized = String(value).trim();
+    const parsed = new Date(normalized.length <= 10 ? `${normalized}T23:59:59` : normalized);
+    if (Number.isNaN(parsed.getTime())) return true;
+    return parsed.getTime() >= Date.now();
+  };
+
   const normalizedReferralCode = referralCode.trim().toLowerCase();
   const matchedReferral = (content?.referralCodes || []).find((item) => {
     const code = String(item?.code || "").trim().toLowerCase();
-    return code && code === normalizedReferralCode;
+    return code && code === normalizedReferralCode && isActiveUntil(item?.expiresAt);
   }) || null;
   const referralPercent = matchedReferral ? Math.max(0, Math.min(100, Number(matchedReferral.percent) || 0)) : 0;
   const selectedPriceValue = getSelectedPrice();
@@ -127,14 +137,23 @@ function MembershipForm() {
     ? selectedPriceNumber * (1 - referralPercent / 100)
     : selectedPriceNumber;
   const discountedPriceLabel = selectedPriceNumber > 0 ? formatPriceNumber(discountedPriceNumber) : "";
+  const activeCard = submittedCard || savedMembership || null;
 
-  if (submitted) {
-    const memberName = submittedCard?.fullName || "New Member";
-    const memberPlan = submittedCard?.plan || selectedPlan || "Membership";
-    const memberPeriod = submittedCard?.membershipType || selectedPeriod || "Pending";
-    const memberPrice = submittedCard?.price || "";
-    const memberReferralCode = submittedCard?.referralCode || "";
-    const memberReferralPercent = submittedCard?.referralPercent || 0;
+  React.useEffect(() => {
+    if (savedMembership) {
+      setSubmitted(true);
+      setSubmittedCard(savedMembership);
+    }
+  }, [savedMembership]);
+
+  if (activeCard) {
+    const memberName = activeCard?.fullName || member?.fullName || "New Member";
+    const memberPlan = activeCard?.plan || selectedPlan || "Membership";
+    const memberPeriod = activeCard?.membershipType || selectedPeriod || "Pending";
+    const memberPrice = activeCard?.calculatedPrice || activeCard?.price || "";
+    const memberReferralCode = activeCard?.referralCode || "";
+    const memberReferralPercent = activeCard?.referralPercent || 0;
+    const memberStatus = activeCard?.status || "Pending Approval";
 
     return (
       <div className="tour-confirm membership-success">
@@ -156,7 +175,7 @@ function MembershipForm() {
             </div>
             <div className="membership-success-pill">
               <strong>Status</strong>
-              <span>Pending Approval</span>
+              <span>{memberStatus}</span>
             </div>
             {memberReferralCode ? (
               <div className="membership-success-pill">
@@ -187,7 +206,11 @@ function MembershipForm() {
               <div className="nfc-card-cross nfc-cross-bottom-right"></div>
               <div className="nfc-front-mark">
                 <div className="nfc-front-emblem">
-                  <span className="nfc-front-emblem-mark"></span>
+                  <img
+                    src="./images/nfc.png"
+                    alt="Tenas Gym logo"
+                    className="nfc-front-emblem-image"
+                  />
                 </div>
                 <span className="nfc-front-divider"></span>
                 <div className="nfc-front-copy">
@@ -229,6 +252,12 @@ function MembershipForm() {
     setError("");
     setLoading(true);
     const form = event.currentTarget;
+
+    if (!member?.token) {
+      setError("Please sign in first to save your membership.");
+      setLoading(false);
+      return;
+    }
 
     const goals = Array.from(form.querySelectorAll("input[name='goals']:checked")).map((input) => input.value);
     const conditions = Array.from(form.querySelectorAll("input[name='conditions']:checked")).map((input) => input.value);
@@ -297,6 +326,9 @@ function MembershipForm() {
     try {
       const res = await fetch("/api/membership", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${member.token}`
+        },
         body: payload
       });
       if (!res.ok) {
@@ -310,15 +342,19 @@ function MembershipForm() {
         }
         throw new Error(msg);
       }
-      setSubmittedCard({
+      const data = await res.json();
+      const nextMembership = data.membership || {
         fullName,
         plan,
         membershipType,
-        price: selectedPrice,
+        calculatedPrice: selectedPrice,
         referralCode: appliedReferralCode,
-        referralPercent
-      });
+        referralPercent,
+        status: "Pending Approval"
+      };
+      setSubmittedCard(nextMembership);
       setSubmitted(true);
+      onMembershipSaved?.(nextMembership);
     } catch (err) {
       setError(String(err.message || err || "Network error. Make sure you opened the site at http://localhost:3001"));
     } finally {
@@ -333,15 +369,15 @@ function MembershipForm() {
         <div className="form-grid">
           <div className="form-field">
             <label htmlFor="fullName">Full name / ሙሉ ስም</label>
-            <input id="fullName" name="fullName" type="text" placeholder="Your full name" required />
+            <input id="fullName" name="fullName" type="text" placeholder="Your full name" defaultValue={member?.fullName || ""} required />
           </div>
           <div className="form-field">
             <label htmlFor="phone">Phone number / ስልክ ቁጥር</label>
-            <input id="phone" name="phone" type="tel" placeholder="+251 9xx xxx xxx" required />
+            <input id="phone" name="phone" type="tel" placeholder="+251 9xx xxx xxx" defaultValue={member?.phone || ""} required />
           </div>
           <div className="form-field">
             <label htmlFor="email">Email address / ኢሜይል</label>
-            <input id="email" name="email" type="email" placeholder="you@email.com" required />
+            <input id="email" name="email" type="email" placeholder="you@email.com" defaultValue={member?.email || ""} required />
           </div>
           <div className="form-field">
             <label htmlFor="dob">Date of birth / የትውልድ ቀን</label>
@@ -598,6 +634,434 @@ function MembershipForm() {
   );
 }
 
+function MembershipPageApp() {
+  const [content, setContent] = React.useState(null);
+  const [member, setMember] = React.useState(null);
+  const [memberLoading, setMemberLoading] = React.useState(true);
+  const [authMode, setAuthMode] = React.useState("signup");
+  const [authLoading, setAuthLoading] = React.useState(false);
+  const [authError, setAuthError] = React.useState("");
+  const [authForm, setAuthForm] = React.useState({
+    fullName: "",
+    phone: "",
+    email: "",
+    password: ""
+  });
+
+  React.useEffect(() => {
+    let mounted = true;
+    fetch("/api/content")
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("api"))))
+      .catch(() => fetch("./content.json?v=20260325203227").then((res) => res.json()))
+      .then((data) => {
+        if (mounted && data) {
+          setContent(data.content || data);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    const token = localStorage.getItem(MEMBER_TOKEN_KEY);
+    if (!token) {
+      setMemberLoading(false);
+      return undefined;
+    }
+
+    let mounted = true;
+    fetch("/api/member/me", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("auth"))))
+      .then((data) => {
+        if (!mounted) return;
+        setMember(data?.member ? { ...data.member, token } : null);
+      })
+      .catch(() => {
+        if (!mounted) return;
+        localStorage.removeItem(MEMBER_TOKEN_KEY);
+        setMember(null);
+      })
+      .finally(() => {
+        if (mounted) setMemberLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const handleAuthFieldChange = (event) => {
+    const { name, value } = event.target;
+    setAuthForm((current) => ({ ...current, [name]: value }));
+  };
+
+  const handleAuthSubmit = async (event) => {
+    event.preventDefault();
+    setAuthError("");
+    setAuthLoading(true);
+
+    try {
+      const endpoint = authMode === "signup" ? "/api/member/signup" : "/api/member/login";
+      const payload =
+        authMode === "signup"
+          ? authForm
+          : {
+              email: authForm.email,
+              password: authForm.password
+            };
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.ok || !data?.token || !data?.member) {
+        throw new Error(data?.error || "Unable to continue.");
+      }
+
+      localStorage.setItem(MEMBER_TOKEN_KEY, data.token);
+      setMember({ ...data.member, token: data.token });
+      setAuthForm((current) => ({
+        ...current,
+        password: ""
+      }));
+    } catch (err) {
+      setAuthError(err?.message || "Unable to continue.");
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    const token = member?.token;
+    try {
+      if (token) {
+        await fetch("/api/member/logout", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).catch(() => {});
+      }
+    } finally {
+      localStorage.removeItem(MEMBER_TOKEN_KEY);
+      setMember(null);
+      setAuthError("");
+      setAuthMode("login");
+      setAuthForm({
+        fullName: "",
+        phone: "",
+        email: "",
+        password: ""
+      });
+    }
+  };
+
+  const handleMembershipSaved = (savedMembership) => {
+    setMember((current) =>
+      current
+        ? {
+            ...current,
+            membership: savedMembership || current.membership || null,
+            fullName: savedMembership?.fullName || current.fullName,
+            phone: savedMembership?.phone || current.phone
+          }
+        : current
+    );
+  };
+
+  return (
+    <div className="page-shell">
+      <header className="hero">
+        <nav className="nav">
+          <a className="logo" href="./index.html">
+            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
+            <span>Tenas Gym and Spa</span>
+          </a>
+          <div className="nav-links">
+            <a href="./">Home</a>
+            <a href="./gallery.html">Gallery</a>
+            <a href="./shop.html">Shop</a>
+            <a href="./machines.html">Machines</a>
+            <a href="./coaches.html">Coaches</a>
+            <a href="./membership.html">Membership</a>
+          </div>
+          <div className="nav-actions">
+            <ThemeToggle />
+            <a className="cta" href="#member-access">Join Now</a>
+          </div>
+        </nav>
+
+        <div className="hero-grid">
+          <div>
+            <p className="eyebrow">Membership</p>
+            <h1>Choose a Plan That Fits Your Life.</h1>
+            <p className="lead">Create your member account once, save your details, and come back anytime to view your virtual access card.</p>
+            <div className="hero-actions">
+              <a className="cta" href="#member-access">Join Now</a>
+              <a className="secondary" href="./coaches.html">Meet Coaches</a>
+            </div>
+          </div>
+          <div className="hero-card">
+            <h3>What's Included</h3>
+            {(content?.membershipPerks || perks).map((perk) => (
+              <p key={perk}>• {perk}</p>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <main className="page-main">
+        <section id="tiers" className="section pricing">
+          <div className="section-header">
+            <h2>Membership Options</h2>
+            <p>Updated price list and membership choices.</p>
+          </div>
+          {content?.priceList ? (
+            <div className="price-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Period</th>
+                    {content.priceList.columns.map((col) => (
+                      <th key={col}>{col}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {content.priceList.periods.map((period, rowIndex) => (
+                    <tr key={period}>
+                      <td><strong>{period}</strong></td>
+                      {content.priceList.prices[rowIndex].map((price, colIndex) => (
+                        <td key={`${period}-${colIndex}`}>{price}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="pricing-grid">
+              {(content?.membershipTiers || tiers).map((tier) => (
+                <div className="price-card" key={tier.name}>
+                  <h3>{tier.name}</h3>
+                  <p className="price">{tier.price}</p>
+                  <p>{tier.desc}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {content?.dailyPass?.length ? (
+            <div className="price-extra">
+              <h3>Daily Pass</h3>
+              <div className="extra-grid">
+                {content.dailyPass.map((item) => (
+                  <div className="extra-card" key={item.label}>
+                    <p>{item.label}</p>
+                    <p className="price">{item.price}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {content?.discounts?.length ? (
+            <div className="price-extra">
+              <h3>Discounts</h3>
+              <div className="extra-grid">
+                {content.discounts.map((item) => (
+                  <div className="extra-card" key={item.label}>
+                    <p>{item.label}</p>
+                    <p className="price">{item.value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {content?.priceNote ? <p className="form-note">{content.priceNote}</p> : null}
+        </section>
+
+        <section className="section cta-band">
+          <div>
+            <h2>Start Your Trial This Week</h2>
+            <p>Tour the facility, meet a coach, and get your plan built fast.</p>
+          </div>
+          <a className="cta" href="./tour.html">Book a Tour</a>
+        </section>
+
+        <section className="section membership-start" id="member-access">
+          <div className="section-header">
+            <h2>Member Access</h2>
+            <p>Create your account once, then log back in anytime to view your saved membership and virtual NFC card.</p>
+          </div>
+
+          {memberLoading ? (
+            <div className="membership-card membership-intro">
+              <p className="form-note">Loading your member access...</p>
+            </div>
+          ) : !member ? (
+            <div className="membership-card member-auth-card">
+              <div className="member-auth-head">
+                <p className="eyebrow">Member Login</p>
+                <h3>{authMode === "signup" ? "Create your member account" : "Welcome back"}</h3>
+                <p>
+                  {authMode === "signup"
+                    ? "Sign up once so your membership details, payment status, and virtual access card stay saved to your account."
+                    : "Log in with your email to pick up where you left off and view your saved membership card."}
+                </p>
+              </div>
+
+              <div className="member-auth-toggle">
+                <button
+                  type="button"
+                  className={`secondary ${authMode === "signup" ? "is-active" : ""}`}
+                  onClick={() => {
+                    setAuthMode("signup");
+                    setAuthError("");
+                  }}
+                >
+                  Sign Up
+                </button>
+                <button
+                  type="button"
+                  className={`secondary ${authMode === "login" ? "is-active" : ""}`}
+                  onClick={() => {
+                    setAuthMode("login");
+                    setAuthError("");
+                  }}
+                >
+                  Log In
+                </button>
+              </div>
+
+              <form className="member-auth-form" onSubmit={handleAuthSubmit}>
+                {authMode === "signup" ? (
+                  <div className="form-grid">
+                    <div className="form-field">
+                      <label htmlFor="memberFullName">Full Name</label>
+                      <input
+                        id="memberFullName"
+                        name="fullName"
+                        type="text"
+                        required
+                        value={authForm.fullName}
+                        onChange={handleAuthFieldChange}
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label htmlFor="memberPhone">Phone Number</label>
+                      <input
+                        id="memberPhone"
+                        name="phone"
+                        type="tel"
+                        required
+                        value={authForm.phone}
+                        onChange={handleAuthFieldChange}
+                        placeholder="+251..."
+                      />
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className="form-grid">
+                  <div className="form-field">
+                    <label htmlFor="memberEmail">Email</label>
+                    <input
+                      id="memberEmail"
+                      name="email"
+                      type="email"
+                      required
+                      value={authForm.email}
+                      onChange={handleAuthFieldChange}
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label htmlFor="memberPassword">Password</label>
+                    <input
+                      id="memberPassword"
+                      name="password"
+                      type="password"
+                      required
+                      minLength={6}
+                      value={authForm.password}
+                      onChange={handleAuthFieldChange}
+                      placeholder="At least 6 characters"
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" className="cta" disabled={authLoading}>
+                  {authLoading
+                    ? authMode === "signup"
+                      ? "Creating Account..."
+                      : "Signing In..."
+                    : authMode === "signup"
+                      ? "Create Account"
+                      : "Log In"}
+                </button>
+                {authError ? <p className="form-error">{authError}</p> : null}
+              </form>
+            </div>
+          ) : (
+            <>
+              <div className="membership-card member-summary-card">
+                <div className="member-summary-head">
+                  <div>
+                    <p className="eyebrow">Logged In</p>
+                    <h3>{member.fullName || "Member Account"}</h3>
+                    <p>{member.email}</p>
+                    {member.phone ? <p>{member.phone}</p> : null}
+                  </div>
+                  <button type="button" className="secondary" onClick={handleLogout}>
+                    Log Out
+                  </button>
+                </div>
+
+                <div className="member-summary-grid">
+                  <div className="member-summary-pill">
+                    <strong>Membership: </strong>
+                    <span>{member.membership?.plan || "Not submitted yet"}</span>
+                  </div>
+                  <div className="member-summary-pill">
+                    <strong>Status: </strong>
+                    <span>{member.membership?.status || "Ready to apply"}</span>
+                  </div>
+                  <div className="member-summary-pill">
+                    <strong>Saved Card: </strong>
+                    <span>{member.membership ? "Available in your account" : "Will appear after submission"}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="membership-card">
+                <MembershipForm
+                  member={member}
+                  savedMembership={member.membership}
+                  onMembershipSaved={handleMembershipSaved}
+                />
+              </div>
+            </>
+          )}
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
+
 function App() {
   const [content, setContent] = React.useState(null);
   React.useEffect(() => {
@@ -623,14 +1087,13 @@ function App() {
         <nav className="nav">
           <a className="logo" href="./index.html">
             <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Fitness</span>
+            <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
             <a href="./gallery.html">Gallery</a>
             <a href="./shop.html">Shop</a>
             <a href="./machines.html">Machines</a>
-            <a href="./programs.html">Programs</a>
             <a href="./coaches.html">Coaches</a>
             <a href="./membership.html">Membership</a>
           </div>
@@ -768,7 +1231,7 @@ function App() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")).render(<MembershipPageApp />);
 
 
 
