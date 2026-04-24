@@ -613,7 +613,7 @@ html[data-theme="light"] .admin-editor textarea::placeholder {
   margin: 0 auto;
   transform-origin: 50% 50%;
   transform-style: preserve-3d;
-  animation: spin 28s linear infinite;
+  animation: spin 46s linear infinite;
 }
 
 .carousel-ring.paused {
@@ -4387,6 +4387,35 @@ html[data-theme="light"] .nav {
   z-index: 0;
 }
 
+/* Machine carousel breathing room */
+.carousel-ring {
+  height: 390px;
+}
+
+.machine-card {
+  width: 180px;
+  transform: rotateY(calc(var(--i) * (360deg / var(--total)))) translateZ(300px) translate(-50%, -50%);
+}
+
+.machine-card.selected {
+  transform: rotateY(calc(var(--i) * (360deg / var(--total)))) translateZ(336px) translate(-50%, -50%) scale(1.05);
+}
+
+@media (max-width: 900px) {
+  .carousel-ring {
+    height: 340px;
+  }
+
+  .machine-card {
+    width: 168px;
+    transform: rotateY(calc(var(--i) * (360deg / var(--total)))) translateZ(252px) translate(-50%, -50%);
+  }
+
+  .machine-card.selected {
+    transform: rotateY(calc(var(--i) * (360deg / var(--total)))) translateZ(282px) translate(-50%, -50%) scale(1.04);
+  }
+}
+
 @media (max-width: 900px) {
   .nav {
     left: 0;
@@ -4398,6 +4427,85 @@ html[data-theme="light"] .nav {
 
   .hero {
     padding-top: 138px !important;
+  }
+}
+
+/* Final machine carousel spacing override */
+.machines .carousel-ring {
+  height: 500px !important;
+}
+
+.machines .machine-card {
+  width: 150px !important;
+  transform: rotateY(calc(var(--i) * (360deg / var(--total)))) translateZ(500px) translate(-50%, -50%) !important;
+}
+
+.machines .machine-card.selected {
+  transform: rotateY(calc(var(--i) * (360deg / var(--total)))) translateZ(548px) translate(-50%, -50%) scale(1.02) !important;
+}
+
+.machines .machine-card .info {
+  margin-top: 16px !important;
+  min-height: 56px !important;
+  padding: 0 1px !important;
+  align-content: start !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  transform: translateY(6px) !important;
+  transition: opacity 0.25s ease, transform 0.25s ease !important;
+  pointer-events: none !important;
+}
+
+.machines .machine-card .info h3 {
+  font-size: 0.66rem !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.25px !important;
+  -webkit-line-clamp: 2 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: normal !important;
+  text-wrap: balance;
+}
+
+.machines .machine-card.selected .info {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.machines .machine-card.selected .info h3 {
+  font-size: 0.78rem !important;
+  line-height: 1.28 !important;
+  -webkit-line-clamp: 3 !important;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45) !important;
+}
+
+@media (max-width: 900px) {
+  .machines .carousel-ring {
+    height: 410px !important;
+  }
+
+  .machines .machine-card {
+    width: 136px !important;
+    transform: rotateY(calc(var(--i) * (360deg / var(--total)))) translateZ(360px) translate(-50%, -50%) !important;
+  }
+
+  .machines .machine-card.selected {
+    transform: rotateY(calc(var(--i) * (360deg / var(--total)))) translateZ(392px) translate(-50%, -50%) scale(1.02) !important;
+  }
+
+  .machines .machine-card .info {
+    min-height: 52px !important;
+  }
+
+  .machines .machine-card .info h3 {
+    font-size: 0.62rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .machines .machine-card.selected .info h3 {
+    font-size: 0.72rem !important;
+    line-height: 1.22 !important;
   }
 }
 
