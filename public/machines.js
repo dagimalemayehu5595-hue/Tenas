@@ -4,7 +4,7 @@ const machines = [
   {
     name: "Commercial Treadmill (LCD Screen)",
     desc: "Motorized treadmill built for steady cardio, incline walks, and running sessions.",
-    img: "./images/Treadmillsc.png",
+    img: "./images/Commercial Treadmill.png",
     targets: "Cardio, legs, endurance",
     bestFor: "Walking, running, intervals",
     tip: "Start smooth, then build speed or incline once your stride feels stable."
@@ -28,7 +28,7 @@ const machines = [
   {
     name: "Recumbent Bike",
     desc: "Back-supported bike setup for low-impact cardio and longer steady sessions.",
-    img: "./images/bike.png",
+    img: "./images/Recumbent Bike.png",
     targets: "Cardio, legs",
     bestFor: "Comfortable endurance work",
     tip: "Set the seat so the knee stays slightly bent at the far end of the pedal stroke."
@@ -44,7 +44,7 @@ const machines = [
   {
     name: "Hack Squat Machine",
     desc: "Plate-loaded lower-body machine for heavy quad-focused squat work with back support.",
-    img: "./images/leg press.png",
+    img: "./images/Hack Squat Machine.png",
     targets: "Quads, glutes, calves",
     bestFor: "Lower-body strength and quad focus",
     tip: "Keep your back flat against the pad and drive through the full foot."
@@ -52,7 +52,7 @@ const machines = [
   {
     name: "Incline Squat Machine (45 Degree)",
     desc: "Angled squat and leg drive machine for heavy lower-body loading in a stable track.",
-    img: "./images/leg press.png",
+    img: "./images/Incline Squat.png",
     targets: "Quads, glutes, hamstrings",
     bestFor: "Heavy leg work and lower-body progression",
     tip: "Keep the knees tracking over the toes and do not rush the bottom."
@@ -60,7 +60,7 @@ const machines = [
   {
     name: "Seated Row Machine",
     desc: "Guided rowing station for building upper-back strength through a supported pulling path.",
-    img: "./images/gym machine.png",
+    img: "./images/gymseated.png",
     targets: "Back, lats, rear delts, biceps",
     bestFor: "Back thickness and seated pulling",
     tip: "Lead with the elbows and squeeze the shoulder blades together at the finish."
@@ -84,7 +84,7 @@ const machines = [
   {
     name: "Seated Straight Arm Chest Machine",
     desc: "Chest-focused machine that supports a strict pressing or fly-style path through the front body.",
-    img: "./images/cross.png",
+    img: "./images/Seated Straight Arm Chest Machine.png",
     targets: "Chest, front delts, triceps",
     bestFor: "Chest isolation and controlled pressing",
     tip: "Stay tall in the seat and squeeze the chest instead of shrugging the shoulders."
@@ -92,7 +92,7 @@ const machines = [
   {
     name: "Leg Curl & Leg Extension",
     desc: "Two-in-one lower-body station for isolating the hamstrings and quadriceps in one setup.",
-    img: "./images/Leg Extension Machine.png",
+    img: "./images/Leg Curl Machine.png",
     targets: "Quads, hamstrings, knees",
     bestFor: "Lower-body isolation work",
     tip: "Control both the lift and the lowering phase to keep tension where it belongs."
@@ -148,7 +148,7 @@ const machines = [
   {
     name: "Rubber Coated Weight Plates",
     desc: "Coated plates for loading bars, machines, and plate-loaded strength equipment.",
-    img: "./images/power.png",
+    img: "./images/Rubber DumbbellRack.png",
     targets: "Strength loading",
     bestFor: "Barbell and machine progression",
     tip: "Match plate sizes evenly so the setup stays balanced."
@@ -156,7 +156,7 @@ const machines = [
   {
     name: "Power Lifting Weight Plate",
     desc: "Heavy-duty plates built for serious barbell loading and strength-focused sessions.",
-    img: "./images/power.png",
+    img: "./images/power Lifting Weight.png",
     targets: "Strength loading",
     bestFor: "Squats, deadlifts, presses",
     tip: "Load both sides evenly before unracking the bar."
@@ -164,7 +164,7 @@ const machines = [
   {
     name: "Abs Wheel",
     desc: "Simple core tool for anti-extension ab work and trunk control.",
-    img: "./images/gym.png",
+    img: "./images/Abs Wheel.png",
     targets: "Core, abs, shoulders",
     bestFor: "Rollouts and trunk stability",
     tip: "Brace hard and keep the ribs tucked as you roll out."
@@ -172,7 +172,7 @@ const machines = [
   {
     name: "Step Platform",
     desc: "Portable step used for cardio circuits, warm-ups, and lower-body conditioning drills.",
-    img: "./images/Mats  Functional Space.png",
+    img: "./images/Step Platform.png",
     targets: "Cardio, legs, coordination",
     bestFor: "Step work and conditioning circuits",
     tip: "Plant the whole foot on the platform before driving up."
@@ -180,7 +180,7 @@ const machines = [
   {
     name: "Straight Bar",
     desc: "Straight cable or accessory bar used for pulling, pressing, and arm work.",
-    img: "./images/power.png",
+    img: "./images/Straight Bar.png",
     targets: "Arms, back, shoulders",
     bestFor: "Cable rows, pushdowns, curls",
     tip: "Keep the wrists stacked and let the elbows guide the movement."
@@ -188,7 +188,7 @@ const machines = [
   {
     name: "Curved Bar",
     desc: "Curved cable bar for more comfortable wrist angles during upper-body accessories.",
-    img: "./images/power.png",
+    img: "./images/Curved Bar.png",
     targets: "Arms, back, shoulders",
     bestFor: "Pushdowns, curls, cable accessories",
     tip: "Use the curve to find the most natural grip for your joints."
@@ -196,7 +196,7 @@ const machines = [
   {
     name: "Three-Tier Dumbbell Rack",
     desc: "Storage rack that keeps the dumbbell area organized and easy to load from.",
-    img: "./images/Dumbbell Rack.png",
+    img: "./images/Three-Tier Dumbbell Rack.png",
     targets: "Storage and setup",
     bestFor: "Organizing free weights",
     tip: "Return pairs to the right level so the floor stays clear and safe."
@@ -204,7 +204,7 @@ const machines = [
   {
     name: "Dual Cable Cross",
     desc: "Dual-stack cable station for flyes, rows, pulldowns, curls, and full-body cable work.",
-    img: "./images/functional.png",
+    img: "./images/Dual Cable Cross.png",
     targets: "Chest, back, arms, shoulders, core",
     bestFor: "Versatile cable training",
     tip: "Set both sides evenly before you begin the set."
@@ -228,7 +228,7 @@ const machines = [
   {
     name: "Boxing Gloves",
     desc: "Protective gloves used for bag work, boxing drills, and conditioning rounds.",
-    img: "./images/Punching Bag.png",
+    img: "./images/Boxing Gloves.png",
     targets: "Boxing setup",
     bestFor: "Bag work and striking practice",
     tip: "Wrap or secure the wrist properly before starting rounds."
@@ -236,7 +236,7 @@ const machines = [
   {
     name: "Shoulder Protection",
     desc: "Supportive gear used to make loaded movements feel more stable around the shoulders.",
-    img: "./images/gym.png",
+    img: "./images/Shoulder Protection.png",
     targets: "Joint support",
     bestFor: "Support during selected lifts",
     tip: "Use support gear to assist good technique, not replace it."
@@ -252,7 +252,7 @@ const machines = [
   {
     name: "Weight Lifting Belt",
     desc: "Support belt for heavy compound lifts where bracing matters most.",
-    img: "./images/gym.png",
+    img: "./images/Weight Lifting Belt.png",
     targets: "Bracing support",
     bestFor: "Heavy squats, presses, deadlifts",
     tip: "Push your core into the belt instead of just tightening it."
@@ -268,7 +268,7 @@ const machines = [
   {
     name: "Cable Handles",
     desc: "Accessory handles for cable stations that open up rows, flyes, curls, and press variations.",
-    img: "./images/functional.png",
+    img: "./images/handl.png",
     targets: "Accessory attachment",
     bestFor: "Cable customization",
     tip: "Choose the handle width that matches the movement, not just comfort."
@@ -276,7 +276,7 @@ const machines = [
   {
     name: "Barbell Rack",
     desc: "Storage rack for barbells and free-weight bar organization in the strength area.",
-    img: "./images/power.png",
+    img: "./images/Barbell Rack.png",
     targets: "Storage and setup",
     bestFor: "Keeping bars organized and ready",
     tip: "Rack the bars carefully so the sleeves and floor stay protected."
@@ -300,7 +300,7 @@ const machines = [
   {
     name: "Olympic Squat Rack",
     desc: "Free barbell squat station for heavy lower-body training and big compound work.",
-    img: "./images/apex-power-rack.jpg",
+    img: "./images/Olympic Squat rack.png",
     targets: "Quads, glutes, hamstrings, core",
     bestFor: "Barbell squats and rack-based lifts",
     tip: "Set the J-hooks and safeties before you unrack the bar."
@@ -308,7 +308,7 @@ const machines = [
   {
     name: "Olympic Flat Bench With Weight Storage",
     desc: "Flat bench press station with built-in plate storage for efficient setup.",
-    img: "./images/Adjustable Benches.png",
+    img: "./images/Olympic Flat Benches.png",
     targets: "Chest, triceps, shoulders",
     bestFor: "Bench press and flat pressing",
     tip: "Plant the feet hard and keep the upper back set before every rep."
@@ -329,14 +329,6 @@ const machines = [
     bestFor: "Hip thrusts and glute development",
     tip: "Lock the ribs down and squeeze hard at the top."
   },
-  {
-    name: "Water Tanker",
-    desc: "Hydration station for members between sets, sessions, and long training days.",
-    img: "./images/Hydro.png",
-    targets: "Recovery support",
-    bestFor: "Hydration between workouts",
-    tip: "Keep water intake steady before, during, and after training."
-  }
 ];
 
 function getMachineCardLabel(name) {
@@ -387,7 +379,22 @@ function App() {
   }, []);
 
   const machineList = machines;
-  const total = machineList.length;
+  const itemsPerPage = 6;
+  const totalPages = Math.max(1, Math.ceil(machineList.length / itemsPerPage));
+  const [page, setPage] = useState(0);
+  const pageStart = page * itemsPerPage;
+  const visibleMachines = machineList.slice(pageStart, pageStart + itemsPerPage);
+  const total = visibleMachines.length;
+  const selectedOnPage = visibleMachines.findIndex((_, index) => pageStart + index === selected);
+  const activeIndex = selectedOnPage >= 0 ? selectedOnPage : 0;
+  const activeMachine = machineList[selected] || visibleMachines[0] || machineList[0];
+
+  const handlePageChange = (nextPage) => {
+    const normalizedPage = (nextPage + totalPages) % totalPages;
+    const nextStart = normalizedPage * itemsPerPage;
+    setPage(normalizedPage);
+    setSelected(nextStart);
+  };
 
   return (
     <div>
@@ -437,13 +444,25 @@ function App() {
         </div>
 
         <div className="carousel-scene">
+          <div className="carousel-toolbar">
+            <button type="button" className="secondary" onClick={() => handlePageChange(page - 1)}>
+              Previous Set
+            </button>
+            <p>
+              Showing {pageStart + 1}-{Math.min(pageStart + itemsPerPage, machineList.length)} of {machineList.length}
+            </p>
+            <button type="button" className="secondary" onClick={() => handlePageChange(page + 1)}>
+              Next Set
+            </button>
+          </div>
+
           <div className="carousel-ring" style={{ "--total": total }}>
-            {machineList.map((machine, index) => (
+            {visibleMachines.map((machine, index) => (
               <article
                 key={machine.name}
-                className={`machine-card ${selected === index ? "selected" : ""}`}
+                className={`machine-card ${activeIndex === index ? "selected" : ""}`}
                 style={{ "--i": index }}
-                onClick={() => setSelected(index)}
+                onClick={() => setSelected(pageStart + index)}
               >
                 <img src={machine.img} alt={machine.name} />
                 <div className="info">
@@ -454,24 +473,24 @@ function App() {
           </div>
 
           <div className="machine-details">
-            <h3>{machineList[selected]?.name}</h3>
-            <p>{machineList[selected]?.desc}</p>
+            <h3>{activeMachine?.name}</h3>
+            <p>{activeMachine?.desc}</p>
             <div className="machine-detail-layout">
               <div className="machine-detail-photo">
-                <img src={machineList[selected]?.img} alt={machineList[selected]?.name} />
+                <img src={activeMachine?.img} alt={activeMachine?.name} />
               </div>
               <div className="detail-grid">
                 <div className="detail-box">
                   <strong>Targets</strong>
-                  <p>{machineList[selected]?.targets}</p>
+                  <p>{activeMachine?.targets}</p>
                 </div>
                 <div className="detail-box">
                   <strong>Best For</strong>
-                  <p>{machineList[selected]?.bestFor}</p>
+                  <p>{activeMachine?.bestFor}</p>
                 </div>
                 <div className="detail-box">
                   <strong>Coach Tip</strong>
-                  <p>{machineList[selected]?.tip}</p>
+                  <p>{activeMachine?.tip}</p>
                 </div>
               </div>
             </div>

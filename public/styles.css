@@ -606,6 +606,21 @@ html[data-theme="light"] .admin-editor textarea::placeholder {
   margin-top: 260px;
 }
 
+.carousel-toolbar {
+  width: min(1120px, 94vw);
+  margin: 0 auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.carousel-toolbar p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-align: center;
+}
+
 .carousel-ring {
   position: relative;
   width: min(1120px, 94vw);
@@ -1985,6 +2000,10 @@ html[data-theme="light"] .update-status {
 }
 
 @media (max-width: 900px) {
+  .carousel-toolbar {
+    flex-direction: column;
+  }
+
   .hero-grid {
     grid-template-columns: 1fr;
   }
@@ -4446,26 +4465,27 @@ html[data-theme="light"] .nav {
 
 .machines .machine-card .info {
   margin-top: 16px !important;
-  min-height: 56px !important;
-  padding: 0 1px !important;
+  min-height: 64px !important;
+  padding: 0 2px !important;
   align-content: start !important;
   overflow: hidden !important;
-  opacity: 0 !important;
-  transform: translateY(6px) !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
   transition: opacity 0.25s ease, transform 0.25s ease !important;
   pointer-events: none !important;
 }
 
 .machines .machine-card .info h3 {
-  font-size: 0.66rem !important;
-  line-height: 1.2 !important;
-  letter-spacing: 0.25px !important;
+  font-size: 0.76rem !important;
+  line-height: 1.24 !important;
+  letter-spacing: 0.3px !important;
   -webkit-line-clamp: 2 !important;
   max-width: 100% !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: normal !important;
   text-wrap: balance;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.42) !important;
 }
 
 .machines .machine-card.selected .info {
@@ -4474,7 +4494,7 @@ html[data-theme="light"] .nav {
 }
 
 .machines .machine-card.selected .info h3 {
-  font-size: 0.78rem !important;
+  font-size: 0.84rem !important;
   line-height: 1.28 !important;
   -webkit-line-clamp: 3 !important;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45) !important;
@@ -4495,16 +4515,16 @@ html[data-theme="light"] .nav {
   }
 
   .machines .machine-card .info {
-    min-height: 52px !important;
+    min-height: 60px !important;
   }
 
   .machines .machine-card .info h3 {
-    font-size: 0.62rem !important;
-    line-height: 1.15 !important;
+    font-size: 0.7rem !important;
+    line-height: 1.18 !important;
   }
 
   .machines .machine-card.selected .info h3 {
-    font-size: 0.72rem !important;
+    font-size: 0.76rem !important;
     line-height: 1.22 !important;
   }
 }
