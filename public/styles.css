@@ -36,8 +36,7 @@ html,
 body {
   font-family: "Manrope", sans-serif;
   background:
-    url("./images/IMG_3759.JPG") center center / cover no-repeat fixed,
-    #02050f;
+    linear-gradient(180deg, #07111f 0%, #0a1628 45%, #0d1b31 100%);
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
@@ -47,8 +46,7 @@ body {
 
 html[data-theme="light"] body {
   background:
-    url("./images/IMG_3759.JPG") center center / cover no-repeat fixed,
-    #edf3fb;
+    linear-gradient(180deg, #f7fafc 0%, #eef4f9 42%, #e6eef6 100%);
 }
 
 #root,
@@ -75,11 +73,10 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(2, 6, 18, 0.4) 0%, rgba(3, 6, 22, 0.48) 55%, rgba(2, 4, 12, 0.62) 100%),
-    radial-gradient(circle at 15% 15%, rgba(15, 127, 201, 0.12), transparent 42%),
-    radial-gradient(circle at 85% 10%, rgba(12, 36, 70, 0.22), transparent 40%),
-    radial-gradient(circle at 55% 80%, rgba(241, 200, 76, 0.08), transparent 46%);
-  filter: brightness(0.72) saturate(0.88);
+    radial-gradient(circle at 14% 16%, rgba(15, 127, 201, 0.16), transparent 34%),
+    radial-gradient(circle at 82% 14%, rgba(20, 48, 92, 0.18), transparent 32%),
+    radial-gradient(circle at 50% 86%, rgba(241, 200, 76, 0.08), transparent 34%);
+  filter: saturate(0.92);
   z-index: -1;
   pointer-events: none;
 }
@@ -95,11 +92,10 @@ body::after {
 
 html[data-theme="light"] body::before {
   background:
-    linear-gradient(180deg, rgba(244, 247, 252, 0.58) 0%, rgba(238, 243, 249, 0.64) 55%, rgba(228, 236, 246, 0.72) 100%),
-    radial-gradient(circle at 15% 15%, rgba(29, 127, 204, 0.1), transparent 42%),
-    radial-gradient(circle at 85% 10%, rgba(70, 112, 173, 0.12), transparent 40%),
-    radial-gradient(circle at 55% 80%, rgba(179, 131, 23, 0.08), transparent 46%);
-  filter: brightness(1.02) saturate(0.9);
+    radial-gradient(circle at 16% 18%, rgba(29, 127, 204, 0.12), transparent 32%),
+    radial-gradient(circle at 84% 12%, rgba(129, 167, 214, 0.14), transparent 30%),
+    radial-gradient(circle at 52% 88%, rgba(179, 131, 23, 0.08), transparent 32%);
+  filter: saturate(0.94);
 }
 
 html[data-theme="light"] body::after {
@@ -4041,17 +4037,15 @@ html[data-theme="light"] .footer::after {
 html,
 body {
   background:
-    url("./images/bac.jpg") center top / cover no-repeat fixed,
-    #040506;
+    linear-gradient(180deg, #07111f 0%, #0a1628 45%, #0d1b31 100%);
 }
 
 body::before {
   background:
-    linear-gradient(90deg, rgba(3, 4, 6, 0.9) 0%, rgba(3, 4, 6, 0.72) 34%, rgba(3, 4, 6, 0.46) 58%, rgba(3, 4, 6, 0.7) 100%),
-    radial-gradient(circle at 72% 24%, rgba(255, 255, 255, 0.08), transparent 20%),
-    radial-gradient(circle at 70% 18%, rgba(255, 255, 255, 0.05), transparent 32%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.5));
-  filter: grayscale(0.55) brightness(0.54) contrast(1.05);
+    radial-gradient(circle at 14% 16%, rgba(15, 127, 201, 0.16), transparent 34%),
+    radial-gradient(circle at 82% 14%, rgba(20, 48, 92, 0.18), transparent 32%),
+    radial-gradient(circle at 50% 86%, rgba(241, 200, 76, 0.08), transparent 34%);
+  filter: saturate(0.92);
 }
 
 body::after {
@@ -4109,10 +4103,10 @@ body::after {
 
 html[data-theme="light"] body::before {
   background:
-    linear-gradient(90deg, rgba(244, 246, 249, 0.88) 0%, rgba(244, 246, 249, 0.66) 34%, rgba(244, 246, 249, 0.34) 58%, rgba(244, 246, 249, 0.74) 100%),
-    radial-gradient(circle at 72% 24%, rgba(255, 255, 255, 0.18), transparent 20%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(228, 233, 240, 0.22));
-  filter: grayscale(0.35) brightness(0.96) contrast(1.02);
+    radial-gradient(circle at 16% 18%, rgba(29, 127, 204, 0.12), transparent 32%),
+    radial-gradient(circle at 84% 12%, rgba(129, 167, 214, 0.14), transparent 30%),
+    radial-gradient(circle at 52% 88%, rgba(179, 131, 23, 0.08), transparent 32%);
+  filter: saturate(0.94);
 }
 
 html[data-theme="light"] body::after {
@@ -4158,8 +4152,7 @@ html[data-theme="light"] .cta {
 /* Force site background image after simplification overrides */
 body {
   background:
-    url("./images/bac.jpg") center top / cover no-repeat fixed,
-    #040506 !important;
+    linear-gradient(180deg, #07111f 0%, #0a1628 45%, #0d1b31 100%) !important;
 }
 
 body::before,
@@ -4169,8 +4162,7 @@ body::after {
 
 html[data-theme="light"] body {
   background:
-    url("./images/screenshots/bac3.png") center top / cover no-repeat fixed,
-    #eef3f8 !important;
+    linear-gradient(180deg, #f7fafc 0%, #eef4f9 42%, #e6eef6 100%) !important;
 }
 
 /* Light mode readability and footer polish */
