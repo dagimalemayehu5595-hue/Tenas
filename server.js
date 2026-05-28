@@ -9,11 +9,46 @@ import nodemailer from "nodemailer";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const loadEnvFile = async () => {
+  try {
+    const envPath = path.join(__dirname, ".env");
+    const raw = await fs.readFile(envPath, "utf8");
+    for (const line of raw.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const eqIndex = trimmed.indexOf("=");
+      if (eqIndex === -1) continue;
+      const key = trimmed.slice(0, eqIndex).trim();
+      if (!key || process.env[key]) continue;
+      let value = trimmed.slice(eqIndex + 1).trim();
+      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+        value = value.slice(1, -1);
+      }
+      process.env[key] = value;
+    }
+  } catch (err) {
+    if (err?.code !== "ENOENT") {
+      console.error("Failed to load .env file", err);
+    }
+  }
+};
+
+await loadEnvFile();
+
 const app = express();
 const PORT = process.env.PORT || 3001;
+const imageFileFilter = (req, file, cb) => {
+  const allowedMime = /^image\/(png|jpe?g|webp|avif)$/i.test(file.mimetype || "");
+  const allowedExt = /\.(png|jpe?g|webp|avif)$/i.test(file.originalname || "");
+  if (!allowedMime || !allowedExt) {
+    return cb(new Error("Only PNG, JPG, WEBP, and AVIF images are allowed"));
+  }
+  return cb(null, true);
+};
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 6 * 1024 * 1024 }
+  limits: { fileSize: 6 * 1024 * 1024 },
+  fileFilter: imageFileFilter
 });
 const uploadDir = path.join(__dirname, "public", "uploads");
 const uploadImage = multer({
@@ -32,7 +67,8 @@ const uploadImage = multer({
       cb(null, `${crypto.randomUUID()}${safeExt}`);
     }
   }),
-  limits: { fileSize: 6 * 1024 * 1024 }
+  limits: { fileSize: 6 * 1024 * 1024 },
+  fileFilter: imageFileFilter
 });
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || crypto.randomBytes(16).toString("hex");
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "";
@@ -52,8 +88,21 @@ const otpStore = new Map();
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
 
-app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "32mb" }));
+app.disable("x-powered-by");
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  if (req.path.startsWith("/api/")) {
+    res.setHeader("Cache-Control", "no-store");
+  }
+  next();
+});
+app.use(express.static(path.join(__dirname, "public"), {
+  etag: true,
+  maxAge: process.env.NODE_ENV === "production" ? "1h" : 0
+}));
 
 let submissions = [];
 let content = null;
@@ -88,8 +137,8 @@ const defaultContent = {
     sunday: "Half day"
   },
   contact: {
-    phone: "+251 9xx xxx xxx",
-    email: "info@tenasgym.com"
+    phone: "+25191 219 6096",
+    email: "tenasgymandspa@gmail.com"
   },
   payment: {
     link: ""
@@ -350,6 +399,8 @@ const ensureAdminFile = async () => {
 };
 
 const normalizeEmail = (value) => String(value || "").trim().toLowerCase();
+const normalizeLooseText = (value) => String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
+const normalizePhone = (value) => String(value || "").replace(/[^\d+]/g, "");
 const getAdminEmail = () => normalizeEmail(ADMIN_EMAIL || content?.contact?.email || "info@tenasgym.com");
 
 const getMailer = () => {
@@ -456,6 +507,32 @@ const syncMemberMembershipFromSubmission = (member, submission) => {
   };
 };
 
+const matchesMemberSubmission = (member, submission) => {
+  if (!member || !submission) return false;
+  if (submission.memberId && submission.memberId === member.id) return true;
+
+  const submissionEmail = normalizeEmail(submission.email);
+  if (submissionEmail && submissionEmail === member.email) return true;
+
+  const memberPhone = normalizePhone(member.phone);
+  const submissionPhone = normalizePhone(submission.phone);
+  if (memberPhone && submissionPhone && memberPhone === submissionPhone) return true;
+
+  const memberName = normalizeLooseText(member.fullName);
+  const submissionName = normalizeLooseText(submission.fullName);
+  if (memberName && submissionName && memberName === submissionName) return true;
+
+  return false;
+};
+
+const isActiveUntil = (value) => {
+  if (!value) return true;
+  const normalized = String(value).trim();
+  const parsed = new Date(normalized.length <= 10 ? `${normalized}T23:59:59` : normalized);
+  if (Number.isNaN(parsed.getTime())) return true;
+  return parsed.getTime() >= Date.now();
+};
+
 const requireMember = (req, res, next) => {
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
@@ -496,6 +573,10 @@ app.get(["/programs", "/programs.html"], (req, res) => {
 
 app.get(["/membership", "/membership.html"], (req, res) => {
   res.sendFile(path.join(__dirname, "public", "membership.html"));
+});
+
+app.get(["/dashboard", "/dashboard.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
 app.get(["/tour", "/tour.html"], (req, res) => {
@@ -676,6 +757,112 @@ app.get("/api/member/me", requireMember, async (req, res) => {
     await saveMembers();
     await fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2));
   }
+  return res.json({ ok: true, member: getMemberPublic(req.member) });
+});
+
+app.get("/api/member/dashboard", requireMember, async (req, res) => {
+  const latestMembership = submissions.find((item) => item.type === "membership" && matchesMemberSubmission(req.member, item));
+  if (latestMembership) {
+    latestMembership.memberId = req.member.id;
+    syncMemberMembershipFromSubmission(req.member, latestMembership);
+    await saveMembers();
+    await fs.writeFile(DATA_FILE, JSON.stringify(submissions, null, 2));
+  }
+
+  const shopOrders = submissions
+    .filter((item) => item.type === "shop" && matchesMemberSubmission(req.member, item))
+    .slice(0, 6)
+    .map((item) => ({
+      id: item.id,
+      fullName: item.fullName || "",
+      phone: item.phone || "",
+      status: item.status || "Received",
+      notes: item.notes || "",
+      items: Array.isArray(item.items) ? item.items : [],
+      createdAt: item.createdAt || null
+    }));
+
+  const tourRequests = submissions
+    .filter((item) => item.type === "tour" && matchesMemberSubmission(req.member, item))
+    .slice(0, 6)
+    .map((item) => ({
+      id: item.id,
+      fullName: item.fullName || "",
+      phone: item.phone || "",
+      status: item.status || "Requested",
+      notes: item.notes || "",
+      createdAt: item.createdAt || null
+    }));
+
+  const memberAnnouncements = Array.isArray(content?.announcements)
+    ? content.announcements
+        .filter((item) => isActiveUntil(item?.expiresAt))
+        .slice(0, 4)
+        .map((item) => ({
+          id: item.id || crypto.randomUUID(),
+          tag: item.tag || "Update",
+          title: item.title || "",
+          text: item.text || "",
+          dateLabel: item.dateLabel || "",
+          link: item.link || ""
+        }))
+    : [];
+
+  const recentActivity = [
+    ...(req.member.membership
+      ? [{
+          id: `membership-${req.member.membership.submissionId || req.member.id}`,
+          type: "membership",
+          title: req.member.membership.plan
+            ? `Membership saved for ${req.member.membership.plan}`
+            : "Membership saved",
+          status: req.member.membership.status || "Pending Approval",
+          createdAt: req.member.membership.createdAt || req.member.createdAt || null
+        }]
+      : []),
+    ...shopOrders.map((item) => ({
+      id: `shop-${item.id}`,
+      type: "shop",
+      title: `Shop order with ${item.items.length} item${item.items.length === 1 ? "" : "s"}`,
+      status: item.status,
+      createdAt: item.createdAt
+    })),
+    ...tourRequests.map((item) => ({
+      id: `tour-${item.id}`,
+      type: "tour",
+      title: "Tour request submitted",
+      status: item.status,
+      createdAt: item.createdAt
+    }))
+  ]
+    .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+    .slice(0, 8);
+
+  return res.json({
+    ok: true,
+    member: getMemberPublic(req.member),
+    membership: req.member.membership || null,
+    shopOrders,
+    tourRequests,
+    recentActivity,
+    announcements: memberAnnouncements,
+    contact: content?.contact || {}
+  });
+});
+
+app.patch("/api/member/profile", requireMember, async (req, res) => {
+  const fullName = String(req.body?.fullName || "").trim();
+  const phone = String(req.body?.phone || "").trim();
+  if (!fullName) {
+    return res.status(400).json({ ok: false, error: "Full name is required" });
+  }
+  req.member.fullName = fullName;
+  req.member.phone = phone;
+  if (req.member.membership) {
+    req.member.membership.fullName = fullName;
+    req.member.membership.phone = phone;
+  }
+  await saveMembers();
   return res.json({ ok: true, member: getMemberPublic(req.member) });
 });
 
@@ -968,6 +1155,22 @@ app.post(
     return res.status(500).json({ ok: false, error: String(err) });
   }
 });
+
+app.use((err, req, res, next) => {
+  if (!err) return next();
+  if (req.path.startsWith("/api/")) {
+    const message = err.code === "LIMIT_FILE_SIZE"
+      ? "Uploaded image is too large. Maximum size is 6MB."
+      : err.message || "Upload failed";
+    return res.status(400).json({ ok: false, error: message });
+  }
+  return next(err);
+});
+
+app.use("/api", (req, res) => {
+  return res.status(404).json({ ok: false, error: "API route not found" });
+});
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -978,7 +1181,7 @@ const start = async () => {
   await ensureContentFile();
   await ensureAdminFile();
   app.listen(PORT, () => {
-    console.log(`Tenas Fitness running on http://localhost:${PORT}`);
+    console.log(`Tenas Gym and Spa running on http://localhost:${PORT}`);
   });
 };
 

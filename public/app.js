@@ -30,6 +30,34 @@ const tech = [
   }
 ];
 
+const heroSignals = [
+  "Premium machine floor",
+  "Smart gate member access",
+  "Gym + spa experience"
+];
+
+const arrivalMoments = [
+  {
+    title: "Reception Feel",
+    desc: "A calm first touchpoint before the training floor opens up.",
+    tag: "Arrival",
+    img: "./images/IMG_3766.JPG",
+    className: "arrival-card-feature"
+  },
+  {
+    title: "Building Presence",
+    desc: "A polished exterior story that makes the location feel easy to trust and find.",
+    tag: "Outside",
+    img: "./images/IMG_3777.JPG"
+  },
+  {
+    title: "Smart Gate Access",
+    desc: "A smoother entry experience that makes membership feel premium from the door.",
+    tag: "Access",
+    img: "./images/IMG_3770.JPG"
+  }
+];
+
 function isActiveUntil(value) {
   if (!value) return true;
   const normalized = String(value).trim();
@@ -40,7 +68,7 @@ function isActiveUntil(value) {
 
 function App() {
   const [content, setContent] = useState(null);
-  const mapQuery = encodeURIComponent("Tenas Fitness Bole Bulbula Kidus gebreal Building Addis Ababa Ethiopia");
+  const mapQuery = encodeURIComponent("Tenas Gym and Spa Bole Bulbula Kidus gebreal Building Addis Ababa Ethiopia");
   const phone = content?.contact?.phone || "+25191 219 6096";
   const email = content?.contact?.email || "tenasgymandspa@gmail.com";
   const announcements = Array.isArray(content?.announcements)
@@ -65,37 +93,42 @@ function App() {
 
   return (
     <div>
-      <header className="hero">
-        <nav className="nav">
-          <a className="logo" href="./index.html">
-            <img
-              src="./images/tenas.jpeg"
-              alt="Tenas Fitness logo"
-              className="logo-image"
-            />
-            <span>Tenas Gym and Spa</span>
-          </a>
-          <div className="nav-links">
-            <a href="./gallery.html">Gallery</a>
-            <a href="./shop.html">Shop</a>
-            <a href="./machines.html">Machines</a>
-            <a href="./coaches.html">Coaches</a>
-            <a href="./membership.html">Membership</a>
-          </div>
-          <div className="nav-actions">
-            <ThemeToggle />
-            <a className="cta" href="./membership.html">Join Now</a>
-          </div>
-        </nav>
-
+      <nav className="nav">
+        <a className="logo" href="./index.html">
+          <img
+            src="./images/tenas.jpeg"
+            alt="Tenas Gym and Spa logo"
+            className="logo-image"
+          />
+          <span>Tenas Gym and Spa</span>
+        </a>
+        <div className="nav-links">
+          <a href="./index.html">Home</a>
+          <a href="./gallery.html">Gallery</a>
+          <a href="./shop.html">Shop</a>
+          <a href="./machines.html">Machines</a>
+          <a href="./coaches.html">Coaches</a>
+          <a href="./membership.html">Membership</a>
+        </div>
+        <div className="nav-actions">
+          <ThemeToggle />
+          <a className="cta" href="./membership.html">Join Now</a>
+        </div>
+      </nav>
+      <header className="hero hero-home">
         <div className="hero-grid">
           <div>
-            <p className="eyebrow">Strength , Conditioning , Recovery</p>
+            <p className="eyebrow">Strength. Conditioning. Recovery.</p>
             <h1>Train strong. Move fast. Recover smarter.</h1>
-            <p className="lead">Black & blue performance gym with premium machines, coaching, and recovery built around your goals.</p>
+            <p className="lead">A focused training space with premium machines, practical coaching, and recovery support built around real consistency.</p>
             <div className="hero-actions">
               <a className="cta" href="./membership.html">Join Now</a>
               <a className="secondary" href="./tour.html">Book a Tour</a>
+            </div>
+            <div className="hero-signal-row">
+              {heroSignals.map((item) => (
+                <span className="hero-signal" key={item}>{item}</span>
+              ))}
             </div>
           </div>
           <div className="hero-card">
@@ -177,6 +210,26 @@ function App() {
         </section>
       ) : null}
 
+      <section className="section arrival-section">
+        <div className="section-header">
+          <p className="eyebrow">First Impression</p>
+          <h2>Show the arrival experience too</h2>
+          <p className="lead">Reception, building presence, and smart access help visitors picture the full experience before they step inside.</p>
+        </div>
+        <div className="arrival-grid">
+          {arrivalMoments.map((item) => (
+            <article className={`arrival-card ${item.className || ""}`} key={item.title}>
+              <img className="arrival-image" src={item.img} alt={item.title} />
+              <div className="arrival-overlay">
+                <span className="arrival-tag">{item.tag}</span>
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="section location-section">
         <div className="section-header">
           <p className="eyebrow">Find Us</p>
@@ -221,7 +274,7 @@ function App() {
           <div className="map-shell">
             <iframe
               className="location-map"
-              title="Tenas Fitness location map"
+              title="Tenas Gym and Spa location map"
               src={`https://www.google.com/maps?q=${mapQuery}&z=15&output=embed`}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"

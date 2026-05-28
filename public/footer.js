@@ -12,6 +12,45 @@ function applyTheme(theme) {
 
 applyTheme(getPreferredTheme());
 
+function normalizeNavPath(value) {
+  if (!value) return "/index.html";
+  const clean = value.split("#")[0].split("?")[0].trim();
+  if (!clean || clean === "/") return "/index.html";
+  if (clean.endsWith("/")) return `${clean}index.html`;
+  return clean.startsWith("/") ? clean : `/${clean.replace(/^\.\//, "")}`;
+}
+
+function syncActiveNavLink() {
+  const current = normalizeNavPath(window.location.pathname);
+  document.querySelectorAll(".nav-links a").forEach((link) => {
+    const href = normalizeNavPath(link.getAttribute("href") || "");
+    const isHome = current === "/index.html" && (href === "/index.html" || href === "/");
+    const isActive = isHome || href === current;
+    link.classList.toggle("is-active", isActive);
+    if (isActive) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+}
+
+const navObserver = new MutationObserver(() => {
+  syncActiveNavLink();
+});
+
+if (document.body) {
+  navObserver.observe(document.body, { childList: true, subtree: true });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", syncActiveNavLink, { once: true });
+} else {
+  syncActiveNavLink();
+}
+
+window.addEventListener("load", syncActiveNavLink);
+
 function useThemeMode() {
   const [theme, setTheme] = React.useState(() => getPreferredTheme());
 
@@ -49,7 +88,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-brand">
-        <h3>Tenas Fitness</h3>
+        <h3>Tenas Gym and Spa</h3>
         <p>Bole Bulbula, Kidus gebreal Building</p>
         <p>Ethiopia, A.A</p>
       </div>
@@ -107,7 +146,7 @@ function Footer() {
       </div>
       <div className="footer-bottom">
         <p>
-          Tenas Fitness (c) <a href="./admin.html" className="footer-year-link">2026</a>
+          Tenas Gym and Spa (c) <a href="./admin.html" className="footer-year-link">2026</a>
         </p>
         <p>Designed and developed by Dagim Alemayehu | Contact: 0930105595 / 0917923211</p>
       </div>

@@ -38,6 +38,19 @@ function AdminApp() {
   };
   const [contentDraft, setContentDraft] = useState(emptyDraft);
 
+  const getStatusOptions = (type) => {
+    switch (type) {
+      case "membership":
+        return ["submitted", "under review", "approved", "card ready", "closed"];
+      case "shop":
+        return ["received", "preparing", "ready", "delivered", "closed"];
+      case "tour":
+        return ["requested", "contacted", "scheduled", "completed", "closed"];
+      default:
+        return ["new", "contacted", "closed"];
+    }
+  };
+
   const authFetch = async (url) => {
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` }
@@ -289,7 +302,7 @@ function AdminApp() {
       <header className="hero admin-hero">
         <nav className="nav">
           <a className="logo" href="./index.html">
-            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
+            <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
             <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
@@ -495,17 +508,16 @@ function AdminApp() {
                         <label>
                           Status
                           <select
-                            value={item.status || "new"}
+                            value={item.status || getStatusOptions(item.type)[0]}
                             onChange={(e) => handleSubmissionUpdate(item.id, { status: e.target.value })}
                           >
-                            <option value="new">New</option>
-                            <option value="contacted">Contacted</option>
-                            <option value="paid">Paid</option>
-                            <option value="closed">Closed</option>
+                            {getStatusOptions(item.type).map((status) => (
+                              <option key={status} value={status}>{status}</option>
+                            ))}
                           </select>
                         </label>
                         <label>
-                          Notes
+                          {item.type === "membership" ? "Member Note" : item.type === "shop" ? "Order Note" : "Visit Note"}
                           <textarea
                             rows="2"
                             value={item.notes || ""}

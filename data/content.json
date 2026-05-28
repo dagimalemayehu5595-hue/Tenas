@@ -31,7 +31,8 @@
       "Gym and Aerobics",
       "Gym Only",
       "Aerobics Only",
-      "Off Peak Hour"
+      "Off Peak Hour",
+      "Aerobics and spa"
     ],
     "prices": [
       [
@@ -40,7 +41,8 @@
         "7,499",
         "5,499",
         "2,999",
-        "4,499"
+        "4,499",
+        ""
       ],
       [
         "18,799",
@@ -48,7 +50,8 @@
         "13,999",
         "10,199",
         "5,499",
-        "8,499"
+        "8,499",
+        ""
       ],
       [
         "23,999",
@@ -56,7 +59,8 @@
         "18,499",
         "13,199",
         "7,499",
-        "10,999"
+        "10,999",
+        ""
       ],
       [
         "39,999",
@@ -64,7 +68,8 @@
         "30,999",
         "23,999",
         "13,499",
-        "19,999"
+        "19,999",
+        ""
       ],
       [
         "69,999",
@@ -72,7 +77,8 @@
         "53,999",
         "39,999",
         "24,999",
-        "35,999"
+        "35,999",
+        ""
       ]
     ]
   },
@@ -98,6 +104,10 @@
     {
       "label": ">= 4 person",
       "value": "7% each"
+    },
+    {
+      "label": "2 person",
+      "value": "6% each"
     }
   ],
   "referralCodes": [
@@ -107,17 +117,7 @@
       "expiresAt": ""
     }
   ],
-  "announcements": [
-    {
-      "tag": "Discount ",
-      "title": "Fasika ",
-      "text": "Don't miss it ",
-      "date": "This weekend ",
-      "link": "",
-      "img": "",
-      "expiresAt": ""
-    }
-  ],
+  "announcements": [],
   "shopProducts": [
     {
       "category": "Protein",

@@ -54,26 +54,25 @@ const galleryAtmosphere = [
 function App() {
   return (
     <div>
+      <nav className="nav">
+        <a className="logo" href="./index.html">
+          <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
+          <span>Tenas Gym and Spa</span>
+        </a>
+        <div className="nav-links">
+          <a href="./index.html">Home</a>
+          <a href="./gallery.html">Gallery</a>
+          <a href="./shop.html">Shop</a>
+          <a href="./machines.html">Machines</a>
+          <a href="./coaches.html">Coaches</a>
+          <a href="./membership.html">Membership</a>
+        </div>
+        <div className="nav-actions">
+          <ThemeToggle />
+          <a className="cta" href="./tour.html">Book a Tour</a>
+        </div>
+      </nav>
       <header className="hero gallery-hero">
-        <nav className="nav">
-          <a className="logo" href="./index.html">
-            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Gym and Spa</span>
-          </a>
-          <div className="nav-links">
-            <a href="./index.html">Home</a>
-            <a href="./gallery.html">Gallery</a>
-            <a href="./shop.html">Shop</a>
-            <a href="./machines.html">Machines</a>
-            <a href="./coaches.html">Coaches</a>
-            <a href="./membership.html">Membership</a>
-          </div>
-          <div className="nav-actions">
-            <ThemeToggle />
-            <a className="cta" href="./tour.html">Book a Tour</a>
-          </div>
-        </nav>
-
         <div className="hero-grid">
           <div>
             <p className="eyebrow">Photo + Video Preview</p>

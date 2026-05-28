@@ -47,26 +47,25 @@ function App() {
 
   return (
     <div>
+      <nav className="nav">
+        <a className="logo" href="./index.html">
+          <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
+          <span>Tenas Gym and Spa</span>
+        </a>
+        <div className="nav-links">
+          <a href="./">Home</a>
+          <a href="./gallery.html">Gallery</a>
+          <a href="./shop.html">Shop</a>
+          <a href="./machines.html">Machines</a>
+          <a href="./coaches.html">Coaches</a>
+          <a href="./membership.html">Membership</a>
+        </div>
+        <div className="nav-actions">
+          <ThemeToggle />
+          <a className="cta" href="./membership.html">Join Now</a>
+        </div>
+      </nav>
       <header className="hero">
-        <nav className="nav">
-          <a className="logo" href="./index.html">
-            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Gym and Spa</span>
-          </a>
-          <div className="nav-links">
-            <a href="./">Home</a>
-            <a href="./gallery.html">Gallery</a>
-            <a href="./shop.html">Shop</a>
-            <a href="./machines.html">Machines</a>
-            <a href="./coaches.html">Coaches</a>
-            <a href="./membership.html">Membership</a>
-          </div>
-          <div className="nav-actions">
-            <ThemeToggle />
-            <a className="cta" href="./membership.html">Join Now</a>
-          </div>
-        </nav>
-
         <div className="hero-grid">
           <div>
             <p className="eyebrow">Elite Coaching Team</p>
@@ -127,30 +126,6 @@ function App() {
           <div className="program-card">
             <h3>Recovery Protocols</h3>
             <p>Mobility flows, breathwork, and recovery sequencing after sessions.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section pricing">
-        <div className="section-header">
-          <h2>Book A Session</h2>
-          <p>Train with a coach, see the facility, and get a custom plan.</p>
-        </div>
-        <div className="pricing-grid">
-          <div className="price-card">
-            <h3>Coach Intro</h3>
-            <p className="price">Free</p>
-            <p>Movement screen + gym tour.</p>
-          </div>
-          <div className="price-card">
-            <h3>Performance Consult</h3>
-            <p className="price">$29</p>
-            <p>Baseline metrics + 4-week plan.</p>
-          </div>
-          <div className="price-card">
-            <h3>1-on-1 Session</h3>
-            <p className="price">$49</p>
-            <p>Technique coaching + recovery session.</p>
           </div>
         </div>
       </section>

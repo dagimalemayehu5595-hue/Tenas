@@ -635,6 +635,13 @@ function MembershipForm({ member, savedMembership, onMembershipSaved }) {
 }
 
 function MembershipPageApp() {
+  const allowMemberFormAccess = React.useMemo(() => {
+    try {
+      return new URLSearchParams(window.location.search).get("form") === "1";
+    } catch (e) {
+      return false;
+    }
+  }, []);
   const [content, setContent] = React.useState(null);
   const [member, setMember] = React.useState(null);
   const [memberLoading, setMemberLoading] = React.useState(true);
@@ -696,6 +703,12 @@ function MembershipPageApp() {
     };
   }, []);
 
+  React.useEffect(() => {
+    if (member && !allowMemberFormAccess) {
+      window.location.replace("./dashboard.html");
+    }
+  }, [member, allowMemberFormAccess]);
+
   const handleAuthFieldChange = (event) => {
     const { name, value } = event.target;
     setAuthForm((current) => ({ ...current, [name]: value }));
@@ -733,6 +746,8 @@ function MembershipPageApp() {
         ...current,
         password: ""
       }));
+      window.location.href = "./dashboard.html";
+      return;
     } catch (err) {
       setAuthError(err?.message || "Unable to continue.");
     } finally {
@@ -780,26 +795,25 @@ function MembershipPageApp() {
 
   return (
     <div className="page-shell">
+      <nav className="nav">
+        <a className="logo" href="./index.html">
+          <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
+          <span>Tenas Gym and Spa</span>
+        </a>
+        <div className="nav-links">
+          <a href="./">Home</a>
+          <a href="./gallery.html">Gallery</a>
+          <a href="./shop.html">Shop</a>
+          <a href="./machines.html">Machines</a>
+          <a href="./coaches.html">Coaches</a>
+          <a href="./membership.html">Membership</a>
+        </div>
+        <div className="nav-actions">
+          <ThemeToggle />
+          <a className="cta" href="#member-access">Join Now</a>
+        </div>
+      </nav>
       <header className="hero">
-        <nav className="nav">
-          <a className="logo" href="./index.html">
-            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
-            <span>Tenas Gym and Spa</span>
-          </a>
-          <div className="nav-links">
-            <a href="./">Home</a>
-            <a href="./gallery.html">Gallery</a>
-            <a href="./shop.html">Shop</a>
-            <a href="./machines.html">Machines</a>
-            <a href="./coaches.html">Coaches</a>
-            <a href="./membership.html">Membership</a>
-          </div>
-          <div className="nav-actions">
-            <ThemeToggle />
-            <a className="cta" href="#member-access">Join Now</a>
-          </div>
-        </nav>
-
         <div className="hero-grid">
           <div>
             <p className="eyebrow">Membership</p>
@@ -1014,34 +1028,19 @@ function MembershipPageApp() {
                 {authError ? <p className="form-error">{authError}</p> : null}
               </form>
             </div>
-          ) : (
+          ) : allowMemberFormAccess ? (
             <>
-              <div className="membership-card member-summary-card">
-                <div className="member-summary-head">
-                  <div>
-                    <p className="eyebrow">Logged In</p>
-                    <h3>{member.fullName || "Member Account"}</h3>
-                    <p>{member.email}</p>
-                    {member.phone ? <p>{member.phone}</p> : null}
-                  </div>
+              <div className="membership-card member-form-gate">
+                <div>
+                  <p className="eyebrow">Membership Form</p>
+                  <h3>Complete or update your membership details.</h3>
+                  <p>Your saved card, status, and member history live in your dashboard. This page is only for filling or updating the form.</p>
+                </div>
+                <div className="member-summary-head-actions">
+                  <a className="secondary" href="./dashboard.html">Back to Dashboard</a>
                   <button type="button" className="secondary" onClick={handleLogout}>
                     Log Out
                   </button>
-                </div>
-
-                <div className="member-summary-grid">
-                  <div className="member-summary-pill">
-                    <strong>Membership: </strong>
-                    <span>{member.membership?.plan || "Not submitted yet"}</span>
-                  </div>
-                  <div className="member-summary-pill">
-                    <strong>Status: </strong>
-                    <span>{member.membership?.status || "Ready to apply"}</span>
-                  </div>
-                  <div className="member-summary-pill">
-                    <strong>Saved Card: </strong>
-                    <span>{member.membership ? "Available in your account" : "Will appear after submission"}</span>
-                  </div>
                 </div>
               </div>
 
@@ -1053,6 +1052,18 @@ function MembershipPageApp() {
                 />
               </div>
             </>
+          ) : (
+            <div className="membership-card member-redirect-card">
+              <div>
+                <p className="eyebrow">Member Access</p>
+                <h3>Your account is ready.</h3>
+                <p>We now keep your saved card, status, and member details inside your dashboard so everything stays in one clean place.</p>
+              </div>
+              <div className="membership-success-actions">
+                <a className="cta" href="./dashboard.html">Open Dashboard</a>
+                <a className="secondary" href="./membership.html?form=1">Open Membership Form</a>
+              </div>
+            </div>
           )}
         </section>
       </main>
@@ -1086,7 +1097,7 @@ function App() {
       <header className="hero">
         <nav className="nav">
           <a className="logo" href="./index.html">
-            <img src="./images/tenas.jpeg" alt="Tenas Fitness logo" className="logo-image" />
+            <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
             <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
@@ -1109,7 +1120,7 @@ function App() {
             <h1>Choose a Plan That Fits Your Life.</h1>
             <p className="lead">Premium equipment, expert coaching, and recovery support — without the chaos.</p>
             <div className="hero-actions">
-              <a className="cta" href="#tiers">Claim Free Trial</a>
+              <a className="cta" href="#tiers">Join Now</a>
               <a className="secondary" href="./coaches.html">Meet Coaches</a>
             </div>
           </div>
@@ -1232,12 +1243,6 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<MembershipPageApp />);
-
-
-
-
-
-
 
 
 
