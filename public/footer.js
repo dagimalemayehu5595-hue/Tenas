@@ -12,19 +12,54 @@ function applyTheme(theme) {
 
 applyTheme(getPreferredTheme());
 
+const CLEAN_PAGE_PATHS = new Map([
+  ["/index.html", "/"],
+  ["/gallery.html", "/gallery"],
+  ["/shop.html", "/shop"],
+  ["/machines.html", "/machines"],
+  ["/coaches.html", "/coaches"],
+  ["/spa.html", "/spa"],
+  ["/membership.html", "/membership"],
+  ["/dashboard.html", "/dashboard"],
+  ["/tour.html", "/tour"],
+  ["/admin.html", "/admin"]
+]);
+
+function rewriteCleanPageLinks() {
+  document.querySelectorAll("a[href]").forEach((link) => {
+    const url = new URL(link.getAttribute("href"), window.location.href);
+    const cleanPath = url.origin === window.location.origin
+      ? CLEAN_PAGE_PATHS.get(url.pathname)
+      : "";
+    if (cleanPath) {
+      link.setAttribute("href", `${cleanPath}${url.search}${url.hash}`);
+    }
+  });
+}
+
+const currentCleanPath = CLEAN_PAGE_PATHS.get(window.location.pathname);
+if (currentCleanPath) {
+  window.history.replaceState(
+    window.history.state,
+    "",
+    `${currentCleanPath}${window.location.search}${window.location.hash}`
+  );
+}
+
 function normalizeNavPath(value) {
-  if (!value) return "/index.html";
+  if (!value) return "/";
   const clean = value.split("#")[0].split("?")[0].trim();
-  if (!clean || clean === "/") return "/index.html";
-  if (clean.endsWith("/")) return `${clean}index.html`;
-  return clean.startsWith("/") ? clean : `/${clean.replace(/^\.\//, "")}`;
+  if (!clean || clean === "/" || clean === "/index.html") return "/";
+  const absolute = clean.startsWith("/") ? clean : `/${clean.replace(/^\.\//, "")}`;
+  return absolute.replace(/\.html$/, "");
 }
 
 function syncActiveNavLink() {
+  rewriteCleanPageLinks();
   const current = normalizeNavPath(window.location.pathname);
   document.querySelectorAll(".nav-links a").forEach((link) => {
     const href = normalizeNavPath(link.getAttribute("href") || "");
-    const isHome = current === "/index.html" && (href === "/index.html" || href === "/");
+    const isHome = current === "/" && href === "/";
     const isActive = isHome || href === current;
     link.classList.toggle("is-active", isActive);
     if (isActive) {
@@ -126,7 +161,7 @@ function Footer() {
         <h4>Partners</h4>
         <div className="footer-partner-grid">
           <div className="partner">
-            <img src="./images/samrawit.png" alt="Samrawit Foundation logo" className="partner-logo" />
+            <img src="./images/samrawit.png" alt="Samrawit Foundation logo" className="partner-logo" loading="lazy" decoding="async" />
             <p>Samrawit Foundation</p>
             <a
               href="https://samrawitfoundation.org.et"
@@ -138,7 +173,7 @@ function Footer() {
             </a>
           </div>
           <div className="partner">
-            <img src="./images/spa.PNG" alt="Tenas Day Spa Therapy and Wellness logo" className="partner-logo" />
+            <img src="./images/spa.PNG" alt="Tenas Day Spa Therapy and Wellness logo" className="partner-logo" loading="lazy" decoding="async" />
             <p>Tenas Day Spa</p>
             <span className="partner-link">Therapy and Wellness</span>
           </div>
@@ -146,7 +181,7 @@ function Footer() {
       </div>
       <div className="footer-bottom">
         <p>
-          Tenas Gym and Spa (c) <a href="./admin.html" className="footer-year-link">2026</a>
+          Tenas Gym and Spa (c) <a href="/admin" className="footer-year-link">2026</a>
         </p>
         <p>Designed and developed by Dagim Alemayehu | Contact: 0930105595 / 0917923211</p>
       </div>

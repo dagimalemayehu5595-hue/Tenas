@@ -37,6 +37,11 @@ await loadEnvFile();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const resolveAppPath = (value, fallback) => {
+  const selected = String(value || fallback || "").trim();
+  return path.isAbsolute(selected) ? selected : path.join(__dirname, selected);
+};
 const imageFileFilter = (req, file, cb) => {
   const allowedMime = /^image\/(png|jpe?g|webp|avif)$/i.test(file.mimetype || "");
   const allowedExt = /\.(png|jpe?g|webp|avif)$/i.test(file.originalname || "");
@@ -50,7 +55,7 @@ const upload = multer({
   limits: { fileSize: 6 * 1024 * 1024 },
   fileFilter: imageFileFilter
 });
-const uploadDir = path.join(__dirname, "public", "uploads");
+const uploadDir = resolveAppPath(process.env.UPLOAD_DIR, path.join("public", "uploads"));
 const uploadImage = multer({
   storage: multer.diskStorage({
     destination: async (req, file, cb) => {
@@ -75,13 +80,14 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "";
 const OTP_SECRET = process.env.OTP_SECRET || crypto.randomBytes(32).toString("hex");
 const OTP_TTL_MS = 10 * 60 * 1000;
 const OTP_COOLDOWN_MS = 60 * 1000;
-const DATA_DIR = path.join(__dirname, "data");
+const ADMIN_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
+const DATA_DIR = resolveAppPath(process.env.DATA_DIR, "data");
 const DATA_FILE = path.join(DATA_DIR, "submissions.json");
 const CONTENT_FILE = path.join(DATA_DIR, "content.json");
 const PUBLIC_CONTENT_FILE = path.join(__dirname, "public", "content.json");
 const ADMIN_CONFIG_FILE = path.join(DATA_DIR, "admin.json");
 const MEMBERS_FILE = path.join(DATA_DIR, "members.json");
-const adminTokens = new Set();
+const revokedAdminTokens = new Set();
 const memberTokens = new Map();
 const otpStore = new Map();
 
@@ -90,18 +96,54 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "";
 
 app.use(express.json({ limit: "32mb" }));
 app.disable("x-powered-by");
+if (IS_PRODUCTION) {
+  app.set("trust proxy", 1);
+}
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  if (IS_PRODUCTION && req.secure) {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
   if (req.path.startsWith("/api/")) {
     res.setHeader("Cache-Control", "no-store");
   }
   next();
 });
+if (IS_PRODUCTION && String(process.env.FORCE_HTTPS || "").toLowerCase() === "true") {
+  app.use((req, res, next) => {
+    if (req.secure || req.path === "/api/health") return next();
+    return res.redirect(301, `https://${req.headers.host}${req.originalUrl}`);
+  });
+}
+const cleanPageRoutes = new Map([
+  ["/index.html", "/"],
+  ["/gallery.html", "/gallery"],
+  ["/shop.html", "/shop"],
+  ["/machines.html", "/machines"],
+  ["/coaches.html", "/coaches"],
+  ["/spa.html", "/spa"],
+  ["/membership.html", "/membership"],
+  ["/dashboard.html", "/dashboard"],
+  ["/tour.html", "/tour"],
+  ["/admin.html", "/admin"]
+]);
+app.use((req, res, next) => {
+  const cleanPath = cleanPageRoutes.get(req.path);
+  if (!cleanPath) return next();
+  const queryIndex = req.originalUrl.indexOf("?");
+  const query = queryIndex >= 0 ? req.originalUrl.slice(queryIndex) : "";
+  return res.redirect(301, `${cleanPath}${query}`);
+});
+app.use("/uploads", express.static(uploadDir, {
+  etag: true,
+  maxAge: IS_PRODUCTION ? "1d" : 0
+}));
 app.use(express.static(path.join(__dirname, "public"), {
   etag: true,
-  maxAge: process.env.NODE_ENV === "production" ? "1h" : 0
+  maxAge: IS_PRODUCTION ? "1h" : 0
 }));
 
 let submissions = [];
@@ -165,15 +207,15 @@ const defaultContent = {
       "Off Peak Hour"
     ],
     prices: [
-      ["9,999", "7,499", "7,499", "5,499", "2,999", "4,499"],
-      ["18,799", "13,999", "13,999", "10,199", "5,499", "8,499"],
-      ["23,999", "18,499", "18,499", "13,199", "7,499", "10,999"],
-      ["39,999", "30,999", "30,999", "23,999", "13,499", "19,999"],
-      ["69,999", "53,999", "53,999", "39,999", "24,999", "35,999"]
+      ["9,999", "7,999", "7,499", "5,999", "3,999", "4,999"],
+      ["18,799", "14,999", "13,999", "11,099", "7,359", "9,139"],
+      ["23,999", "19,679", "18,499", "14,399", "9,999", "12,209"],
+      ["39,999", "32,639", "30,999", "26,199", "17,999", "22,199"],
+      ["69,999", "57,599", "53,999", "43,599", "33,299", "38,999"]
     ]
   },
   dailyPass: [
-    { label: "Daily pass F.P", price: "1,099" },
+    { label: "Daily pass F.P", price: "1,199" },
     { label: "Daily pass Gym", price: "499" },
     { label: "Daily pass Aerobics", price: "499" }
   ],
@@ -217,7 +259,7 @@ const defaultContent = {
       img: ""
     }
   ],
-  priceNote: "The above price does not include donation for 500.00 to Samrawit Foundation.",
+  priceNote: "The prices above do not include the ETB 500 membership card fee.",
   programs: [
     {
       name: "Strength Track",
@@ -378,6 +420,50 @@ const verifyPassword = (password, auth) => {
   return crypto.timingSafeEqual(Buffer.from(hash, "hex"), Buffer.from(auth.hash, "hex"));
 };
 
+const signAdminToken = () => {
+  const payload = Buffer.from(JSON.stringify({
+    type: "admin",
+    issuedAt: Date.now(),
+    authVersion: adminAuth?.updatedAt || ""
+  })).toString("base64url");
+  const signature = crypto
+    .createHmac("sha256", OTP_SECRET)
+    .update(payload)
+    .digest("base64url");
+  return `${payload}.${signature}`;
+};
+
+const verifyAdminToken = (token) => {
+  if (!token || revokedAdminTokens.has(token)) return false;
+  const [payload, signature, extra] = String(token).split(".");
+  if (!payload || !signature || extra) return false;
+
+  const expected = crypto
+    .createHmac("sha256", OTP_SECRET)
+    .update(payload)
+    .digest();
+  let actual;
+  try {
+    actual = Buffer.from(signature, "base64url");
+  } catch {
+    return false;
+  }
+  if (actual.length !== expected.length || !crypto.timingSafeEqual(actual, expected)) {
+    return false;
+  }
+
+  try {
+    const parsed = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    return parsed.type === "admin"
+      && parsed.authVersion === (adminAuth?.updatedAt || "")
+      && Number.isFinite(parsed.issuedAt)
+      && parsed.issuedAt <= Date.now()
+      && Date.now() - parsed.issuedAt <= ADMIN_TOKEN_TTL_MS;
+  } catch {
+    return false;
+  }
+};
+
 const saveAdminAuth = async (password) => {
   const { salt, hash } = hashPassword(password);
   adminAuth = { salt, hash, updatedAt: new Date().toISOString() };
@@ -509,20 +595,10 @@ const syncMemberMembershipFromSubmission = (member, submission) => {
 
 const matchesMemberSubmission = (member, submission) => {
   if (!member || !submission) return false;
-  if (submission.memberId && submission.memberId === member.id) return true;
+  if (submission.memberId) return submission.memberId === member.id;
 
   const submissionEmail = normalizeEmail(submission.email);
-  if (submissionEmail && submissionEmail === member.email) return true;
-
-  const memberPhone = normalizePhone(member.phone);
-  const submissionPhone = normalizePhone(submission.phone);
-  if (memberPhone && submissionPhone && memberPhone === submissionPhone) return true;
-
-  const memberName = normalizeLooseText(member.fullName);
-  const submissionName = normalizeLooseText(submission.fullName);
-  if (memberName && submissionName && memberName === submissionName) return true;
-
-  return false;
+  return Boolean(submissionEmail && submissionEmail === member.email);
 };
 
 const isActiveUntil = (value) => {
@@ -549,21 +625,26 @@ const requireMember = (req, res, next) => {
 const requireAdmin = (req, res, next) => {
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
-  if (!token || !adminTokens.has(token)) {
+  if (!verifyAdminToken(token)) {
     return res.status(401).json({ ok: false, error: "Unauthorized" });
   }
+  req.adminToken = token;
   return next();
 };
 
-app.get(["/coaches", "/coaches.html"], (req, res) => {
+app.get("/coaches", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "coaches.html"));
 });
 
-app.get(["/shop", "/shop.html"], (req, res) => {
+app.get("/gallery", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "gallery.html"));
+});
+
+app.get("/shop", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "shop.html"));
 });
 
-app.get(["/machines", "/machines.html"], (req, res) => {
+app.get("/machines", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "machines.html"));
 });
 
@@ -571,19 +652,31 @@ app.get(["/programs", "/programs.html"], (req, res) => {
   res.redirect(302, "/");
 });
 
-app.get(["/membership", "/membership.html"], (req, res) => {
+app.get("/spa", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "spa.html"));
+});
+
+app.get("/membership", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "membership.html"));
 });
 
-app.get(["/dashboard", "/dashboard.html"], (req, res) => {
+app.get("/dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "dashboard.html"));
 });
 
-app.get(["/tour", "/tour.html"], (req, res) => {
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    service: "tenas-gym",
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get("/tour", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "tour.html"));
 });
 
-app.get(["/admin", "/admin.html"], (req, res) => {
+app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 app.post("/api/tour", async (req, res) => {
@@ -871,8 +964,7 @@ app.post("/api/admin/login", (req, res) => {
   if (!verifyPassword(password, adminAuth)) {
     return res.status(401).json({ ok: false, error: "Invalid password" });
   }
-  const token = crypto.randomBytes(24).toString("hex");
-  adminTokens.add(token);
+  const token = signAdminToken();
   return res.json({ ok: true, token });
 });
 
@@ -932,9 +1024,7 @@ app.post("/api/admin/reset", async (req, res) => {
 });
 
 app.post("/api/admin/logout", requireAdmin, (req, res) => {
-  const auth = req.headers.authorization || "";
-  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
-  if (token) adminTokens.delete(token);
+  if (req.adminToken) revokedAdminTokens.add(req.adminToken);
   return res.json({ ok: true });
 });
 
@@ -1171,18 +1261,35 @@ app.use("/api", (req, res) => {
   return res.status(404).json({ ok: false, error: "API route not found" });
 });
 
-app.get("*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 const start = async () => {
+  if (IS_PRODUCTION) {
+    const required = ["ADMIN_PASSWORD", "ADMIN_EMAIL", "OTP_SECRET"];
+    const missing = required.filter((key) => !String(process.env[key] || "").trim());
+    if (missing.length) {
+      throw new Error(`Missing required production environment variables: ${missing.join(", ")}`);
+    }
+    if (String(process.env.ADMIN_PASSWORD).length < 12) {
+      throw new Error("ADMIN_PASSWORD must contain at least 12 characters in production");
+    }
+    if (String(process.env.OTP_SECRET).length < 32) {
+      throw new Error("OTP_SECRET must contain at least 32 characters in production");
+    }
+  }
   await ensureDataFile();
   await ensureMembersFile();
   await ensureContentFile();
   await ensureAdminFile();
+  await fs.mkdir(uploadDir, { recursive: true });
   app.listen(PORT, () => {
     console.log(`Tenas Gym and Spa running on http://localhost:${PORT}`);
   });
 };
 
-start();
+start().catch((err) => {
+  console.error("Tenas Gym failed to start", err);
+  process.exitCode = 1;
+});

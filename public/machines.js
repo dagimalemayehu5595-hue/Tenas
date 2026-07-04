@@ -359,8 +359,81 @@ function getMachineCardLabel(name) {
   return labels[name] || name;
 }
 
+const machineCategories = ["All", "Chest", "Back", "Shoulders", "Arms", "Legs", "Cardio", "Functional", "Free Weights"];
+const catalogPageSize = 12;
+
+const machineCategoryByName = {
+  "Commercial Treadmill (LCD Screen)": "Cardio",
+  "Curved Treadmill (LED Screen)": "Cardio",
+  "Elliptical": "Cardio",
+  "Recumbent Bike": "Cardio",
+  "Spinning Bike": "Cardio",
+  "Hack Squat Machine": "Legs",
+  "Incline Squat Machine (45 Degree)": "Legs",
+  "Seated Row Machine": "Back",
+  "High Pulley Machine": "Back",
+  "Seated Chest Press": "Chest",
+  "Seated Straight Arm Chest Machine": "Chest",
+  "Leg Curl & Leg Extension": "Legs",
+  "Seated Calf Machine": "Legs",
+  "Multi Adjustable Bench": "Free Weights",
+  "Preacher Curl Attachment": "Arms",
+  "Hip Adductor & Abductor Machine": "Legs",
+  "Smith Machine": "Free Weights",
+  "Rubber Dumbbell Set": "Free Weights",
+  "Rubber Coated Weight Plates": "Free Weights",
+  "Power Lifting Weight Plate": "Free Weights",
+  "Abs Wheel": "Functional",
+  "Step Platform": "Functional",
+  "Straight Bar": "Arms",
+  "Curved Bar": "Arms",
+  "Three-Tier Dumbbell Rack": "Free Weights",
+  "Dual Cable Cross": "Functional",
+  "Barbell": "Free Weights",
+  "Vinyl Kettlebell": "Free Weights",
+  "Boxing Gloves": "Functional",
+  "Shoulder Protection": "Functional",
+  "Sand Bag": "Functional",
+  "Weight Lifting Belt": "Functional",
+  "Speed Rope": "Cardio",
+  "Cable Handles": "Functional",
+  "Barbell Rack": "Free Weights",
+  "Kettlebell Rack": "Free Weights",
+  "Stair Trainer": "Cardio",
+  "Olympic Squat Rack": "Legs",
+  "Olympic Flat Bench With Weight Storage": "Chest",
+  "Sled": "Legs",
+  "Hip Thrust Machine": "Legs"
+};
+
+function getMachineCategory(machine) {
+  if (machineCategoryByName[machine.name]) {
+    return machineCategoryByName[machine.name];
+  }
+
+  const haystack = `${machine.name} ${machine.desc} ${machine.targets} ${machine.bestFor}`.toLowerCase();
+
+  if (/treadmill|elliptical|bike|stair|rope|cardio|conditioning/.test(haystack)) return "Cardio";
+  if (/chest|pec|bench press/.test(haystack)) return "Chest";
+  if (/row|lat|pulley|pull|back|lats/.test(haystack)) return "Back";
+  if (/shoulder|delt/.test(haystack)) return "Shoulders";
+  if (/curl|biceps|triceps|arms|forearms|handle|straight bar|curved bar/.test(haystack)) return "Arms";
+  if (/leg|squat|calf|quad|hamstring|glute|hip|thigh|sled/.test(haystack)) return "Legs";
+  if (/dumbbell|barbell|plate|kettlebell|bench|rack/.test(haystack)) return "Free Weights";
+  return "Functional";
+}
+
 function App() {
-  const [selected, setSelected] = useState(0);
+  const catalog = machines.map((machine) => ({
+    ...machine,
+    label: getMachineCardLabel(machine.name),
+    category: getMachineCategory(machine)
+  }));
+  const [selected, setSelected] = useState(catalog[0]?.name || "");
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [query, setQuery] = useState("");
+  const [visibleCount, setVisibleCount] = useState(catalogPageSize);
   const [content, setContent] = useState(null);
 
   React.useEffect(() => {
@@ -378,42 +451,50 @@ function App() {
     };
   }, []);
 
-  const machineList = machines;
-  const itemsPerPage = 6;
-  const totalPages = Math.max(1, Math.ceil(machineList.length / itemsPerPage));
-  const [page, setPage] = useState(0);
-  const pageStart = page * itemsPerPage;
-  const visibleMachines = machineList.slice(pageStart, pageStart + itemsPerPage);
-  const total = visibleMachines.length;
-  const selectedOnPage = visibleMachines.findIndex((_, index) => pageStart + index === selected);
-  const activeIndex = selectedOnPage >= 0 ? selectedOnPage : 0;
-  const activeMachine = machineList[selected] || visibleMachines[0] || machineList[0];
+  React.useEffect(() => {
+    setVisibleCount(catalogPageSize);
+  }, [activeCategory, query]);
 
-  const handlePageChange = (nextPage) => {
-    const normalizedPage = (nextPage + totalPages) % totalPages;
-    const nextStart = normalizedPage * itemsPerPage;
-    setPage(normalizedPage);
-    setSelected(nextStart);
-  };
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredMachines = catalog.filter((machine) => {
+    const matchesCategory = activeCategory === "All" || machine.category === activeCategory;
+    const searchable = `${machine.name} ${machine.label} ${machine.desc} ${machine.targets} ${machine.bestFor}`.toLowerCase();
+    return matchesCategory && (!normalizedQuery || searchable.includes(normalizedQuery));
+  });
+  const visibleMachines = filteredMachines.slice(0, visibleCount);
+  const activeMachine =
+    filteredMachines.find((machine) => machine.name === selected) ||
+    filteredMachines[0] ||
+    catalog[0];
+  const availableCategories = machineCategories.filter((category) => (
+    category === "All" || catalog.some((machine) => machine.category === category)
+  ));
+  const categoryCounts = availableCategories.reduce((counts, category) => {
+    counts[category] = category === "All"
+      ? catalog.length
+      : catalog.filter((machine) => machine.category === category).length;
+    return counts;
+  }, {});
 
   return (
     <div>
       <nav className="nav">
-        <a className="logo" href="./index.html">
+        <a className="logo" href="/">
           <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
           <span>Tenas Gym and Spa</span>
         </a>
         <div className="nav-links">
           <a href="./">Home</a>
-          <a href="./gallery.html">Gallery</a>
-          <a href="./shop.html">Shop</a>
-          <a href="./machines.html">Machines</a>
-          <a href="./coaches.html">Coaches</a>
-          <a href="./membership.html">Membership</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/shop">Shop</a>
+          <a href="/machines">Machines</a>
+          <a href="/coaches">Coaches</a>
+          <a href="/spa">Spa</a>
+          <a href="/membership">Membership</a>
         </div>
         <div className="nav-actions">
           <ThemeToggle />
-          <a className="cta" href="./membership.html">Join Now</a>
+          <a className="cta" href="/membership">Join Now</a>
         </div>
       </nav>
       <header className="hero">
@@ -423,8 +504,8 @@ function App() {
             <h1>Precision Equipment That Performs.</h1>
             <p className="lead">Select a machine to see specs, coaching tips, and training focus.</p>
             <div className="hero-actions">
-              <a className="cta" href="./tour.html">Book a Tour</a>
-              <a className="secondary" href="./coaches.html">Meet Coaches</a>
+              <a className="cta" href="/tour">Book a Tour</a>
+              <a className="secondary" href="/coaches">Meet Coaches</a>
             </div>
           </div>
           <div className="hero-card">
@@ -436,65 +517,118 @@ function App() {
         </div>
       </header>
 
-      <section className="section machines">
-        <div className="section-header">
-          <h2>3D Machine Showcase</h2>
-          <p>Auto-rotating equipment. Tap one to enlarge and see details.</p>
+      <section className="section machine-catalog">
+        <div className="catalog-intro">
+          <div>
+            <p className="eyebrow">Our Machines</p>
+            <h2>Train Better With The Right Equipment.</h2>
+            <p>
+              Explore {catalog.length}+ machines grouped by training focus, then tap any card for coaching notes.
+            </p>
+          </div>
+          <label className="machine-search" htmlFor="machine-search">
+            <span>Search</span>
+            <input
+              id="machine-search"
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search machine..."
+            />
+          </label>
         </div>
 
-        <div className="carousel-scene">
-          <div className="carousel-toolbar">
-            <button type="button" className="secondary" onClick={() => handlePageChange(page - 1)}>
-              Previous Set
+        <div className="machine-category-tabs" aria-label="Machine categories">
+          {availableCategories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              className={`machine-category-button ${activeCategory === category ? "active" : ""}`}
+              onClick={() => setActiveCategory(category)}
+            >
+              <span>{category}</span>
+              <small>{categoryCounts[category]}</small>
             </button>
-            <p>
-              Showing {pageStart + 1}-{Math.min(pageStart + itemsPerPage, machineList.length)} of {machineList.length}
-            </p>
-            <button type="button" className="secondary" onClick={() => handlePageChange(page + 1)}>
-              Next Set
-            </button>
-          </div>
+          ))}
+        </div>
 
-          <div className="carousel-ring" style={{ "--total": total }}>
-            {visibleMachines.map((machine, index) => (
-              <article
-                key={machine.name}
-                className={`machine-card ${activeIndex === index ? "selected" : ""}`}
-                style={{ "--i": index }}
-                onClick={() => setSelected(pageStart + index)}
+        <div className="machine-results-line">
+          Showing {visibleMachines.length} of {filteredMachines.length} machines
+        </div>
+
+        <div className="machine-card-grid">
+          {visibleMachines.map((machine) => (
+            <article
+              key={machine.name}
+              className={`machine-grid-card ${activeMachine?.name === machine.name ? "selected" : ""}`}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setSelected(machine.name);
+                  setDetailOpen(true);
+                }}
+                aria-label={`View ${machine.name}`}
               >
-                <img src={machine.img} alt={machine.name} />
-                <div className="info">
-                  <h3>{getMachineCardLabel(machine.name)}</h3>
-                </div>
-              </article>
-            ))}
-          </div>
+                <span className="machine-card-media">
+                  <img src={machine.img} alt={machine.name} loading="lazy" decoding="async" />
+                </span>
+                <span className="machine-card-copy">
+                  <span className="machine-card-tag">{machine.category}</span>
+                  <strong>{machine.label}</strong>
+                  <span>{machine.desc}</span>
+                  <em>View Details</em>
+                </span>
+              </button>
+            </article>
+          ))}
+        </div>
 
-          <div className="machine-details">
-            <h3>{activeMachine?.name}</h3>
-            <p>{activeMachine?.desc}</p>
-            <div className="machine-detail-layout">
-              <div className="machine-detail-photo">
-                <img src={activeMachine?.img} alt={activeMachine?.name} />
+        {visibleCount < filteredMachines.length && (
+          <button type="button" className="machine-load-more" onClick={() => setVisibleCount(visibleCount + catalogPageSize)}>
+            Load More Machines
+          </button>
+        )}
+
+        {filteredMachines.length === 0 && (
+          <div className="machine-empty-state">
+            <h3>No machines found</h3>
+            <p>Try another category or search term.</p>
+          </div>
+        )}
+
+        {detailOpen && activeMachine && (
+          <div className="machine-modal" role="dialog" aria-modal="true" aria-labelledby="machine-modal-title">
+            <button type="button" className="machine-modal-backdrop" onClick={() => setDetailOpen(false)} aria-label="Close machine details"></button>
+            <div className="machine-modal-card">
+              <button type="button" className="machine-modal-close" onClick={() => setDetailOpen(false)} aria-label="Close machine details">
+                Close
+              </button>
+              <div className="machine-modal-media">
+                <img src={activeMachine.img} alt={activeMachine.name} decoding="async" />
               </div>
-              <div className="detail-grid">
-                <div className="detail-box">
-                  <strong>Targets</strong>
-                  <p>{activeMachine?.targets}</p>
-                </div>
-                <div className="detail-box">
-                  <strong>Best For</strong>
-                  <p>{activeMachine?.bestFor}</p>
-                </div>
-                <div className="detail-box">
-                  <strong>Coach Tip</strong>
-                  <p>{activeMachine?.tip}</p>
+              <div className="machine-modal-copy">
+                <p className="eyebrow">Machine Detail</p>
+                <h3 id="machine-modal-title">{activeMachine.name}</h3>
+                <p>{activeMachine.desc}</p>
+                <div className="detail-grid">
+                  <div className="detail-box">
+                    <strong>Targets</strong>
+                    <p>{activeMachine.targets}</p>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Best For</strong>
+                    <p>{activeMachine.bestFor}</p>
+                  </div>
+                  <div className="detail-box">
+                    <strong>Coach Tip</strong>
+                    <p>{activeMachine.tip}</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
 
       <Footer />

@@ -149,7 +149,7 @@ function OrderForm({ products }) {
       if (!data.ok) throw new Error(data.error || "Order failed");
       setSubmitted(true);
     } catch (err) {
-      setError(String(err.message || err || "Network error. Make sure you opened the site at http://localhost:3001"));
+      setError(String(err.message || err || "Unable to connect. Please check your internet connection and try again."));
     } finally {
       setLoading(false);
     }
@@ -263,17 +263,18 @@ function App() {
   return (
     <div>
       <nav className="nav">
-        <a className="logo" href="./index.html">
+        <a className="logo" href="/">
           <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
           <span>Tenas Gym and Spa</span>
         </a>
         <div className="nav-links">
-          <a href="./index.html">Home</a>
-          <a href="./gallery.html">Gallery</a>
-          <a href="./shop.html">Shop</a>
-          <a href="./machines.html">Machines</a>
-          <a href="./coaches.html">Coaches</a>
-          <a href="./membership.html">Membership</a>
+          <a href="/">Home</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/shop">Shop</a>
+          <a href="/machines">Machines</a>
+          <a href="/coaches">Coaches</a>
+          <a href="/spa">Spa</a>
+          <a href="/membership">Membership</a>
         </div>
         <div className="nav-actions">
           <ThemeToggle />
@@ -320,7 +321,7 @@ function App() {
             <article className="shop-feature">
               <div className="shop-feature-media">
                 {featuredProduct.img ? (
-                  <img className="shop-feature-image" src={featuredProduct.img} alt={featuredProduct.name || "Featured supplement"} />
+                  <img className="shop-feature-image" src={featuredProduct.img} alt={featuredProduct.name || "Featured supplement"} loading="lazy" decoding="async" />
                 ) : (
                   <ProductVisual product={featuredProduct} featured />
                 )}
@@ -346,7 +347,7 @@ function App() {
               <article className="shop-card" key={`${item.name || "shop"}-${index}`}>
                 <div className="shop-card-media">
                   {item.img ? (
-                    <img className="shop-card-image" src={item.img} alt={item.name || "Supplement"} />
+                    <img className="shop-card-image" src={item.img} alt={item.name || "Supplement"} loading="lazy" decoding="async" />
                   ) : (
                     <ProductVisual product={item} />
                   )}
@@ -387,9 +388,9 @@ function App() {
             <p className="lead">Next we can fine-tune the exact prices, add brands if you want them shown, or create a fuller product page for each supplement later.</p>
           </div>
         <div className="media-band-actions">
-          <a className="cta" href="./membership.html">Join Tenas</a>
-          <a className="secondary" href="./tour.html">Visit the Gym</a>
-          <a className="secondary" href="./index.html">Back Home</a>
+          <a className="cta" href="/membership">Join Tenas</a>
+          <a className="secondary" href="/tour">Visit the Gym</a>
+          <a className="secondary" href="/">Back Home</a>
         </div>
       </section>
 

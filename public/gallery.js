@@ -55,21 +55,22 @@ function App() {
   return (
     <div>
       <nav className="nav">
-        <a className="logo" href="./index.html">
+        <a className="logo" href="/">
           <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
           <span>Tenas Gym and Spa</span>
         </a>
         <div className="nav-links">
-          <a href="./index.html">Home</a>
-          <a href="./gallery.html">Gallery</a>
-          <a href="./shop.html">Shop</a>
-          <a href="./machines.html">Machines</a>
-          <a href="./coaches.html">Coaches</a>
-          <a href="./membership.html">Membership</a>
+          <a href="/">Home</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/shop">Shop</a>
+          <a href="/machines">Machines</a>
+          <a href="/coaches">Coaches</a>
+          <a href="/spa">Spa</a>
+          <a href="/membership">Membership</a>
         </div>
         <div className="nav-actions">
           <ThemeToggle />
-          <a className="cta" href="./tour.html">Book a Tour</a>
+          <a className="cta" href="/tour">Book a Tour</a>
         </div>
       </nav>
       <header className="hero gallery-hero">
@@ -117,7 +118,7 @@ function App() {
               }`}
               key={item.title}
             >
-              <img src={item.img} alt={item.title} className="gallery-page-image" />
+              <img src={item.img} alt={item.title} className="gallery-page-image" loading="lazy" decoding="async" />
               <div className="gallery-page-overlay">
                 <span className="gallery-chip">{item.tone}</span>
                 <h3>{item.title}</h3>
@@ -137,7 +138,7 @@ function App() {
         <div className="media-band-actions">
           <a className="cta" href="https://www.instagram.com/tenasgymandspa/" target="_blank" rel="noreferrer">Open Instagram</a>
           <a className="secondary" href="https://www.tiktok.com/@tenas.gym.and.spa" target="_blank" rel="noreferrer">Open TikTok</a>
-          <a className="secondary" href="./tour.html">Visit in Person</a>
+          <a className="secondary" href="/tour">Visit in Person</a>
         </div>
       </section>
 

@@ -143,7 +143,7 @@ function DashboardCardPreview({ membership, member }) {
             <div className="nfc-card-cross nfc-cross-bottom-right"></div>
             <div className="nfc-front-mark">
               <div className="nfc-front-emblem">
-                <img src="./images/nfc.png" alt="Tenas Gym logo" className="nfc-front-emblem-image" />
+                <img src="./images/tenas.jpeg" alt="Tenas Gym logo" className="nfc-front-emblem-image" />
               </div>
               <span className="nfc-front-divider"></span>
               <div className="nfc-front-copy">
@@ -268,7 +268,7 @@ function DashboardApp() {
       }
     } finally {
       localStorage.removeItem(MEMBER_TOKEN_KEY);
-      window.location.href = "./membership.html#member-access";
+      window.location.href = "/membership#member-access";
     }
   };
 
@@ -313,21 +313,22 @@ function DashboardApp() {
   return (
     <div className="page-shell">
       <nav className="nav">
-        <a className="logo" href="./index.html">
+        <a className="logo" href="/">
           <img src="./images/tenas.jpeg" alt="Tenas Gym logo" className="logo-image" />
           <span>Tenas Gym and Spa</span>
         </a>
         <div className="nav-links">
-          <a href="./index.html">Home</a>
-          <a href="./gallery.html">Gallery</a>
-          <a href="./shop.html">Shop</a>
-          <a href="./machines.html">Machines</a>
-          <a href="./coaches.html">Coaches</a>
-          <a href="./membership.html">Membership</a>
+          <a href="/">Home</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/shop">Shop</a>
+          <a href="/machines">Machines</a>
+          <a href="/coaches">Coaches</a>
+          <a href="/spa">Spa</a>
+          <a href="/membership">Membership</a>
         </div>
         <div className="nav-actions">
           <ThemeToggle />
-          <a className="cta" href="./membership.html?form=1">Open Form</a>
+          <a className="cta" href="/membership?form=1">Open Form</a>
         </div>
       </nav>
 
@@ -338,8 +339,8 @@ function DashboardApp() {
             <p className="eyebrow">Saved Access</p>
             <p className="lead">Track your membership, card pickup, supplement orders, and member-only updates from one clean place.</p>
             <div className="hero-actions">
-              <a className="cta" href="./membership.html?form=1">Open Membership Form</a>
-              <a className="secondary" href="./shop.html">Shop Supplements</a>
+              <a className="cta" href="/membership?form=1">Open Membership Form</a>
+              <a className="secondary" href="/shop">Shop Supplements</a>
             </div>
           </div>
           <div className="hero-card">
@@ -365,8 +366,8 @@ function DashboardApp() {
               <h2>Log in to open your dashboard.</h2>
               <p>Your saved card and member information stay connected to your account. Log in from the membership page to continue.</p>
               <div className="dashboard-actions">
-                <a className="cta" href="./membership.html#member-access">Go to Member Login</a>
-                <a className="secondary" href="./tour.html">Book a Tour</a>
+                <a className="cta" href="/membership#member-access">Go to Member Login</a>
+                <a className="secondary" href="/tour">Book a Tour</a>
               </div>
               {error ? <p className="form-error">{error}</p> : null}
             </div>
@@ -399,8 +400,8 @@ function DashboardApp() {
                 <p>Your membership progress, card pickup notice, shop activity, and member-only updates are all tied to your account now.</p>
               </div>
               <div className="dashboard-actions">
-                <a className="cta" href="./membership.html?form=1">Open Membership Form</a>
-                <a className="secondary" href="./shop.html">Shop Supplements</a>
+                <a className="cta" href="/membership?form=1">Open Membership Form</a>
+                <a className="secondary" href="/shop">Shop Supplements</a>
               </div>
             </div>
 
@@ -472,12 +473,12 @@ function DashboardApp() {
                 {!membership ? (
                   <div className="dashboard-next-step">
                     <p><strong>Next step:</strong> complete your membership form so your card, plan, and approval status can be saved here automatically.</p>
-                    <a className="cta" href="./membership.html?form=1">Complete Membership Form</a>
+                    <a className="cta" href="/membership?form=1">Complete Membership Form</a>
                   </div>
                 ) : (
                   <div className="dashboard-next-step">
                     <p><strong>Renew Membership:</strong> when your period is close to ending, open your form and submit the next plan so your access stays smooth.</p>
-                    <a className="cta" href="./membership.html?form=1">Renew / Update Membership</a>
+                    <a className="cta" href="/membership?form=1">Renew / Update Membership</a>
                   </div>
                 )}
                 {membership?.notes ? (
@@ -595,7 +596,7 @@ function DashboardApp() {
                 <div className="dashboard-actions">
                   {contact?.phone ? <a className="cta" href={`tel:${contact.phone}`}>Call Gym</a> : null}
                   {contact?.email ? <a className="secondary" href={`mailto:${contact.email}`}>Email Support</a> : null}
-                  <a className="secondary" href="./tour.html">Book a Tour</a>
+                  <a className="secondary" href="/tour">Book a Tour</a>
                 </div>
               </section>
             </div>

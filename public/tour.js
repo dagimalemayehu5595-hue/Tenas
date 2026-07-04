@@ -44,7 +44,7 @@ function TourForm() {
           }
           setSubmitted(true);
         } catch (err) {
-          setError(String(err.message || err || "Network error. Make sure you opened the site at http://localhost:3001"));
+          setError(String(err.message || err || "Unable to connect. Please check your internet connection and try again."));
         } finally {
           setLoading(false);
         }
@@ -71,21 +71,22 @@ function App() {
   return (
     <div>
       <nav className="nav">
-        <a className="logo" href="./index.html">
+        <a className="logo" href="/">
           <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
           <span>Tenas Gym and Spa</span>
         </a>
         <div className="nav-links">
           <a href="./">Home</a>
-          <a href="./gallery.html">Gallery</a>
-          <a href="./shop.html">Shop</a>
-          <a href="./machines.html">Machines</a>
-          <a href="./coaches.html">Coaches</a>
-          <a href="./membership.html">Membership</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/shop">Shop</a>
+          <a href="/machines">Machines</a>
+          <a href="/coaches">Coaches</a>
+          <a href="/spa">Spa</a>
+          <a href="/membership">Membership</a>
         </div>
         <div className="nav-actions">
           <ThemeToggle />
-          <a className="cta" href="./membership.html">Join Now</a>
+          <a className="cta" href="/membership">Join Now</a>
         </div>
       </nav>
       <header className="hero">

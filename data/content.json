@@ -31,61 +31,55 @@
       "Gym and Aerobics",
       "Gym Only",
       "Aerobics Only",
-      "Off Peak Hour",
-      "Aerobics and spa"
+      "Off Peak Hour"
     ],
     "prices": [
       [
         "9,999",
+        "7,999",
         "7,499",
-        "7,499",
-        "5,499",
-        "2,999",
-        "4,499",
-        ""
+        "5,999",
+        "3,999",
+        "4,999"
       ],
       [
         "18,799",
+        "14,999",
         "13,999",
-        "13,999",
-        "10,199",
-        "5,499",
-        "8,499",
-        ""
+        "11,099",
+        "7,359",
+        "9,139"
       ],
       [
         "23,999",
+        "19,679",
         "18,499",
-        "18,499",
-        "13,199",
-        "7,499",
-        "10,999",
-        ""
+        "14,399",
+        "9,999",
+        "12,209"
       ],
       [
         "39,999",
+        "32,639",
         "30,999",
-        "30,999",
-        "23,999",
-        "13,499",
-        "19,999",
-        ""
+        "26,199",
+        "17,999",
+        "22,199"
       ],
       [
         "69,999",
+        "57,599",
         "53,999",
-        "53,999",
-        "39,999",
-        "24,999",
-        "35,999",
-        ""
+        "43,599",
+        "33,299",
+        "38,999"
       ]
     ]
   },
   "dailyPass": [
     {
       "label": "Daily pass F.P",
-      "price": "1,099"
+      "price": "1,199"
     },
     {
       "label": "Daily pass Gym",
@@ -104,10 +98,6 @@
     {
       "label": ">= 4 person",
       "value": "7% each"
-    },
-    {
-      "label": "2 person",
-      "value": "6% each"
     }
   ],
   "referralCodes": [
@@ -176,7 +166,7 @@
       "img": "./images/Multivitamins.jpg"
     }
   ],
-  "priceNote": "The 500.00 Birr pass card membership fee will be donated to the Samrawit Foundation Charitable Endowment.",
+  "priceNote": "The prices above do not include the ETB 500 membership card fee.",
   "programs": [
     {
       "name": "Strength Track",

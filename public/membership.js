@@ -192,7 +192,7 @@ function MembershipForm({ member, savedMembership, onMembershipSaved }) {
           </div>
           <div className="membership-success-actions">
             <a className="cta" href="./">Back to Home</a>
-            <a className="secondary" href="./tour.html">Book a Tour</a>
+            <a className="secondary" href="/tour">Book a Tour</a>
           </div>
         </div>
 
@@ -207,7 +207,7 @@ function MembershipForm({ member, savedMembership, onMembershipSaved }) {
               <div className="nfc-front-mark">
                 <div className="nfc-front-emblem">
                   <img
-                    src="./images/nfc.png"
+                    src="./images/tenas.jpeg"
                     alt="Tenas Gym logo"
                     className="nfc-front-emblem-image"
                   />
@@ -356,7 +356,7 @@ function MembershipForm({ member, savedMembership, onMembershipSaved }) {
       setSubmitted(true);
       onMembershipSaved?.(nextMembership);
     } catch (err) {
-      setError(String(err.message || err || "Network error. Make sure you opened the site at http://localhost:3001"));
+      setError(String(err.message || err || "Unable to connect. Please check your internet connection and try again."));
     } finally {
       setLoading(false);
     }
@@ -705,7 +705,7 @@ function MembershipPageApp() {
 
   React.useEffect(() => {
     if (member && !allowMemberFormAccess) {
-      window.location.replace("./dashboard.html");
+      window.location.replace("/dashboard");
     }
   }, [member, allowMemberFormAccess]);
 
@@ -741,12 +741,21 @@ function MembershipPageApp() {
       }
 
       localStorage.setItem(MEMBER_TOKEN_KEY, data.token);
-      setMember({ ...data.member, token: data.token });
       setAuthForm((current) => ({
         ...current,
         password: ""
       }));
-      window.location.href = "./dashboard.html";
+      if (authMode === "signup") {
+        window.location.replace("/membership?form=1#member-access");
+        return;
+      }
+
+      setMember({ ...data.member, token: data.token });
+      window.location.replace(
+        data.member.membership
+          ? "/dashboard"
+          : "/membership?form=1#member-access"
+      );
       return;
     } catch (err) {
       setAuthError(err?.message || "Unable to continue.");
@@ -796,17 +805,18 @@ function MembershipPageApp() {
   return (
     <div className="page-shell">
       <nav className="nav">
-        <a className="logo" href="./index.html">
+        <a className="logo" href="/">
           <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
           <span>Tenas Gym and Spa</span>
         </a>
         <div className="nav-links">
           <a href="./">Home</a>
-          <a href="./gallery.html">Gallery</a>
-          <a href="./shop.html">Shop</a>
-          <a href="./machines.html">Machines</a>
-          <a href="./coaches.html">Coaches</a>
-          <a href="./membership.html">Membership</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/shop">Shop</a>
+          <a href="/machines">Machines</a>
+          <a href="/coaches">Coaches</a>
+          <a href="/spa">Spa</a>
+          <a href="/membership">Membership</a>
         </div>
         <div className="nav-actions">
           <ThemeToggle />
@@ -821,7 +831,7 @@ function MembershipPageApp() {
             <p className="lead">Create your member account once, save your details, and come back anytime to view your virtual access card.</p>
             <div className="hero-actions">
               <a className="cta" href="#member-access">Join Now</a>
-              <a className="secondary" href="./coaches.html">Meet Coaches</a>
+              <a className="secondary" href="/coaches">Meet Coaches</a>
             </div>
           </div>
           <div className="hero-card">
@@ -910,7 +920,7 @@ function MembershipPageApp() {
             <h2>Start Your Trial This Week</h2>
             <p>Tour the facility, meet a coach, and get your plan built fast.</p>
           </div>
-          <a className="cta" href="./tour.html">Book a Tour</a>
+          <a className="cta" href="/tour">Book a Tour</a>
         </section>
 
         <section className="section membership-start" id="member-access">
@@ -1037,7 +1047,7 @@ function MembershipPageApp() {
                   <p>Your saved card, status, and member history live in your dashboard. This page is only for filling or updating the form.</p>
                 </div>
                 <div className="member-summary-head-actions">
-                  <a className="secondary" href="./dashboard.html">Back to Dashboard</a>
+                  <a className="secondary" href="/dashboard">Back to Dashboard</a>
                   <button type="button" className="secondary" onClick={handleLogout}>
                     Log Out
                   </button>
@@ -1060,8 +1070,8 @@ function MembershipPageApp() {
                 <p>We now keep your saved card, status, and member details inside your dashboard so everything stays in one clean place.</p>
               </div>
               <div className="membership-success-actions">
-                <a className="cta" href="./dashboard.html">Open Dashboard</a>
-                <a className="secondary" href="./membership.html?form=1">Open Membership Form</a>
+                <a className="cta" href="/dashboard">Open Dashboard</a>
+                <a className="secondary" href="/membership?form=1">Open Membership Form</a>
               </div>
             </div>
           )}
@@ -1096,21 +1106,22 @@ function App() {
     <div className="page-shell">
       <header className="hero">
         <nav className="nav">
-          <a className="logo" href="./index.html">
+          <a className="logo" href="/">
             <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
             <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
-            <a href="./gallery.html">Gallery</a>
-            <a href="./shop.html">Shop</a>
-            <a href="./machines.html">Machines</a>
-            <a href="./coaches.html">Coaches</a>
-            <a href="./membership.html">Membership</a>
+            <a href="/gallery">Gallery</a>
+            <a href="/shop">Shop</a>
+            <a href="/machines">Machines</a>
+            <a href="/coaches">Coaches</a>
+            <a href="/spa">Spa</a>
+            <a href="/membership">Membership</a>
           </div>
           <div className="nav-actions">
             <ThemeToggle />
-            <a className="cta" href="./membership.html">Join Now</a>
+            <a className="cta" href="/membership">Join Now</a>
           </div>
         </nav>
 
@@ -1121,7 +1132,7 @@ function App() {
             <p className="lead">Premium equipment, expert coaching, and recovery support — without the chaos.</p>
             <div className="hero-actions">
               <a className="cta" href="#tiers">Join Now</a>
-              <a className="secondary" href="./coaches.html">Meet Coaches</a>
+              <a className="secondary" href="/coaches">Meet Coaches</a>
             </div>
           </div>
           <div className="hero-card">
@@ -1210,7 +1221,7 @@ function App() {
             <h2>Start Your Trial This Week</h2>
             <p>Tour the facility, meet a coach, and get your plan built fast.</p>
           </div>
-          <a className="cta" href="./tour.html">Book a Tour</a>
+          <a className="cta" href="/tour">Book a Tour</a>
         </section>
 
         <section className="section membership-start">
@@ -1243,8 +1254,3 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<MembershipPageApp />);
-
-
-
-
-

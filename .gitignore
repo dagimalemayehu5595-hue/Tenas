@@ -6,5 +6,6 @@ yarn-debug.log*
 yarn-error.log*
 server.out.log
 server.err.log
+deploy/
 data/members.json
 data/submissions.json

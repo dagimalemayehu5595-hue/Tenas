@@ -48,21 +48,22 @@ function App() {
   return (
     <div>
       <nav className="nav">
-        <a className="logo" href="./index.html">
+        <a className="logo" href="/">
           <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
           <span>Tenas Gym and Spa</span>
         </a>
         <div className="nav-links">
           <a href="./">Home</a>
-          <a href="./gallery.html">Gallery</a>
-          <a href="./shop.html">Shop</a>
-          <a href="./machines.html">Machines</a>
-          <a href="./coaches.html">Coaches</a>
-          <a href="./membership.html">Membership</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/shop">Shop</a>
+          <a href="/machines">Machines</a>
+          <a href="/coaches">Coaches</a>
+          <a href="/spa">Spa</a>
+          <a href="/membership">Membership</a>
         </div>
         <div className="nav-actions">
           <ThemeToggle />
-          <a className="cta" href="./membership.html">Join Now</a>
+          <a className="cta" href="/membership">Join Now</a>
         </div>
       </nav>
       <header className="hero">
@@ -72,7 +73,7 @@ function App() {
             <h1>Coaches Who Build Performance, Not Just Physique.</h1>
             <p className="lead">Certified experts in strength, conditioning, mobility, and recovery with individualized programs for every goal.</p>
             <div className="hero-actions">
-              <a className="secondary" href="./tour.html">Book a Tour</a>
+              <a className="secondary" href="/tour">Book a Tour</a>
             </div>
           </div>
           <div className="hero-card">
@@ -92,7 +93,7 @@ function App() {
         <div className="coach-grid">
           {coachList.map((coach) => (
             <article className="coach-card" key={coach.name}>
-              <img src={coach.img} alt={coach.name} className="coach-photo" />
+              <img src={coach.img} alt={coach.name} className="coach-photo" loading="lazy" decoding="async" />
               <div>
                 <h3>{coach.name}</h3>
                 <p className="role">{coach.role}</p>

@@ -94,7 +94,7 @@ function App() {
   return (
     <div>
       <nav className="nav">
-        <a className="logo" href="./index.html">
+        <a className="logo" href="/">
           <img
             src="./images/tenas.jpeg"
             alt="Tenas Gym and Spa logo"
@@ -103,16 +103,17 @@ function App() {
           <span>Tenas Gym and Spa</span>
         </a>
         <div className="nav-links">
-          <a href="./index.html">Home</a>
-          <a href="./gallery.html">Gallery</a>
-          <a href="./shop.html">Shop</a>
-          <a href="./machines.html">Machines</a>
-          <a href="./coaches.html">Coaches</a>
-          <a href="./membership.html">Membership</a>
+          <a href="/">Home</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/shop">Shop</a>
+          <a href="/machines">Machines</a>
+          <a href="/coaches">Coaches</a>
+          <a href="/spa">Spa</a>
+          <a href="/membership">Membership</a>
         </div>
         <div className="nav-actions">
           <ThemeToggle />
-          <a className="cta" href="./membership.html">Join Now</a>
+          <a className="cta" href="/membership">Join Now</a>
         </div>
       </nav>
       <header className="hero hero-home">
@@ -122,8 +123,8 @@ function App() {
             <h1>Train strong. Move fast. Recover smarter.</h1>
             <p className="lead">A focused training space with premium machines, practical coaching, and recovery support built around real consistency.</p>
             <div className="hero-actions">
-              <a className="cta" href="./membership.html">Join Now</a>
-              <a className="secondary" href="./tour.html">Book a Tour</a>
+              <a className="cta" href="/membership">Join Now</a>
+              <a className="secondary" href="/tour">Book a Tour</a>
             </div>
             <div className="hero-signal-row">
               {heroSignals.map((item) => (
@@ -184,7 +185,7 @@ function App() {
                 key={`${item.title || "update"}-${index}`}
               >
                 <div className="update-media">
-                  {item.img ? <img className="update-image" src={item.img} alt={item.title || "Tenas update"} /> : <div className="update-image update-image-fallback" />}
+                  {item.img ? <img className="update-image" src={item.img} alt={item.title || "Tenas update"} loading="lazy" decoding="async" /> : <div className="update-image update-image-fallback" />}
                   <div className="update-media-overlay" />
                   <div className="update-badges">
                     {item.tag ? <span className="update-tag">{item.tag}</span> : null}
@@ -219,7 +220,7 @@ function App() {
         <div className="arrival-grid">
           {arrivalMoments.map((item) => (
             <article className={`arrival-card ${item.className || ""}`} key={item.title}>
-              <img className="arrival-image" src={item.img} alt={item.title} />
+              <img className="arrival-image" src={item.img} alt={item.title} loading="lazy" decoding="async" />
               <div className="arrival-overlay">
                 <span className="arrival-tag">{item.tag}</span>
                 <h3>{item.title}</h3>
@@ -266,9 +267,9 @@ function App() {
               >
                 Get Directions
               </a>
-              <a className="secondary" href="./shop.html">Open Shop</a>
-              <a className="secondary" href="./gallery.html">Open Full Gallery</a>
-              <a className="secondary" href="./tour.html">Book a Tour</a>
+              <a className="secondary" href="/shop">Open Shop</a>
+              <a className="secondary" href="/gallery">Open Full Gallery</a>
+              <a className="secondary" href="/tour">Book a Tour</a>
             </div>
           </div>
           <div className="map-shell">

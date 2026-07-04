@@ -18,6 +18,7 @@ function AdminApp() {
   const [saveStatus, setSaveStatus] = useState("");
   const [stats, setStats] = useState({ total: 0, membership: 0, tour: 0, last: null });
   const [submissions, setSubmissions] = useState([]);
+  const [activeAdminView, setActiveAdminView] = useState("overview");
   const emptyDraft = {
     hours: { monSat: "", sunday: "" },
     contact: { phone: "", email: "" },
@@ -51,9 +52,13 @@ function AdminApp() {
     }
   };
 
-  const authFetch = async (url) => {
+  const authFetch = async (url, options = {}) => {
     const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` }
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${token}`
+      }
     });
     if (res.status === 401) {
       setToken("");
@@ -204,10 +209,9 @@ function AdminApp() {
       return;
     }
     try {
-      const res = await fetch("/api/admin/password", {
+      const res = await authFetch("/api/admin/password", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ currentPassword, newPassword })
@@ -228,10 +232,9 @@ function AdminApp() {
     setSaveStatus("");
     try {
       const next = normalizeContent(contentDraft);
-      const res = await fetch("/api/admin/content", {
+      const res = await authFetch("/api/admin/content", {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(next)
@@ -252,9 +255,8 @@ function AdminApp() {
     try {
       const body = new FormData();
       body.append("image", file);
-      const res = await fetch("/api/admin/upload", {
+      const res = await authFetch("/api/admin/upload", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
         body
       });
       const data = await res.json();
@@ -267,10 +269,9 @@ function AdminApp() {
 
   const handleSubmissionUpdate = async (id, updates) => {
     try {
-      const res = await fetch(`/api/admin/submissions/${id}`, {
+      const res = await authFetch(`/api/admin/submissions/${id}`, {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(updates)
@@ -285,9 +286,8 @@ function AdminApp() {
 
   const handleSubmissionDelete = async (id) => {
     try {
-      const res = await fetch(`/api/admin/submissions/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
+      const res = await authFetch(`/api/admin/submissions/${id}`, {
+        method: "DELETE"
       });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || "Failed to delete");
@@ -298,19 +298,20 @@ function AdminApp() {
   };
 
   return (
-    <div>
-      <header className="hero admin-hero">
+    <div className="admin-page">
+      <header className={`hero admin-hero ${token ? "is-authenticated" : ""}`}>
         <nav className="nav">
-          <a className="logo" href="./index.html">
+          <a className="logo" href="/">
             <img src="./images/tenas.jpeg" alt="Tenas Gym and Spa logo" className="logo-image" />
             <span>Tenas Gym and Spa</span>
           </a>
           <div className="nav-links">
             <a href="./">Home</a>
-            <a href="./gallery.html">Gallery</a>
-            <a href="./shop.html">Shop</a>
-            <a href="./membership.html">Membership</a>
-            <a href="./tour.html">Tour</a>
+            <a href="/gallery">Gallery</a>
+            <a href="/shop">Shop</a>
+            <a href="/spa">Spa</a>
+            <a href="/membership">Membership</a>
+            <a href="/tour">Tour</a>
           </div>
           <div className="nav-actions">
             <ThemeToggle />
@@ -325,8 +326,10 @@ function AdminApp() {
         <div className="hero-grid">
           <div>
             <p className="eyebrow">Admin</p>
-            <h1>Manage submissions and keep tabs on activity.</h1>
-            <p className="lead">Secure dashboard with membership and tour requests.</p>
+            <h1>{token ? "Admin control center." : "Manage submissions and keep tabs on activity."}</h1>
+            <p className="lead">
+              {token ? "Review requests, update site content, and manage access." : "Secure dashboard with membership and tour requests."}
+            </p>
           </div>
           <div className="hero-card">
             <h3>Access</h3>
@@ -423,26 +426,81 @@ function AdminApp() {
           </div>
         ) : (
           <div className="admin-dashboard">
-            <div className="admin-stats">
-              <div className="stat-card">
-                <h3>Total Requests</h3>
-                <p>{stats.total}</p>
+            <div className="admin-console-head">
+              <div>
+                <p className="eyebrow">Control Center</p>
+                <h2>Website Administration</h2>
+                <p className="form-note">Choose a workspace below. Only the selected tools are shown.</p>
               </div>
-              <div className="stat-card">
-                <h3>Memberships</h3>
-                <p>{stats.membership}</p>
-              </div>
-              <div className="stat-card">
-                <h3>Tours</h3>
-                <p>{stats.tour}</p>
-              </div>
-              <div className="stat-card">
-                <h3>Last Request</h3>
-                <p>{stats.last ? new Date(stats.last).toLocaleString() : "No data yet"}</p>
-              </div>
+              <button
+                type="button"
+                className="secondary admin-refresh-button"
+                onClick={() => loadData().catch((err) => setError(String(err.message || err)))}
+              >
+                Refresh Data
+              </button>
             </div>
 
-            <div className="admin-card admin-password-card">
+            <div className="admin-view-tabs" role="tablist" aria-label="Admin workspace">
+              {[
+                ["overview", "Overview"],
+                ["submissions", `Requests (${stats.total})`],
+                ["content", "Site Content"],
+                ["security", "Security"]
+              ].map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeAdminView === value}
+                  className={activeAdminView === value ? "is-active" : ""}
+                  onClick={() => setActiveAdminView(value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {activeAdminView === "overview" ? (
+              <div className="admin-overview-view">
+                <div className="admin-stats">
+                  <div className="stat-card">
+                    <span>Total Requests</span>
+                    <p>{stats.total}</p>
+                  </div>
+                  <div className="stat-card">
+                    <span>Memberships</span>
+                    <p>{stats.membership}</p>
+                  </div>
+                  <div className="stat-card">
+                    <span>Tours</span>
+                    <p>{stats.tour}</p>
+                  </div>
+                  <div className="stat-card">
+                    <span>Last Request</span>
+                    <p className="admin-stat-date">{stats.last ? new Date(stats.last).toLocaleString() : "No data yet"}</p>
+                  </div>
+                </div>
+
+                <div className="admin-quick-grid">
+                  <button type="button" onClick={() => setActiveAdminView("submissions")}>
+                    <strong>Review Requests</strong>
+                    <span>Update member, tour, and shop request statuses.</span>
+                  </button>
+                  <button type="button" onClick={() => setActiveAdminView("content")}>
+                    <strong>Edit Site Content</strong>
+                    <span>Manage prices, announcements, products, coaches, and machines.</span>
+                  </button>
+                  <button type="button" onClick={() => setActiveAdminView("security")}>
+                    <strong>Account Security</strong>
+                    <span>Change the administrator password.</span>
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
+            {activeAdminView === "security" ? (
+            <div className="admin-card admin-password-card admin-workspace-panel">
               <h2>Change Password</h2>
               <form className="tour-form" onSubmit={handleChangePassword}>
                 <div className="form-field">
@@ -482,8 +540,10 @@ function AdminApp() {
                 {error ? <p className="form-error">{error}</p> : null}
               </form>
             </div>
+            ) : null}
 
-            <div className="admin-list">
+            {activeAdminView === "submissions" ? (
+            <div className="admin-list admin-workspace-panel">
               <h2>Submissions</h2>
               {submissions.length === 0 ? (
                 <p className="form-note">No submissions yet.</p>
@@ -533,8 +593,10 @@ function AdminApp() {
                 </div>
               )}
             </div>
+            ) : null}
 
-            <div className="admin-editor">
+            {activeAdminView === "content" ? (
+            <div className="admin-editor admin-workspace-panel">
               <h2>Edit Site Content</h2>
               <p className="form-note">Edit fields below. Changes update the live site.</p>
 
@@ -1656,6 +1718,7 @@ function AdminApp() {
               {saveStatus ? <p className="form-success">{saveStatus}</p> : null}
               {error ? <p className="form-error">{error}</p> : null}
             </div>
+            ) : null}
 
             <button
               type="button"
